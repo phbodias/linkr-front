@@ -1,15 +1,6 @@
 import styled from "styled-components";
-//const urlMetadata = require('url-metadata')
 
 export default function Post({ name, profilePic, url, comment, hashtags, likes }) {
-    
-    /*urlMetadata(url).then(
-        function (metadata) { // success handler
-            console.log(metadata)
-        },
-        function (error) { // failure handler
-            console.log(error)
-        })*/
 
     return (
         <Container>

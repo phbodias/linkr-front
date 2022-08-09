@@ -1,47 +1,51 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "./Post";
 
 export default function PostsPage() {
+    const [postList, setPostList] = useState([])
     const userPhoto = 'https://cdn.serif.com/affinity/img/home/0522/photo-card-090520221343--lg@2x.jpg'
-    const postList = [
-        {
-            name: "Maria",
-            profilePic: "https://cdn.serif.com/affinity/img/home/0522/photo-card-090520221343--lg@2x.jpg",
-            url: "https://meyerweb.com/eric/tools/css/reset/",
-            comment: "Ótimo site para css reset!",
-            hashtags: ['#css', '#coding'],
-            likes: ['Joana', 'Joao']
-        }
-    ]
+    useEffect(() => {
+        const URL = 'https://backlinkr.herokuapp.com/posts'
+        const promise = axios.get(URL)
+        promise.then(response => {
+            setPostList(response.data)
+        })
+        promise.catch(handleError)
+    },[])
 
-    return (
-        <Container>
-            <h1>timeline</h1>
-            <CreatePost>
-                <img src={userPhoto} alt="" />
-                <form>
-                    <h2>What are you going to share today?</h2>
-                    <input placeholder="Link to share" />
-                    <input placeholder="Comment" />
-                    <button>Publish</button>
-                </form>
-            </CreatePost>
-            <Timeline>
-                {postList.map(p =>
-                    <Post
-                        name={p.name}
-                        profilePic={p.profilePic}
-                        url={p.url}
-                        comment={p.comment}
-                        hashtags={p.hashtags}
-                        likes={p.likes}
-                    />
-                )}
+    function handleError(error){
+        console.log(error.response.data)
+    }
 
-            </Timeline>
-        </Container>
-    )
-}
+        return (
+            <Container>
+                <h1>timeline</h1>
+                <CreatePost>
+                    <img src={userPhoto} alt="" />
+                    <form>
+                        <h2>What are you going to share today?</h2>
+                        <input placeholder="Link to share" />
+                        <input placeholder="Comment" />
+                        <button>Publish</button>
+                    </form>
+                </CreatePost>
+                <Timeline>
+                    {postList?.map(p =>
+                        <Post
+                            name={p.name}
+                            profilePic={p.profilePic}
+                            url={p.url}
+                            comment={p.comment}
+                            hashtags={p.hashtags}
+                            likes={p.likes}
+                        />
+                    )}
+
+                </Timeline>
+            </Container>
+        )
+    }
 
 const Container = styled.div`
 background-color:#333333;
@@ -62,7 +66,7 @@ h1{
 
 `
 
-const CreatePost = styled.div`
+    const CreatePost = styled.div`
 background-color:#FFFFFF;
 margin-bottom:15px;
 display:flex;
@@ -117,7 +121,7 @@ button{
 }
 `
 
-const Timeline = styled.div`
+    const Timeline = styled.div`
 width:40%;
 box-sizing:border-box;
 `
