@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SignUp from "./components/Login/SignUp";
+import SignIn from "./components/Login/SignIn";
 import InputSeachUsers from "./Components/InputSeachUsers.js";
-
 
 function App() {
   return (
@@ -9,7 +10,8 @@ function App() {
     
       <BrowserRouter>
         <Routes>
-          <Route path="/" element/>
+          <Route path="/signin" element={< SignIn />} />
+          <Route path="/signup" element={< SignUp />} />
         </Routes>
       </BrowserRouter>
     </>
