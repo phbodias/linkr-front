@@ -5,7 +5,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { Container, Input, Button, StyledLink } from "./AuthStyle";
 import LogoComponent from "./LogoComponent";
 
-export default function SignUp() {
+export default function SignIn() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -13,24 +13,23 @@ export default function SignUp() {
   const [data, setData] = useState({
     email: "",
     password: "",
-    name: "",
-    profilePic: "",
   });
 
   function handleRegister(e) {
     e.preventDefault();
     setLoading(true);
 
-    const promise = axios.post("https://backlinkr.herokuapp.com/sign-up", data);
+    const promise = axios.post("https://backlinkr.herokuapp.com/signin", data);
 
     promise
       .then((res) => {
-        navigate("/signin");
+        localStorage.setItem("tokenLinker", res.data.token);
+        navigate("/");
       })
 
       .catch((error) => {
         alert(
-          `Erro ao cadastrar: \n\n${error.response.status} - ${error.response.data}`
+          `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
         );
         setLoading(false);
       });
@@ -61,31 +60,15 @@ export default function SignUp() {
             onChange={handleInputChange}
             desabilitado={loading}
           />
-          <Input
-            type="text"
-            name="name"
-            placeholder="Username"
-            value={data.name}
-            onChange={handleInputChange}
-            desabilitado={loading}
-          />
-          <Input
-            type="url"
-            name="profilePic"
-            placeholder="picture url"
-            value={data.profilePic}
-            onChange={handleInputChange}
-            desabilitado={loading}
-          />
           <Button type="submit">
             {loading ? (
               <ThreeDots color="#FFF" height={50} width={100} />
             ) : (
-              <p>Sign Up</p>
+              <p>Log In</p>
             )}
           </Button>
         </form>
-        <StyledLink to="/signin">Switch back to log in</StyledLink>
+        <StyledLink to="/signup">First time? Create an account!</StyledLink>
       </Container>
     </>
   );
