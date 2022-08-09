@@ -25,7 +25,6 @@ export default function SignUp() {
 
     promise
       .then((res) => {
-        localStorage.setItem("tokenLinker", res.data.token);
         navigate("/");
       })
 
