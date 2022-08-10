@@ -5,11 +5,11 @@ const Container = styled.div`
   position: fixed;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
   background-color: #333333;
   height: 100vh;
   width: 35vw;
+  min-width: 500px;
   right: 0;
   font-family: "Oswald";
   font-style: normal;
@@ -20,6 +20,17 @@ const Container = styled.div`
   form {
     display: flex;
     flex-direction: column;
+  }
+
+  @media(min-width: 1131px){
+    justify-content: center;
+  }
+
+  @media(max-width: 1130px){
+    top: 175px;
+    min-width: 100vw;
+    height: calc(100vh - 175px);
+    padding-top: 40px;
   }
 `;
 
@@ -42,6 +53,10 @@ const Input = styled.input`
     font-size: 27px;
     line-height: 40px;
   }
+
+  @media(max-width: 1130px){
+    width: 300px;
+  }
 `;
 
 const Button = styled.button`
@@ -62,6 +77,10 @@ const Button = styled.button`
 
   :hover {
     filter: brightness(1.2);
+  }
+
+  @media(max-width: 1130px){
+    min-width: 300px;
   }
 `;
 
