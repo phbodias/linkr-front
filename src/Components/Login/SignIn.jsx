@@ -24,7 +24,7 @@ export default function SignIn() {
     promise
       .then((res) => {
         localStorage.setItem("tokenLinker", res.data.token);
-        navigate("/");
+        navigate("/timeline");
       })
 
       .catch((error) => {

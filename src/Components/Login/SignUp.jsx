@@ -25,7 +25,7 @@ export default function SignUp() {
 
     promise
       .then((res) => {
-        navigate("/signin");
+        navigate("/");
       })
 
       .catch((error) => {
@@ -85,7 +85,7 @@ export default function SignUp() {
             )}
           </Button>
         </form>
-        <StyledLink to="/signin">Switch back to log in</StyledLink>
+        <StyledLink to="/">Switch back to log in</StyledLink>
       </Container>
     </>
   );
