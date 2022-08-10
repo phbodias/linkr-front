@@ -18,6 +18,9 @@ const Container = styled.div`
     width: 100%;
     height: 45px;
     background-color: #E7E7E7;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     
 
     img{
@@ -25,5 +28,6 @@ const Container = styled.div`
         width: 39px;
         height: 39px;
         border-radius: 50%;
+        margin-right: 10px;
     }
 `
