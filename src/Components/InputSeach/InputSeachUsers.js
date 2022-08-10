@@ -10,11 +10,13 @@ import CardUser from './CardUser';
 export default function InputSeachUsers(){
 
 
-    const token = 4
+    const token = localStorage.getItem('tokenLinker')
     const [users, setUsers] = React.useState("")
     const [searchWords, setsearchWords] = React.useState("")
     const [activeButton, setActiveButton] = React.useState(false)
     
+
+    console.log(token)
   
 
     React.useEffect(()=>{
@@ -102,7 +104,7 @@ flex-direction: column;
 const Users = styled.div`
     margin-top: 3px;
     width: 100%;
-    height: 135px;
+    height: 130px;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
