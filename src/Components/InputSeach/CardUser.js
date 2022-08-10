@@ -1,11 +1,15 @@
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
-export default function CardUser({name, profilePic}){
+export default function CardUser({name, profilePic,id}){
     return(
-        <Container>
-            <img src={profilePic}></img>
-            {name}
-        </Container>
+        <Link to={"/user/"+id} >
+            <Container>
+                <img src={profilePic}></img>
+                {name}
+            </Container>
+        </Link>
+        
     )
 }
 
