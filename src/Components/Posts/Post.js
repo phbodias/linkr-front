@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default function Post({ name, profilePic, url, comment, hashtags, likes }) {
+export default function Post({ name, profilePic, url, comment, likes }) {
 
     return (
         <Container>
@@ -8,7 +8,14 @@ export default function Post({ name, profilePic, url, comment, hashtags, likes }
             <div>
                 <h2>{name}</h2>
                 <p>{comment}</p>
-                <p>{url}</p>
+                <URLdiv href={url.url} target="_blank" rel="noreferrer" >
+                    <>
+                        <h3>{url.title}</h3>
+                        <p>{url.description}</p>
+                        <a href={url.url} target="_blank" rel="noreferrer" >{url.url}</a>
+                    </>
+                    <img src={url.image} alt="" />
+                </URLdiv>
             </div>
         </Container>
     )
@@ -44,4 +51,10 @@ const Container = styled.div`
         width:100%;
         box-sizing:border-box;
     }
+`
+
+const URLdiv = styled.a`
+border: 1px solid #C4C4C4;
+border-radius: 5px;
+
 `
