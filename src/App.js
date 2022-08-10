@@ -16,11 +16,11 @@ function App() {
     <UserContext.Provider value={{ userData, setUserData }}>
     <BrowserRouter>
       <Routes>
-        <Route path="/signin" element={<SignIn />} />
+        <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/user/:id" element={<TelaUser/>} />
         <Route path="/buscar" element ={<InputSeachUsers/>}/>
-        <Route path="/" element={<PostsPage />} />
+        <Route path="/posts" element={<PostsPage />} />
       </Routes>
     </BrowserRouter>
     </UserContext.Provider>
