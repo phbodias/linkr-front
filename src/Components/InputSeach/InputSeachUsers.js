@@ -9,6 +9,8 @@ import CardUser from './CardUser';
 
 export default function InputSeachUsers(){
 
+
+    const token = 4
     const [users, setUsers] = React.useState("")
     const [searchWords, setsearchWords] = React.useState("")
     const [activeButton, setActiveButton] = React.useState(false)
@@ -34,12 +36,12 @@ export default function InputSeachUsers(){
 
     function showUsers(){
         if(users.length===0){
-            return <h1>nenhum encontrado</h1>
+            return <h4>NO USER FOUND</h4>
         }
         else{
             return(
                 <>
-                    {users.map((el,i)=><CardUser name={el.name} profilePic={el.profilePic}/>)}
+                    {users.map((el,i)=><CardUser name={el.name} profilePic={el.profilePic} id={el.id}/>)}
                 </>
             )
             
@@ -60,7 +62,7 @@ export default function InputSeachUsers(){
             />
         </Input>
 
-        <Users>
+        <Users selecionado={activeButton}>
             {showUsers()}
         </Users>
         
@@ -104,5 +106,11 @@ const Users = styled.div`
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
+    display : ${props=> props.selecionado?"block":"none"};
 
+    h4{
+        margin-top: 15px;
+        text-align: center;
+        color: red;
+    }
 `
