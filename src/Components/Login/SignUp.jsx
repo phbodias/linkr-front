@@ -48,7 +48,7 @@ export default function SignUp() {
           <Input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="email"
             value={data.email}
             onChange={handleInputChange}
             desabilitado={loading}
@@ -56,7 +56,7 @@ export default function SignUp() {
           <Input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="password"
             value={data.password}
             onChange={handleInputChange}
             desabilitado={loading}
@@ -64,7 +64,7 @@ export default function SignUp() {
           <Input
             type="text"
             name="name"
-            placeholder="Username"
+            placeholder="username"
             value={data.name}
             onChange={handleInputChange}
             desabilitado={loading}
