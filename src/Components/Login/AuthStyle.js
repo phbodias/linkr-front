@@ -22,11 +22,11 @@ const Container = styled.div`
     flex-direction: column;
   }
 
-  @media(min-width: 1131px){
+  @media (min-width: 1131px) {
     justify-content: center;
   }
 
-  @media(max-width: 1130px){
+  @media (max-width: 1130px) {
     top: 175px;
     min-width: 100vw;
     height: calc(100vh - 175px);
@@ -54,8 +54,10 @@ const Input = styled.input`
     line-height: 40px;
   }
 
-  @media(max-width: 1130px){
+  @media (max-width: 700px) {
     width: 300px;
+    height: 25px;
+    font-size: 22px;
   }
 `;
 
@@ -79,7 +81,7 @@ const Button = styled.button`
     filter: brightness(1.2);
   }
 
-  @media(max-width: 1130px){
+  @media (max-width: 700px) {
     min-width: 300px;
   }
 `;
