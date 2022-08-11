@@ -6,6 +6,8 @@ import UserContext from "../contexts/UserContext";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
 
+
+
 export default function PostsPage() {
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
@@ -127,7 +129,6 @@ export default function PostsPage() {
                 <p>There are no posts yet</p>
         
     );
-        console.log(hashtags);
     return (
         <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
     )
