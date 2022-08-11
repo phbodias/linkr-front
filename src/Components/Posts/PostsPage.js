@@ -4,6 +4,7 @@ import { ThreeDots } from "react-loader-spinner";
 import styled from "styled-components";
 import UserContext from "../../contexts/UserContext";
 import Post from "./Post";
+import Header from "../Header";
 
 export default function PostsPage() {
     const { userData } = useContext(UserContext);
@@ -62,7 +63,9 @@ export default function PostsPage() {
     }
 
     return (
+        
         <Container>
+            <Header/>
             <h1>timeline</h1>
             <CreatePost disable={disable}>
                 <img src={userData.profilePic} alt="" />
