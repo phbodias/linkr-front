@@ -1,20 +1,93 @@
 import styled from "styled-components";
+import axios from "axios";
 import { MdEdit } from 'react-icons/md'
 import { AiFillDelete } from 'react-icons/ai'
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 
-export default function Post({ id,userData, urlData, comment, likesCount, likes, openModal }) {
-    let description = urlData.description.substring(0, 150)
+export default function Post({ id, userData, 
+    urlData, comment, likesCount, likes, openModal }) {
 
-    if (description.length === 150) {
-        description += '...'
+    const [currComment, setComment] = useState(comment)
+    const [editPost, setEditMode] = useState(false)
+    const [disable, setDisable] = useState(false);
+    const token = localStorage.getItem('tokenLinker');
+
+    let description = formatUrlData(urlData.description,'description')
+    let title = formatUrlData(urlData.title)
+    let url = formatUrlData(urlData.url)
+
+    function formatUrlData(text,field='') {
+        let textOutput
+        if(field==='description'){
+            textOutput = text.substring(0, 150);
+            if(textOutput.length === 150) textOutput += '...'
+        } else {
+            textOutput = text.substring(0, 55);
+            if(textOutput.length === 55) textOutput += '...'
+        }
+        return textOutput
     }
+
+    function InputFocus() {
+        const inputRef = useRef();
+        useEffect(() => {
+            inputRef.current.focus();
+        }, []);
+
+        return <EditInput
+            ref={inputRef}
+            type="text"
+            value={currComment}
+            onChange={e => setComment(e.target.value)}
+            onKeyDown={e => handleEdit(e.code)}
+            disabled={disable}
+            changeOpacity={disable}
+        />;
+    }
+
+    function handleEdit(code) {
+        switch (code) {
+            case 'Enter':
+                updatePost();
+                break;
+            case 'Escape':
+                setComment(comment);
+                setEditMode(false);
+                break;
+            case 'ClickIcon':
+                if (editPost) setComment(comment);
+                setEditMode(!editPost);
+                break
+            default:
+                break;
+        }
+    }
+
+    function updatePost () {
+        setDisable(true);
+        const URL = `https://backlinkr.herokuapp.com/posts/${id}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.put(URL, {comment:currComment}, config);
+        promise.then(()=>{
+            window.location.reload(false);
+        })
+        promise.catch(()=>{
+            alert('Your changes could not be saved');
+            setDisable(false);
+        })
+    }
+    
 
     const navigate = useNavigate();
 
-    function textWithoutHashtag(text){
-        return text?.replace('#','');
+    function textWithoutHashtag(text) {
+        return text?.replace('#', '');
     }
 
     return (
@@ -26,22 +99,25 @@ export default function Post({ id,userData, urlData, comment, likesCount, likes,
                 <div>
                     <h2>{userData.name}</h2>
                     <Icons>
-                        <MdEdit />
-                        <AiFillDelete onClick={()=>openModal(id)} />
+                        <MdEdit onClick={()=>handleEdit('ClickIcon')} />
+                        <AiFillDelete onClick={() => openModal(id)} />
                     </Icons>
                 </div>
-                <ReactTagify
-                    tagStyle = { tagStyle }
-                    tagClicked = {(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
-                >
-                    <p>{comment}</p>
-                </ReactTagify>
-                
+                {editPost ?
+                    <InputFocus />
+                    :
+                    <ReactTagify
+                        tagStyle={tagStyle}
+                        tagClicked={(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
+                    >
+                        <p>{currComment}</p>
+                    </ReactTagify>}
+
                 <URLdiv href={urlData.url} target="_blank" rel="noreferrer" >
                     <span>
-                        <h3>{urlData.title}</h3>
+                        <h3>{title}</h3>
                         <p>{description}</p>
-                        <p>{urlData.url}</p>
+                        <p>{url}</p>
                     </span>
                     <div>
                         <img src={urlData.image} alt="" />
@@ -56,7 +132,7 @@ const tagStyle = {
     color: 'white',
     fontWeight: 700,
     cursor: 'pointer'
-  };
+};
 
 const Container = styled.div`
     width:100%;
@@ -107,6 +183,17 @@ justify-content:space-between;
 align-items:center;
 color:#FFFFFF;
 font-size:20px;
+`
+const EditInput = styled.input`
+opacity:${({ changeOpacity }) => changeOpacity ? '0.5' : '1'};
+border:none;
+border-radius:5px;
+width:100%;
+font-size:16px;
+font-family:'Lato', sans-serif;
+color:#4C4C4C;
+padding:5px 10px;
+box-sizing:border-box;
 `
 
 const URLdiv = styled.a`

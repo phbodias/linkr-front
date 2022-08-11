@@ -114,7 +114,6 @@ export default function PostsPage() {
 
     function createNewPost(e) {
         e.preventDefault();
-        console.log(newPost)
         setDisable(true);
         const URL = 'https://backlinkr.herokuapp.com/posts';
         const config = {
@@ -329,15 +328,3 @@ button{
     height:30px;
 }
 `
-
-//const Timeline = styled.div`
-// width:50%;
-// box-sizing:border-box;
-// display:flex;
-// flex-direction:column;
-// align-items:center;
-// font-size:20px;
-// color:#FFFFFF;
-// margin:8px 0;
-// text-align:center;
-//`
