@@ -7,7 +7,7 @@ import styled from "styled-components";
 import CardUser from './CardUser';
 
 
-export default function InputSeachUsers(){
+export default function InputSearchUsers(){
 
 
     const token = localStorage.getItem('tokenLinker')
