@@ -4,7 +4,7 @@ import axios from "axios"
 import { ThreeDots } from "react-loader-spinner";
 import { useState } from "react";
 import styled from "styled-components";
-import Post from "../Components/Posts/Post" 
+// import Post from "../Components/Posts/Post" 
 
 
 
@@ -21,16 +21,19 @@ export default function TelaUser(){
     React.useEffect(()=>{
         const promisse = axios.get(`http://localhost:4001/user/${id}`)
 
+        setLoading(true);
         promisse.then(getUserSucess)
         promisse.catch(getUserFail)
-    },[token])
+    },[token,id])
 
     function getUserSucess(response){
          setPostList(response.data)
+         setLoading(false);
     }
 
     function getUserFail(){
         console.log('fail')
+        setLoading(false);
     }
 
     return(
