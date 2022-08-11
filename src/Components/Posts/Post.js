@@ -1,16 +1,17 @@
 import styled from "styled-components";
+import { MdEdit } from 'react-icons/md'
+import { AiFillDelete } from 'react-icons/ai'
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 
-export default function Post({ name, profilePic, urlData, comment, likes }) {
+export default function Post({ id,userData, urlData, comment, likesCount, likes, openModal }) {
+    let description = urlData.description.substring(0, 150)
+
+    if (description.length === 150) {
+        description += '...'
+    }
 
     const navigate = useNavigate();
-
-    const tagStyle = {
-        color: 'white',
-        fontWeight: 700,
-        cursor: 'pointer'
-      };
 
     function textWithoutHashtag(text){
         return text?.replace('#','');
@@ -19,10 +20,16 @@ export default function Post({ name, profilePic, urlData, comment, likes }) {
     return (
         <Container>
             <div>
-                <img src={profilePic} alt="" />
+                <img src={userData.picture} alt="" />
             </div>
             <span>
-                <h2>{name}</h2>
+                <div>
+                    <h2>{userData.name}</h2>
+                    <Icons>
+                        <MdEdit />
+                        <AiFillDelete onClick={()=>openModal(id)} />
+                    </Icons>
+                </div>
                 <ReactTagify
                     tagStyle = { tagStyle }
                     tagClicked = {(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
@@ -33,7 +40,7 @@ export default function Post({ name, profilePic, urlData, comment, likes }) {
                 <URLdiv href={urlData.url} target="_blank" rel="noreferrer" >
                     <span>
                         <h3>{urlData.title}</h3>
-                        <p>{urlData.description}</p>
+                        <p>{description}</p>
                         <p>{urlData.url}</p>
                     </span>
                     <div>
@@ -44,6 +51,12 @@ export default function Post({ name, profilePic, urlData, comment, likes }) {
         </Container>
     )
 }
+
+const tagStyle = {
+    color: 'white',
+    fontWeight: 700,
+    cursor: 'pointer'
+  };
 
 const Container = styled.div`
     width:100%;
@@ -80,6 +93,20 @@ const Container = styled.div`
         flex-direction:column;
         align-items:flex-start;
     }
+    span>div{
+        width:100%;
+        display:flex;
+        justify-content:space-between;
+    }
+`
+
+const Icons = styled.div`
+width:50px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:#FFFFFF;
+font-size:20px;
 `
 
 const URLdiv = styled.a`
@@ -91,23 +118,21 @@ height:160px;
 width:100%;
 border: 1px solid #C4C4C4;
 border-radius: 10px;
-position:relative;
+overflow:hidden;
 
 div{
-    position:absolute;
-    right:-1px;
-    bottom:-1px;
     display:flex;
     align-items:center;
     justify-content:center;
     width:30%;
-    height:101%;
+    height:100%;
     overflow: hidden;
 }
 img{
     height:100%;
-    width:auto;
+    width:100%;
     object-fit: cover;
+    border-radius:0;
 }
 span{
     width:70%;
@@ -115,17 +140,15 @@ span{
     box-sizing:border-box;
 }
 p{
-    width:100%;
     color:#9B9595;
-    font-size:10px;
+    font-size:12px;
     margin:10px 0;
-    line-height:12px;
+    line-height:13px;
 }
 p:last-child{
     color:#CECECE;
 }
 h3{
-    width:100%;
     color:#CECECE;
     font-size:16px;
     text-align:start;

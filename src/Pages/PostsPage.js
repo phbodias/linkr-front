@@ -5,20 +5,75 @@ import styled from "styled-components";
 import UserContext from "../contexts/UserContext";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
+import Modal from 'react-modal';
 
+Modal.setAppElement('#root');
 
 
 export default function PostsPage() {
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
-    const [hashtags, setHashtags] =useState(null);
+    const [postToDelete, setDelete] = useState('');
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
     const [disable, setDisable] = useState(false);
+    const token = localStorage.getItem('tokenLinker');
     const [newPost, setNewPost] = useState({
         url: "",
         comment: ""
     })
-    const token = localStorage.getItem('tokenLinker');
+
+    const postsList = (
+        postList?.length > 0 ?
+            postList.map((p, index) =>
+                <Post
+                    key={index}
+                    id={p.postId}
+                    userData={p.userOwner}
+                    urlData={p.urlData}
+                    comment={p.comment}
+                    likesCount={p.likesCount}
+                    likes={p.likes}
+                    openModal={openModal}
+                />
+            )
+            :
+            loading || !postList || !hashtags ?
+                <ThreeDots color="#FFF" height={50} width={100} />
+                :
+                <p>There are no posts yet</p>
+
+    );
+    const forms = (
+        <CreatePost disable={disable}>
+            <img src={userData.profilePic} alt="" />
+            <form onSubmit={createNewPost}>
+                <h2>What are you going to share today?</h2>
+                <input
+                    type='url'
+                    name='url'
+                    placeholder="Link to share"
+                    value={newPost.url}
+                    onChange={handleInputChange}
+                    required
+                    disabled={disable} />
+                <input
+                    type='text'
+                    name='comment'
+                    placeholder="Comment"
+                    value={newPost.comment}
+                    onChange={handleInputChange}
+                    disabled={disable} />
+                <button
+                    type='submit'
+                    disabled={disable}>
+                    {disable ? 'Publishing...' : 'Publish'}
+                </button>
+            </form>
+        </CreatePost>);
+
+
 
     useEffect(() => {
         const URL = 'https://backlinkr.herokuapp.com';
@@ -31,21 +86,21 @@ export default function PostsPage() {
         const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
             setPostList(response.data)
-            
+
         });
         promise.catch((error) => {
             console.log(error.response.data);
             alert("An error occured while trying to fetch the posts, please refresh the page");
-            setLoading(false);
         });
 
         axios.get(`${URL}/hashtags`, config)
-            .then( res => {
-                const arrayHashtags=[];
-                for (const hash of res.data){
+            .then(res => {
+                const arrayHashtags = [];
+                for (const hash of res.data) {
                     arrayHashtags.push(hash.text);
                 }
                 setHashtags([...arrayHashtags]);
+                setLoading(false);
             })
             .catch(err => {
                 console.log(err.response.data);
@@ -55,7 +110,7 @@ export default function PostsPage() {
 
     }, [token]);
 
-    
+
 
     function createNewPost(e) {
         e.preventDefault();
@@ -82,76 +137,141 @@ export default function PostsPage() {
         setNewPost({ ...newPost, [e.target.name]: e.target.value });
     }
 
-    const forms = (
-    <CreatePost disable={disable}>
-                <img src={userData.profilePic} alt="" />
-                <form onSubmit={createNewPost}>
-                    <h2>What are you going to share today?</h2>
-                    <input
-                        type='url'
-                        name='url'
-                        placeholder="Link to share"
-                        value={newPost.url}
-                        onChange={handleInputChange}
-                        required
-                        disabled={disable} />
-                    <input
-                        type='text'
-                        name='comment'
-                        placeholder="Comment"
-                        value={newPost.comment}
-                        onChange={handleInputChange}
-                        disabled={disable} />
-                    <button
-                        type='submit'
-                        disabled={disable}>
-                        {disable ? 'Publishing...' : 'Publish'}
-                    </button>
-                </form>
-    </CreatePost>);
+    function deletePost() {
+        setLoading(true);
+        const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.delete(URL, config);
+        promise.then(() => {
+            window.location.reload(false);
+        })
+        promise.catch((error) => {
+            setLoading(false);
+            closeModal();
+            console.log(error.response.data);
+            alert("The post could not be deleted");
+        })
+    }
 
-    const postsList= (
-        postList?.length > 0 ?
-            postList.map((p,index) =>
-                <Post
-                    key={index}
-                    name={p.userName}
-                    profilePic={p.profilePic}
-                    urlData={p.postUrl}
-                    comment={p.postComment}
-                    likes={p.likes}
-                />
-            )
-            :
-            loading || !postList || !hashtags  ?
-                <ThreeDots color="#FFF" height={50} width={100} />
-                :
-                <p>There are no posts yet</p>
-        
-    );
+    function openModal(id) {
+        setIsOpen(true);
+        setDelete(id);
+    }
+    function afterOpenModal() {
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
     return (
-        <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
-    )
+        <Container>
+            <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                onAfterOpen={afterOpenModal}
+                style={ModalCustomStyles}
+            >
+                {loading ?
+                    <ThreeDots color="#FFF" height={50} width={100} />
+                    :
+                    <h1
+                        style={Modalh1Style}>
+                        Are you sure you want <br /> to delete this post?
+                    </h1>}
+                <div>
+                    <button
+                        disabled={disable}
+                        style={ModalNButtonStyle}
+                        onClick={closeModal}>
+                        No, go back
+                    </button>
+                    <button
+                        disabled={disable}
+                        style={ModalYButtonStyle}
+                        onClick={deletePost}>
+                        Yes, delete it
+                    </button>
+                </div>
+            </Modal>
+        </Container>
+    );
 }
 
-// const Container = styled.div`
-// background-color:#333333;
-// height:100%;
-// width:100%;
-// display:flex;
-// flex-direction:column;
-// align-items:center;
-// box-sizing:border-box;
-// padding:100px 0 500px 0;
-// h1{
-//     font-family: 'Oswald', sans-serif;
-//     font-size:44px;
-//     font-weight:bold;
-//     margin:30px 0;
-//     width:40%;
-//     color:#FFFFFF;
-// }
-// `;
+
+
+const ModalCustomStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: '#333333',
+        borderRadius: '50px',
+        padding: '40px 130px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+};
+const Modalh1Style = {
+    color: '#FFFFFF',
+    fontSize: '34px',
+    textAlign: 'center',
+    fontWeight: '700',
+    lineHeight: '40px',
+    marginBottom: '20px'
+}
+const ModalNButtonStyle = {
+    border: 'none',
+    borderRadius: '5px',
+    backgroundColor: '#FFFFFF',
+    width: '138px',
+    height: '40px',
+    color: '#1877F2',
+    fontWeight: '700',
+    fontSize: '18px',
+    margin: '20px'
+}
+const ModalYButtonStyle = {
+    border: 'none',
+    borderRadius: '5px',
+    backgroundColor: '#1877F2',
+    width: '138px',
+    height: '40px',
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: '18px',
+    margin: '20px'
+
+}
+const Container = styled.div`
+background-color:#333333;
+height:100%;
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+box-sizing:border-box;
+padding:100px 0 500px 0;
+h1{
+    font-family: 'Oswald', sans-serif;
+    font-size:44px;
+    font-weight:bold;
+    margin:30px 0;
+    width:50%;
+    color:#FFFFFF;
+}
+
+`
 
 const CreatePost = styled.div`
 background-color:#FFFFFF;
@@ -210,7 +330,7 @@ button{
 }
 `
 
-// const Timeline = styled.div`
+//const Timeline = styled.div`
 // width:50%;
 // box-sizing:border-box;
 // display:flex;
@@ -220,4 +340,4 @@ button{
 // color:#FFFFFF;
 // margin:8px 0;
 // text-align:center;
-// `
+//`
