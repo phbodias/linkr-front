@@ -8,6 +8,7 @@ import Post from "../Components/Posts/Post"
 import { FeedPage } from "../shared/Feed/FeedPage";
 
 
+
 export default function TelaUser(){
 
     const [postList, setPostList] = useState([]);
@@ -26,6 +27,7 @@ export default function TelaUser(){
                 Authorization: `Bearer ${token}`
             }
         }
+        setLoading(true);
 
         const users = axios.get(`http://localhost:4001/user/${id}`)
         users.then(getUserSucess)
@@ -49,14 +51,17 @@ export default function TelaUser(){
             setLoading(false);
         });
 
-    },[id])
+    },[token,id])
+
 
     function getUserSucess(response){
          setUser(response.data)
+         setLoading(false);
     }
 
-    function getUserFail(error){
-        console.log(error.response.data)
+    function getUserFail(){
+        console.log('fail')
+        setLoading(false);
     }
 
     function getPostSucess(response){
@@ -64,10 +69,7 @@ export default function TelaUser(){
         console.log(response.data)
     }
 
-    function getUserFail(error){
-        console.log(error)
-        alert('erro requisicao posts')
-    }
+   
 
     
 

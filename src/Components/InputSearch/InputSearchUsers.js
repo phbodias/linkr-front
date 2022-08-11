@@ -27,7 +27,7 @@ export default function InputSearchUsers(){
         getUsersByName.then(getUsersByNameSucess)
         getUsersByName.catch(getUsersByNameFail)
             
-    },[searchWords])
+    },[searchWords,token])
     
     function getUsersByNameSucess(response){
         console.log(response)

@@ -1,6 +1,20 @@
 import styled from "styled-components";
+import { ReactTagify } from "react-tagify";
+import { useNavigate } from "react-router-dom";
 
 export default function Post({ name, profilePic, urlData, comment, likes }) {
+
+    const navigate = useNavigate();
+
+    const tagStyle = {
+        color: 'white',
+        fontWeight: 700,
+        cursor: 'pointer'
+      };
+
+    function textWithoutHashtag(text){
+        return text?.replace('#','');
+    }
 
     return (
         <Container>
@@ -9,7 +23,13 @@ export default function Post({ name, profilePic, urlData, comment, likes }) {
             </div>
             <span>
                 <h2>{name}</h2>
-                <p>{comment}</p>
+                <ReactTagify
+                    tagStyle = { tagStyle }
+                    tagClicked = {(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
+                >
+                    <p>{comment}</p>
+                </ReactTagify>
+                
                 <URLdiv href={urlData.url} target="_blank" rel="noreferrer" >
                     <span>
                         <h3>{urlData.title}</h3>
