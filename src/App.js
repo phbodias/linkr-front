@@ -4,7 +4,6 @@ import SignIn from "./Components/Login/SignIn";
 import InputSeachUsers from "./Components/InputSeach/InputSeachUsers";
 import TelaUser from "./Pages/TelaUser.js"
 import PostsPage from './Components/Posts/PostsPage';
-import Header from './Components/Header';
 import { useState } from "react";
 import UserContext from "./contexts/UserContext";
 
@@ -20,7 +19,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/user/:id" element={<TelaUser/>} />
         <Route path="/buscar" element ={<InputSeachUsers/>}/>
-        <Route path="/posts" element={<PostsPage />} />
+        <Route path="/timeline" element={<PostsPage />} />
       </Routes>
     </BrowserRouter>
     </UserContext.Provider>

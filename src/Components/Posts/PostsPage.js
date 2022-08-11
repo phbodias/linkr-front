@@ -24,7 +24,7 @@ export default function PostsPage() {
             }
         }
         setLoading(true);
-        const promise = axios.get(URL, config)
+        const promise = axios.get(URL, config);
         promise.then(response => {
             setPostList(response.data)
             setLoading(false);
@@ -34,7 +34,7 @@ export default function PostsPage() {
             alert("An error occured while trying to fetch the posts, please refresh the page");
             setLoading(false);
         })
-    }, [postList, token])
+    }, [token])
 
     function createNewPost(e) {
         e.preventDefault();
@@ -46,14 +46,9 @@ export default function PostsPage() {
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(URL, { ...newPost, userId: userData.id }, config)
+        const promise = axios.post(URL, newPost, config)
         promise.then(() => {
-            setNewPost({
-                url: "",
-                comment: ""
-            });
-            setDisable(false);
-            setPostList([])
+            window.location.reload(false);
         })
         promise.catch((error) => {
             console.log(error.response.data);
@@ -97,12 +92,13 @@ export default function PostsPage() {
             </CreatePost>
             <Timeline>
                 {postList?.length > 0 ?
-                    postList.map(p =>
+                    postList.map((p,index) =>
                         <Post
-                            name={p.name}
+                            key={index}
+                            name={p.userName}
                             profilePic={p.profilePic}
-                            urlData={p.url}
-                            comment={p.comment}
+                            urlData={p.postUrl}
+                            comment={p.postComment}
                             likes={p.likes}
                         />
                     )
@@ -120,12 +116,13 @@ export default function PostsPage() {
 
 const Container = styled.div`
 background-color:#333333;
-height:100vh;
+height:100%;
 width:100%;
 display:flex;
 flex-direction:column;
 align-items:center;
 box-sizing:border-box;
+padding:100px 0 500px 0;
 h1{
     font-family: 'Oswald', sans-serif;
     font-size:44px;
@@ -141,9 +138,9 @@ const CreatePost = styled.div`
 background-color:#FFFFFF;
 margin-bottom:15px;
 display:flex;
-border-radius:5px;
+border-radius:10px;
 padding:18px 24px;
-width:40%;
+width:50%;
 box-sizing:border-box;
 position:relative;
 img{
@@ -195,7 +192,7 @@ button{
 `
 
 const Timeline = styled.div`
-width:40%;
+width:50%;
 box-sizing:border-box;
 display:flex;
 flex-direction:column;

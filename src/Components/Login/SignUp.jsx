@@ -86,7 +86,7 @@ export default function SignUp() {
             )}
           </Button>
         </form>
-        <StyledLink to="/signin">Switch back to log in</StyledLink>
+        <StyledLink to="/">Switch back to log in</StyledLink>
       </Container>
     </>
   );
