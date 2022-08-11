@@ -2,44 +2,115 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import styled from "styled-components";
-import UserContext from "../../contexts/UserContext";
-import Post from "./Post";
+import UserContext from "../contexts/UserContext";
+import Post from "../Components/Posts/Post";
+import { FeedPage } from "../shared/Feed/FeedPage";
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
 
+
 export default function PostsPage() {
     const { userData } = useContext(UserContext);
-    const [postList, setPostList] = useState([]);
-    const [modalIsOpen, setIsOpen] = useState(false);
+    const [postList, setPostList] = useState(null);
     const [postToDelete, setDelete] = useState('');
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
     const [disable, setDisable] = useState(false);
+    const token = localStorage.getItem('tokenLinker');
     const [newPost, setNewPost] = useState({
         url: "",
         comment: ""
     })
-    const token = localStorage.getItem('tokenLinker');
+
+    const postsList = (
+        postList?.length > 0 ?
+            postList.map((p, index) =>
+                <Post
+                    key={index}
+                    id={p.postId}
+                    userData={p.userOwner}
+                    urlData={p.urlData}
+                    comment={p.comment}
+                    likesCount={p.likesCount}
+                    likes={p.likes}
+                    openModal={openModal}
+                />
+            )
+            :
+            loading || !postList || !hashtags ?
+                <ThreeDots color="#FFF" height={50} width={100} />
+                :
+                <p>There are no posts yet</p>
+
+    );
+    const forms = (
+        <CreatePost disable={disable}>
+            <img src={userData.profilePic} alt="" />
+            <form onSubmit={createNewPost}>
+                <h2>What are you going to share today?</h2>
+                <input
+                    type='url'
+                    name='url'
+                    placeholder="Link to share"
+                    value={newPost.url}
+                    onChange={handleInputChange}
+                    required
+                    disabled={disable} />
+                <input
+                    type='text'
+                    name='comment'
+                    placeholder="Comment"
+                    value={newPost.comment}
+                    onChange={handleInputChange}
+                    disabled={disable} />
+                <button
+                    type='submit'
+                    disabled={disable}>
+                    {disable ? 'Publishing...' : 'Publish'}
+                </button>
+            </form>
+        </CreatePost>);
+
+
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com/posts';
+        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
         setLoading(true);
-        const promise = axios.get(URL, config);
+        const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
             setPostList(response.data)
-            setLoading(false);
-        })
+
+        });
         promise.catch((error) => {
             console.log(error.response.data);
             alert("An error occured while trying to fetch the posts, please refresh the page");
-            setLoading(false);
-        })
-    }, [token])
+        });
+
+        axios.get(`${URL}/hashtags`, config)
+            .then(res => {
+                const arrayHashtags = [];
+                for (const hash of res.data) {
+                    arrayHashtags.push(hash.text);
+                }
+                setHashtags([...arrayHashtags]);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.log(err.response.data);
+                alert("An error occured while trying to fetch the trenddins, please refresh the page");
+                setLoading(false);
+            });
+
+    }, [token]);
+
+
 
     function createNewPost(e) {
         e.preventDefault();
@@ -67,14 +138,13 @@ export default function PostsPage() {
     }
 
     function deletePost() {
-        setLoading(true);
         const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        alert([postToDelete,loading])
+        alert([postToDelete, loading, 'Testando, por favor dê refresh na página'])
         const promise = axios.delete(URL, config);
         promise.then(() => {
             window.location.reload(false);
@@ -91,63 +161,32 @@ export default function PostsPage() {
         setIsOpen(true);
         setDelete(id);
     }
+    function afterOpenModal() {
+        setLoading(true);
+    }
 
-    function closeModal() {
-        setIsOpen(false);
+    function closeModal(option) {
+        switch (option) {
+            case 'Back':
+                setIsOpen(false);
+                break
+            case 'Delete':
+                setLoading(true);
+                deletePost()
+                break
+            default:
+                break
+        }
     }
 
     return (
         <Container>
             <h1>timeline</h1>
-            <CreatePost disable={disable}>
-                <img src={userData.profilePic} alt="" />
-                <form onSubmit={createNewPost}>
-                    <h2>What are you going to share today?</h2>
-                    <input
-                        type='url'
-                        name='url'
-                        placeholder="Link to share"
-                        value={newPost.url}
-                        onChange={handleInputChange}
-                        required
-                        disabled={disable} />
-                    <input
-                        type='text'
-                        name='comment'
-                        placeholder="Comment"
-                        value={newPost.comment}
-                        onChange={handleInputChange}
-                        disabled={disable} />
-                    <button
-                        type='submit'
-                        disabled={disable}>
-                        {disable ? 'Publishing...' : 'Publish'}
-                    </button>
-                </form>
-            </CreatePost>
-            <Timeline>
-                {postList?.length > 0 ?
-                    postList.map((p, index) =>
-                        <Post
-                            key={index}
-                            name={p.userName}
-                            profilePic={p.profilePic}
-                            urlData={p.postUrl}
-                            comment={p.postComment}
-                            likes={p.likes}
-                            openModal={openModal}
-                        />
-                    )
-                    :
-                    loading ?
-                        <ThreeDots color="#FFF" height={50} width={100} />
-                        :
-                        <p>There are no posts yet</p>
-                }
-            </Timeline>
+            <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
+                onAfterOpen={afterOpenModal}
                 style={ModalCustomStyles}
             >
                 {loading ?
@@ -161,20 +200,23 @@ export default function PostsPage() {
                     <button
                         disabled={disable}
                         style={ModalNButtonStyle}
-                        onClick={closeModal}>
+                        onClick={() => closeModal('Back')}>
                         No, go back
                     </button>
                     <button
                         disabled={disable}
                         style={ModalYButtonStyle}
-                        onClick={deletePost}>
+                        onClick={() => closeModal('Delete')}>
                         Yes, delete it
                     </button>
                 </div>
             </Modal>
         </Container>
-    )
+    );
 }
+
+
+
 const ModalCustomStyles = {
     content: {
         top: '50%',
@@ -187,9 +229,9 @@ const ModalCustomStyles = {
         borderRadius: '50px',
         padding: '40px 130px',
         boxSizing: 'border-box',
-        display:'flex',
-        flexDirection:'column',
-        alignItems:'center'
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
 };
 const Modalh1Style = {
@@ -249,7 +291,7 @@ margin-bottom:15px;
 display:flex;
 border-radius:10px;
 padding:18px 24px;
-width:50%;
+width:100%;
 box-sizing:border-box;
 position:relative;
 img{
@@ -300,14 +342,14 @@ button{
 }
 `
 
-const Timeline = styled.div`
-width:50%;
-box-sizing:border-box;
-display:flex;
-flex-direction:column;
-align-items:center;
-font-size:20px;
-color:#FFFFFF;
-margin:8px 0;
-text-align:center;
-`
+//const Timeline = styled.div`
+// width:50%;
+// box-sizing:border-box;
+// display:flex;
+// flex-direction:column;
+// align-items:center;
+// font-size:20px;
+// color:#FFFFFF;
+// margin:8px 0;
+// text-align:center;
+//`

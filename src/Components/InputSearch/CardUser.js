@@ -5,8 +5,8 @@ export default function CardUser({name, profilePic,id}){
     return(
         <Link to={"/user/"+id} >
             <Container>
-                <img src={profilePic}></img>
-                {name}
+                <img src={profilePic} alt="profile pic rounded"></img>
+                <p>{name}</p>
             </Container>
         </Link>
         
@@ -29,5 +29,12 @@ const Container = styled.div`
         height: 39px;
         border-radius: 50%;
         margin-right: 10px;
+    }
+
+    p{
+        color:#515151;
+        font-size: 19px;
+        font-weight: 400;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     }
 `

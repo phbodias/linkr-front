@@ -7,7 +7,7 @@ import styled from "styled-components";
 import CardUser from './CardUser';
 
 
-export default function InputSeachUsers(){
+export default function InputSearchUsers(){
 
 
     const token = localStorage.getItem('tokenLinker')
@@ -20,12 +20,17 @@ export default function InputSeachUsers(){
   
 
     React.useEffect(()=>{
-        const URL = `http://localhost:4001/busca/${searchWords}`
-        const getUsersByName = axios.get(URL)
+        const URL = `https://backlinkr.herokuapp.com/busca/${searchWords}`
+        const config = { 
+            headers: { 
+                Authorization: `Bearer ${token}` 
+            } 
+        } 
+        const getUsersByName = axios.get(URL,config)
         getUsersByName.then(getUsersByNameSucess)
         getUsersByName.catch(getUsersByNameFail)
             
-    },[searchWords])
+    },[searchWords,token])
     
     function getUsersByNameSucess(response){
         console.log(response)

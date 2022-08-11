@@ -1,33 +1,46 @@
 import styled from "styled-components";
 import { MdEdit } from 'react-icons/md'
 import { AiFillDelete } from 'react-icons/ai'
+import { ReactTagify } from "react-tagify";
+import { useNavigate } from "react-router-dom";
 
-export default function Post({ id,name, profilePic, urlData, comment, likes, openModal }) {
+export default function Post({ id,userData, urlData, comment, likesCount, likes, openModal }) {
     let description = urlData.description.substring(0, 150)
 
     if (description.length === 150) {
         description += '...'
     }
 
+    const navigate = useNavigate();
+
+    function textWithoutHashtag(text){
+        return text?.replace('#','');
+    }
 
     return (
         <Container>
             <div>
-                <img src={profilePic} alt="" />
+                <img src={userData.picture} alt="" />
             </div>
             <span>
                 <div>
-                    <h2>{name}</h2>
+                    <h2>{userData.name}</h2>
                     <Icons>
                         <MdEdit />
-                        <AiFillDelete onClick={()=>openModal(9)} />
+                        <AiFillDelete onClick={()=>openModal(id)} />
                     </Icons>
                 </div>
-                <p>{comment}</p>
+                <ReactTagify
+                    tagStyle = { tagStyle }
+                    tagClicked = {(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
+                >
+                    <p>{comment}</p>
+                </ReactTagify>
+                
                 <URLdiv href={urlData.url} target="_blank" rel="noreferrer" >
                     <span>
                         <h3>{urlData.title}</h3>
-                        <p>{description}</p>
+                        <p>{urlData.description}</p>
                         <p>{urlData.url}</p>
                     </span>
                     <div>
@@ -39,6 +52,11 @@ export default function Post({ id,name, profilePic, urlData, comment, likes, ope
     )
 }
 
+const tagStyle = {
+    color: 'white',
+    fontWeight: 700,
+    cursor: 'pointer'
+  };
 
 const Container = styled.div`
     width:100%;
@@ -86,6 +104,9 @@ const Icons = styled.div`
 width:50px;
 display:flex;
 justify-content:space-between;
+align-items:center;
+color:#FFFFFF;
+font-size:20px;
 `
 
 const URLdiv = styled.a`
