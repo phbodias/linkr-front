@@ -15,12 +15,12 @@ export default function InputSeachUsers(){
     const [searchWords, setsearchWords] = React.useState("")
     const [activeButton, setActiveButton] = React.useState(false)
     
-    console.log('branch nova')
+
     console.log(token)
   
 
     React.useEffect(()=>{
-        const URL = `http://localhost:4001/busca/${searchWords}`
+        const URL = `https://backlinkr.herokuapp.com/busca/${searchWords}`
         const config = { 
             headers: { 
                 Authorization: `Bearer ${token}` 
