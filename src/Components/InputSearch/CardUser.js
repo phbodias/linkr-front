@@ -5,7 +5,7 @@ export default function CardUser({name, profilePic,id}){
     return(
         <Link to={"/user/"+id} >
             <Container>
-                <img src={profilePic}></img>
+                <img src={profilePic} alt='profile pic rounded'></img>
                 {name}
             </Container>
         </Link>

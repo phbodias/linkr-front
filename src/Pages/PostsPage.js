@@ -2,12 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import styled from "styled-components";
-import UserContext from "../../contexts/UserContext";
-import Post from "./Post";
+import UserContext from "../contexts/UserContext";
+import Post from "../Components/Posts/Post";
+import { FeedPage } from "../shared/Feed/FeedPage";
 
 export default function PostsPage() {
     const { userData } = useContext(UserContext);
-    const [postList, setPostList] = useState([]);
+    const [postList, setPostList] = useState(null);
+    const [hashtags, setHashtags] =useState(null);
     const [loading, setLoading] = useState(false);
     const [disable, setDisable] = useState(false);
     const [newPost, setNewPost] = useState({
@@ -17,24 +19,41 @@ export default function PostsPage() {
     const token = localStorage.getItem('tokenLinker');
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com/posts';
+        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
         setLoading(true);
-        const promise = axios.get(URL, config);
+        const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
             setPostList(response.data)
-            setLoading(false);
-        })
+            
+        });
         promise.catch((error) => {
             console.log(error.response.data);
             alert("An error occured while trying to fetch the posts, please refresh the page");
             setLoading(false);
-        })
-    }, [token])
+        });
+
+        axios.get(`${URL}/hashtags`, config)
+            .then( res => {
+                const arrayHashtags=[];
+                for (const hash of res.data){
+                    arrayHashtags.push(hash.text);
+                }
+                setHashtags([...arrayHashtags]);
+            })
+            .catch(err => {
+                console.log(err.response.data);
+                alert("An error occured while trying to fetch the trenddins, please refresh the page");
+                setLoading(false);
+            });
+
+    }, [token]);
+
+    
 
     function createNewPost(e) {
         e.preventDefault();
@@ -61,10 +80,8 @@ export default function PostsPage() {
         setNewPost({ ...newPost, [e.target.name]: e.target.value });
     }
 
-    return (
-        <Container>
-            <h1>timeline</h1>
-            <CreatePost disable={disable}>
+    const forms = (
+    <CreatePost disable={disable}>
                 <img src={userData.profilePic} alt="" />
                 <form onSubmit={createNewPost}>
                     <h2>What are you going to share today?</h2>
@@ -89,50 +106,51 @@ export default function PostsPage() {
                         {disable ? 'Publishing...' : 'Publish'}
                     </button>
                 </form>
-            </CreatePost>
-            <Timeline>
-                {postList?.length > 0 ?
-                    postList.map((p,index) =>
-                        <Post
-                            key={index}
-                            name={p.userName}
-                            profilePic={p.profilePic}
-                            urlData={p.postUrl}
-                            comment={p.postComment}
-                            likes={p.likes}
-                        />
-                    )
-                    :
-                    loading ?
-                        <ThreeDots color="#FFF" height={50} width={100} />
-                        :
-                        <p>There are no posts yet</p>
-                }
+    </CreatePost>);
 
-            </Timeline>
-        </Container>
+    const postsList= (
+        postList?.length > 0 ?
+            postList.map((p,index) =>
+                <Post
+                    key={index}
+                    name={p.userName}
+                    profilePic={p.profilePic}
+                    urlData={p.postUrl}
+                    comment={p.postComment}
+                    likes={p.likes}
+                />
+            )
+            :
+            loading || !postList || !hashtags  ?
+                <ThreeDots color="#FFF" height={50} width={100} />
+                :
+                <p>There are no posts yet</p>
+        
+    );
+        console.log(hashtags);
+    return (
+        <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
     )
 }
 
-const Container = styled.div`
-background-color:#333333;
-height:100%;
-width:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-box-sizing:border-box;
-padding:100px 0 500px 0;
-h1{
-    font-family: 'Oswald', sans-serif;
-    font-size:44px;
-    font-weight:bold;
-    margin:30px 0;
-    width:40%;
-    color:#FFFFFF;
-}
-
-`
+// const Container = styled.div`
+// background-color:#333333;
+// height:100%;
+// width:100%;
+// display:flex;
+// flex-direction:column;
+// align-items:center;
+// box-sizing:border-box;
+// padding:100px 0 500px 0;
+// h1{
+//     font-family: 'Oswald', sans-serif;
+//     font-size:44px;
+//     font-weight:bold;
+//     margin:30px 0;
+//     width:40%;
+//     color:#FFFFFF;
+// }
+// `;
 
 const CreatePost = styled.div`
 background-color:#FFFFFF;
@@ -140,7 +158,7 @@ margin-bottom:15px;
 display:flex;
 border-radius:10px;
 padding:18px 24px;
-width:50%;
+width:100%;
 box-sizing:border-box;
 position:relative;
 img{
@@ -191,14 +209,14 @@ button{
 }
 `
 
-const Timeline = styled.div`
-width:50%;
-box-sizing:border-box;
-display:flex;
-flex-direction:column;
-align-items:center;
-font-size:20px;
-color:#FFFFFF;
-margin:8px 0;
-text-align:center;
-`
+// const Timeline = styled.div`
+// width:50%;
+// box-sizing:border-box;
+// display:flex;
+// flex-direction:column;
+// align-items:center;
+// font-size:20px;
+// color:#FFFFFF;
+// margin:8px 0;
+// text-align:center;
+// `

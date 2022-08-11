@@ -76,6 +76,9 @@ const Button = styled.button`
   font-weight: 700;
   font-size: 27px;
   line-height: 40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
   :hover {
     filter: brightness(1.2);
