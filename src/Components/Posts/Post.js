@@ -40,7 +40,7 @@ export default function Post({ id,userData, urlData, comment, likesCount, likes,
                 <URLdiv href={urlData.url} target="_blank" rel="noreferrer" >
                     <span>
                         <h3>{urlData.title}</h3>
-                        <p>{urlData.description}</p>
+                        <p>{description}</p>
                         <p>{urlData.url}</p>
                     </span>
                     <div>
@@ -118,6 +118,7 @@ height:160px;
 width:100%;
 border: 1px solid #C4C4C4;
 border-radius: 10px;
+overflow:hidden;
 
 div{
     display:flex;

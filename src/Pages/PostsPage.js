@@ -138,13 +138,13 @@ export default function PostsPage() {
     }
 
     function deletePost() {
+        setLoading(true);
         const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        alert([postToDelete, loading, 'Testando, por favor dê refresh na página'])
         const promise = axios.delete(URL, config);
         promise.then(() => {
             window.location.reload(false);
@@ -162,26 +162,14 @@ export default function PostsPage() {
         setDelete(id);
     }
     function afterOpenModal() {
-        setLoading(true);
     }
 
-    function closeModal(option) {
-        switch (option) {
-            case 'Back':
-                setIsOpen(false);
-                break
-            case 'Delete':
-                setLoading(true);
-                deletePost()
-                break
-            default:
-                break
-        }
+    function closeModal() {
+        setIsOpen(false);
     }
 
     return (
         <Container>
-            <h1>timeline</h1>
             <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
             <Modal
                 isOpen={modalIsOpen}
@@ -200,13 +188,13 @@ export default function PostsPage() {
                     <button
                         disabled={disable}
                         style={ModalNButtonStyle}
-                        onClick={() => closeModal('Back')}>
+                        onClick={closeModal}>
                         No, go back
                     </button>
                     <button
                         disabled={disable}
                         style={ModalYButtonStyle}
-                        onClick={() => closeModal('Delete')}>
+                        onClick={deletePost}>
                         Yes, delete it
                     </button>
                 </div>
