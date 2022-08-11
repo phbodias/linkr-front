@@ -19,7 +19,7 @@ export default function PostsPage() {
         comment: ""
     })
     const token = localStorage.getItem('tokenLinker');
-
+console.log(postList)
     useEffect(() => {
         const URL = 'https://backlinkr.herokuapp.com';
         const config = {

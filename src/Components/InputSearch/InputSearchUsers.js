@@ -16,9 +16,6 @@ export default function InputSearchUsers(){
     const [activeButton, setActiveButton] = React.useState(false)
     
 
-    console.log(token)
-  
-
     React.useEffect(()=>{
         const URL = `https://backlinkr.herokuapp.com/busca/${searchWords}`
         const config = { 
@@ -48,7 +45,7 @@ export default function InputSearchUsers(){
         else{
             return(
                 <>
-                    {users.map((el,i)=><CardUser name={el.name} profilePic={el.profilePic} id={el.id}/>)}
+                    {users.map((el,i)=><CardUser key={i} name={el.name} profilePic={el.profilePic} id={el.id}/>)}
                 </>
             )
             

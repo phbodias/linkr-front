@@ -4,49 +4,95 @@ import axios from "axios"
 import { ThreeDots } from "react-loader-spinner";
 import { useState } from "react";
 import styled from "styled-components";
-import Post from "../Components/Posts/Post" 
-
+import Post from "../Components/Posts/Post"
+import { FeedPage } from "../shared/Feed/FeedPage";
 
 
 export default function TelaUser(){
 
-    const token = localStorage.getItem('tokenLinker');
     const [postList, setPostList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState('')
+    const [hashtags, setHashtags] =useState(null);
+    
 
-    //console.log(postList)
-
+  
     const {id} = useParams()
+    const token = localStorage.getItem('tokenLinker');
 
     React.useEffect(()=>{
-        const promisse = axios.get(`http://localhost:4001/user/${id}`)
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
 
-        promisse.then(getUserSucess)
-        promisse.catch(getUserFail)
-    },[token])
+        const users = axios.get(`http://localhost:4001/user/${id}`)
+        users.then(getUserSucess)
+        users.catch(getUserFail)
+
+        const posts = axios.get(`http://localhost:4001/posts/${id}`)
+        posts.then(getPostSucess)
+        posts.catch(getUserFail)
+
+        axios.get(`https://backlinkr.herokuapp.com/hashtags`, config)
+        .then( res => {
+            const arrayHashtags=[];
+            for (const hash of res.data){
+                arrayHashtags.push(hash.text);
+            }
+            setHashtags([...arrayHashtags]);
+        })
+        .catch(err => {
+            console.log(err.response.data);
+            alert("An error occured while trying to fetch the trenddins, please refresh the page");
+            setLoading(false);
+        });
+
+    },[id])
 
     function getUserSucess(response){
-         setPostList(response.data)
+         setUser(response.data)
     }
 
-    function getUserFail(){
-        console.log('fail')
+    function getUserFail(error){
+        console.log(error.response.data)
     }
 
-    return(
-    <Timeline>
-        {postList?.length > 0 ?
+    function getPostSucess(response){
+        setPostList(response.data)
+        console.log(response.data)
+    }
+
+    function getUserFail(error){
+        console.log(error)
+        alert('erro requisicao posts')
+    }
+
+    
+
+    const postsList= (
+        postList?.length > 0 ?
             postList.map((p,index) =>
-                <Pa key={index}>{p.userId}</Pa>
+                <Post
+                    key={index}
+                    name={p.userName}
+                    profilePic={p.profilePic}
+                    urlData={p.postUrl}
+                    comment={p.postComment}
+                    likes={p.likes}
+                />
             )
             :
-            loading ?
+            loading || !postList ?
                 <ThreeDots color="#FFF" height={50} width={100} />
                 :
                 <p>There are no posts yet</p>
-        }
+        
+    );
 
-    </Timeline>
+    return(
+        <FeedPage title={`${user[0]?.name}'s posts`} posts={postsList} hashtags={hashtags}  />
     )
 }
 
