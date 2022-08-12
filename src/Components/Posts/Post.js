@@ -1,20 +1,131 @@
 import styled from "styled-components";
+import axios from "axios";
+import { MdEdit } from 'react-icons/md'
+import { AiFillDelete } from 'react-icons/ai'
+import { ReactTagify } from "react-tagify";
+import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 
-export default function Post({ name, profilePic, urlData, comment, likes }) {
+export default function Post({ id, userData, 
+    urlData, comment, likesCount, likes, openModal }) {
+
+    const [currComment, setComment] = useState(comment)
+    const [editPost, setEditMode] = useState(false)
+    const [disable, setDisable] = useState(false);
+    const token = localStorage.getItem('tokenLinker');
+
+    let description = formatUrlData(urlData.description,'description')
+    let title = formatUrlData(urlData.title)
+    let url = formatUrlData(urlData.url)
+
+    function formatUrlData(text,field='') {
+        let textOutput
+        if(field==='description'){
+            textOutput = text.substring(0, 150);
+            if(textOutput.length === 150) textOutput += '...'
+        } else {
+            textOutput = text.substring(0, 55);
+            if(textOutput.length === 55) textOutput += '...'
+        }
+        return textOutput
+    }
+
+    function moveCursorAtEnd(e) {
+        const temp_value = e.target.value
+        e.target.value = ''
+        e.target.value = temp_value
+      }
+
+    function InputFocus() {
+        const inputRef = useRef();
+        useEffect(() => {
+            inputRef.current.focus();
+        }, []);
+
+        return <EditInput
+            wrap='soft'
+            rows='3'
+            ref={inputRef}
+            onFocus={moveCursorAtEnd}
+            value={currComment}
+            onChange={e => setComment(e.target.value)}
+            onKeyDown={e => handleEdit(e.code)}
+            disabled={disable}
+            changeOpacity={disable}
+            />;
+    }
+
+    function handleEdit(code) {
+        switch (code) {
+            case 'Enter':
+                updatePost();
+                break;
+            case 'Escape':
+                setComment(comment);
+                setEditMode(false);
+                break;
+            case 'ClickIcon':
+                if (editPost) setComment(comment);
+                setEditMode(!editPost);
+                break
+            default:
+                break;
+        }
+    }
+
+    function updatePost () {
+        setDisable(true);
+        const URL = `https://backlinkr.herokuapp.com/posts/${id}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.put(URL, {comment:currComment}, config);
+        promise.then(()=>{
+            window.location.reload(false);
+        })
+        promise.catch(()=>{
+            alert('Your changes could not be saved');
+            setDisable(false);
+        })
+    }
+    
+
+    const navigate = useNavigate();
+
+    function textWithoutHashtag(text) {
+        return text?.replace('#', '');
+    }
 
     return (
         <Container>
             <div>
-                <img src={profilePic} alt="" />
+                <img src={userData.picture} alt="" />
             </div>
             <span>
-                <h2>{name}</h2>
-                <p>{comment}</p>
+                <div>
+                    <h2>{userData.name}</h2>
+                    <Icons>
+                        <MdEdit onClick={()=>handleEdit('ClickIcon')} />
+                        <AiFillDelete onClick={() => openModal(id)} />
+                    </Icons>
+                </div>
+                {editPost ?
+                    <InputFocus />
+                    :
+                    <ReactTagify
+                        tagStyle={tagStyle}
+                        tagClicked={(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
+                    >
+                        <p>{currComment}</p>
+                    </ReactTagify>}
+
                 <URLdiv href={urlData.url} target="_blank" rel="noreferrer" >
                     <span>
-                        <h3>{urlData.title}</h3>
-                        <p>{urlData.description}</p>
-                        <p>{urlData.url}</p>
+                        <h3>{title}</h3>
+                        <p>{description}</p>
+                        <p>{url}</p>
                     </span>
                     <div>
                         <img src={urlData.image} alt="" />
@@ -24,6 +135,12 @@ export default function Post({ name, profilePic, urlData, comment, likes }) {
         </Container>
     )
 }
+
+const tagStyle = {
+    color: 'white',
+    fontWeight: 700,
+    cursor: 'pointer'
+};
 
 const Container = styled.div`
     width:100%;
@@ -60,6 +177,31 @@ const Container = styled.div`
         flex-direction:column;
         align-items:flex-start;
     }
+    span>div{
+        width:100%;
+        display:flex;
+        justify-content:space-between;
+    }
+`
+
+const Icons = styled.div`
+width:50px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:#FFFFFF;
+font-size:20px;
+`
+const EditInput = styled.textarea`
+opacity:${({ changeOpacity }) => changeOpacity ? '0.5' : '1'};
+border:none;
+border-radius:5px;
+width:100%;
+font-size:16px;
+font-family:'Lato', sans-serif;
+color:#4C4C4C;
+padding:5px 10px;
+box-sizing:border-box;
 `
 
 const URLdiv = styled.a`
@@ -71,23 +213,21 @@ height:160px;
 width:100%;
 border: 1px solid #C4C4C4;
 border-radius: 10px;
-position:relative;
+overflow:hidden;
 
 div{
-    position:absolute;
-    right:-1px;
-    bottom:-1px;
     display:flex;
     align-items:center;
     justify-content:center;
     width:30%;
-    height:101%;
+    height:100%;
     overflow: hidden;
 }
 img{
     height:100%;
-    width:auto;
+    width:100%;
     object-fit: cover;
+    border-radius:0;
 }
 span{
     width:70%;
@@ -95,17 +235,15 @@ span{
     box-sizing:border-box;
 }
 p{
-    width:100%;
     color:#9B9595;
-    font-size:10px;
+    font-size:12px;
     margin:10px 0;
-    line-height:12px;
+    line-height:13px;
 }
 p:last-child{
     color:#CECECE;
 }
 h3{
-    width:100%;
     color:#CECECE;
     font-size:16px;
     text-align:start;

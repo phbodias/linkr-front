@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import InputSeachUsers from "./InputSeach/InputSeachUsers";
+import InputSearchUsers from "../Components/InputSearch/InputSearchUsers";
 
 export default function Header() {
   return (
     <Container>
       <Title>linkr</Title>
-      <InputSeachUsers />
+      <InputSearchUsers />
       <ProfilePic></ProfilePic>
     </Container>
   );
