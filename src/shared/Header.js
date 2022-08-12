@@ -15,7 +15,7 @@ position: absolute;
 width: 100%;
 top:0;
 left:0;
-height:50px;
+height:70px;
 background-color:#151515;
 color:#FFFFFF;
 padding: 10px;

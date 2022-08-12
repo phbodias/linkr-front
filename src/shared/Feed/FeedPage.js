@@ -1,11 +1,12 @@
 import { Container, Title, InnerContainer, RightInnerContainer, LeftInnerContainer, SubTitle, TextContent, SubItems} from "./FeedStyle";
 import { useNavigate } from "react-router-dom";
-
+import Header from "../Header";
 export function FeedPage({title, forms, posts, hashtags}){
     const navigate = useNavigate();
     
     return (
        <>
+       <Header/>
         <Container>
             <Title>
                 {title}
