@@ -15,17 +15,21 @@ export default function InputSearchUsers(){
     const [searchWords, setsearchWords] = React.useState("")
     const [activeButton, setActiveButton] = React.useState(false)
     
-
+    console.log("renderizou")
     React.useEffect(()=>{
-        const URL = `https://backlinkr.herokuapp.com/busca/${searchWords}`
-        const config = { 
-            headers: { 
-                Authorization: `Bearer ${token}` 
+        console.log('useEffect')
+        if(searchWords.length>2){
+            const URL = `http://backlinkr.herokuapp.com/busca/${searchWords}`
+            const config = { 
+                headers: { 
+                    Authorization: `Bearer ${token}` 
+                } 
             } 
-        } 
-        const getUsersByName = axios.get(URL,config)
-        getUsersByName.then(getUsersByNameSucess)
-        getUsersByName.catch(getUsersByNameFail)
+            const getUsersByName = axios.get(URL,config)
+            getUsersByName.then(getUsersByNameSucess)
+            getUsersByName.catch(getUsersByNameFail)
+        }
+       
             
     },[searchWords,token])
     
@@ -35,7 +39,8 @@ export default function InputSearchUsers(){
     }
 
     function getUsersByNameFail(error){
-        console.log(error)
+        console.log(error) 
+        alert('Erro na requisição do input ')
     }
 
     function showUsers(){
