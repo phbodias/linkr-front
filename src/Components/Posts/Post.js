@@ -2,17 +2,24 @@ import styled from "styled-components";
 import axios from "axios";
 import { MdEdit } from 'react-icons/md'
 import { AiFillDelete } from 'react-icons/ai'
+import { FaRegHeart, FaHeart } from 'react-icons/fa'
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 
 export default function Post({ id, userData,
     urlData, comment, likesCount, likes, openModal, isFromAuthUser }) {
-        
+
     const [currComment, setComment] = useState(comment)
     const [editPost, setEditMode] = useState(false)
     const [disable, setDisable] = useState(false);
+    const [liked,setLiked] = useState(false)
     const token = localStorage.getItem('tokenLinker');
+    const navigate = useNavigate();
+
+    function textWithoutHashtag(text) {
+        return text?.replace('#', '');
+    }
 
     let description = formatUrlData(urlData.description, 'description')
     let title = formatUrlData(urlData.title)
@@ -91,17 +98,53 @@ export default function Post({ id, userData,
         })
     }
 
-
-    const navigate = useNavigate();
-
-    function textWithoutHashtag(text) {
-        return text?.replace('#', '');
+    function addLike() {
+        setLiked(true)
+        /*const URL = `https://backlinkr.herokuapp.com/likes/${id}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(URL, { postId,userId }, config);
+        promise.then(() => {
+            window.location.reload(false);
+        })
+        promise.catch(() => {
+            alert('Your changes could not be saved');
+        })*/
     }
+    function removeLike () {
+        setLiked(false)
+        /*const URL = `https://backlinkr.herokuapp.com/likes/${id}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.delete(URL, { postId,userId }, config);
+        promise.then(() => {
+            window.location.reload(false);
+        })
+        promise.catch(() => {
+            alert('Your changes could not be saved');
+        })*/
+    }
+
 
     return (
         <Container>
             <div>
                 <img src={userData.picture} alt="" />
+                <Heart>
+                    {
+                        liked ?
+                            <FaHeart style={{color:'#AC0000'}} onClick={removeLike} />
+                            :
+                            <FaRegHeart onClick={addLike} />
+                    }
+                    <p>{likesCount} likes</p>
+                </Heart>
             </div>
             <span>
                 <div>
@@ -162,6 +205,9 @@ const Container = styled.div`
     >div{
         width:50px;
         margin-right:20px;
+        display: flex;
+        flex-direction:column;
+        align-items:center;
     }
     h2{
         font-size:20px;
@@ -195,6 +241,20 @@ justify-content:space-between;
 align-items:center;
 color:#FFFFFF;
 font-size:20px;
+`
+const Heart = styled.div`
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:24px;
+color:#FFFFFF;
+font-size:20px;
+p{
+    font-size:11px;
+    text-align:center;
+    line-height:18px;
+}
 `
 const EditInput = styled.textarea`
 opacity:${({ changeOpacity }) => changeOpacity ? '0.5' : '1'};
