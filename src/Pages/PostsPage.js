@@ -16,7 +16,6 @@ export default function PostsPage() {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [disable, setDisable] = useState(false);
     const token = localStorage.getItem('tokenLinker');
     const [newPost, setNewPost] = useState({
         url: "",
@@ -34,6 +33,7 @@ export default function PostsPage() {
                     comment={p.comment}
                     likesCount={p.likesCount}
                     likes={p.likes}
+                    isFromAuthUser={userData.id===p.userOwner.id}
                     openModal={openModal}
                 />
             )
@@ -45,7 +45,7 @@ export default function PostsPage() {
     );
 
     const forms = (
-        <CreatePost disable={disable}>
+        <CreatePost disable={loading}>
             <img src={userData.profilePic} alt="" />
             <form onSubmit={createNewPost}>
                 <h2>What are you going to share today?</h2>
@@ -56,19 +56,19 @@ export default function PostsPage() {
                     value={newPost.url}
                     onChange={handleInputChange}
                     required
-                    disabled={disable} />
-                <textarea
+                    disabled={loading} />
+                <input
                     type='text'
                     rows='3'
                     name='comment'
                     placeholder="Comment"
                     value={newPost.comment}
                     onChange={handleInputChange}
-                    disabled={disable} />
+                    disabled={loading} />
                 <button
                     type='submit'
-                    disabled={disable}>
-                    {disable ? 'Publishing...' : 'Publish'}
+                    disabled={loading}>
+                    {loading ? 'Publishing...' : 'Publish'}
                 </button>
             </form>
         </CreatePost>);
@@ -110,7 +110,7 @@ export default function PostsPage() {
 
     function createNewPost(e) {
         e.preventDefault();
-        setDisable(true);
+        setLoading(true);
         const URL = 'https://backlinkr.herokuapp.com/posts';
         const config = {
             headers: {
@@ -124,7 +124,7 @@ export default function PostsPage() {
         promise.catch((error) => {
             console.log(error.response.data);
             alert('Houve um erro ao publicar seu link')
-            setDisable(false);
+            setLoading(false);
         })
     }
 
@@ -167,7 +167,6 @@ export default function PostsPage() {
             <ModalForDelete
             modalIsOpen={modalIsOpen}
             loading={loading}
-            disable={disable}
             closeModal={closeModal}
             deletePost={deletePost}
             />

@@ -2,30 +2,37 @@ import styled from "styled-components";
 import axios from "axios";
 import { MdEdit } from 'react-icons/md'
 import { AiFillDelete } from 'react-icons/ai'
+import { FaRegHeart, FaHeart } from 'react-icons/fa'
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 
-export default function Post({ id, userData, 
-    urlData, comment, likesCount, likes, openModal }) {
+export default function Post({ id, userData,
+    urlData, comment, likesCount, likes, openModal, isFromAuthUser }) {
 
     const [currComment, setComment] = useState(comment)
     const [editPost, setEditMode] = useState(false)
     const [disable, setDisable] = useState(false);
+    const [liked,setLiked] = useState(false)
     const token = localStorage.getItem('tokenLinker');
+    const navigate = useNavigate();
 
-    let description = formatUrlData(urlData.description,'description')
+    function textWithoutHashtag(text) {
+        return text?.replace('#', '');
+    }
+
+    let description = formatUrlData(urlData.description, 'description')
     let title = formatUrlData(urlData.title)
     let url = formatUrlData(urlData.url)
 
-    function formatUrlData(text,field='') {
+    function formatUrlData(text, field = '') {
         let textOutput
-        if(field==='description'){
+        if (field === 'description') {
             textOutput = text.substring(0, 150);
-            if(textOutput.length === 150) textOutput += '...'
+            if (textOutput.length === 150) textOutput += '...'
         } else {
             textOutput = text.substring(0, 55);
-            if(textOutput.length === 55) textOutput += '...'
+            if (textOutput.length === 55) textOutput += '...'
         }
         return textOutput
     }
@@ -34,7 +41,7 @@ export default function Post({ id, userData,
         const temp_value = e.target.value
         e.target.value = ''
         e.target.value = temp_value
-      }
+    }
 
     function InputFocus() {
         const inputRef = useRef();
@@ -52,7 +59,7 @@ export default function Post({ id, userData,
             onKeyDown={e => handleEdit(e.code)}
             disabled={disable}
             changeOpacity={disable}
-            />;
+        />;
     }
 
     function handleEdit(code) {
@@ -73,7 +80,7 @@ export default function Post({ id, userData,
         }
     }
 
-    function updatePost () {
+    function updatePost() {
         setDisable(true);
         const URL = `https://backlinkr.herokuapp.com/posts/${id}`
         const config = {
@@ -81,35 +88,75 @@ export default function Post({ id, userData,
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.put(URL, {comment:currComment}, config);
-        promise.then(()=>{
+        const promise = axios.put(URL, { comment: currComment }, config);
+        promise.then(() => {
             window.location.reload(false);
         })
-        promise.catch(()=>{
+        promise.catch(() => {
             alert('Your changes could not be saved');
             setDisable(false);
         })
     }
-    
 
-    const navigate = useNavigate();
-
-    function textWithoutHashtag(text) {
-        return text?.replace('#', '');
+    function addLike() {
+        setLiked(true)
+        /*const URL = `https://backlinkr.herokuapp.com/likes/${id}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(URL, { postId,userId }, config);
+        promise.then(() => {
+            window.location.reload(false);
+        })
+        promise.catch(() => {
+            alert('Your changes could not be saved');
+        })*/
     }
+    function removeLike () {
+        setLiked(false)
+        /*const URL = `https://backlinkr.herokuapp.com/likes/${id}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.delete(URL, { postId,userId }, config);
+        promise.then(() => {
+            window.location.reload(false);
+        })
+        promise.catch(() => {
+            alert('Your changes could not be saved');
+        })*/
+    }
+
 
     return (
         <Container>
             <div>
                 <img src={userData.picture} alt="" />
+                <Heart>
+                    {
+                        liked ?
+                            <FaHeart style={{color:'#AC0000'}} onClick={removeLike} />
+                            :
+                            <FaRegHeart onClick={addLike} />
+                    }
+                    <p>{likesCount} likes</p>
+                </Heart>
             </div>
             <span>
                 <div>
                     <h2>{userData.name}</h2>
-                    <Icons>
-                        <MdEdit onClick={()=>handleEdit('ClickIcon')} />
-                        <AiFillDelete onClick={() => openModal(id)} />
-                    </Icons>
+                    {isFromAuthUser ?
+                        <Icons>
+                            <MdEdit onClick={() => handleEdit('ClickIcon')} />
+                            <AiFillDelete onClick={() => openModal(id)} />
+                        </Icons>
+                        :
+                        ""
+                    }
                 </div>
                 {editPost ?
                     <InputFocus />
@@ -158,6 +205,9 @@ const Container = styled.div`
     >div{
         width:50px;
         margin-right:20px;
+        display: flex;
+        flex-direction:column;
+        align-items:center;
     }
     h2{
         font-size:20px;
@@ -213,6 +263,20 @@ font-size:20px;
 
 @media (max-width: 1130px) {
     font-size:18px;
+}
+`
+const Heart = styled.div`
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:24px;
+color:#FFFFFF;
+font-size:20px;
+p{
+    font-size:11px;
+    text-align:center;
+    line-height:18px;
 }
 `
 const EditInput = styled.textarea`
