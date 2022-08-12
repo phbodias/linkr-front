@@ -72,8 +72,6 @@ export default function PostsPage() {
             </form>
         </CreatePost>);
 
-
-
     useEffect(() => {
         const URL = 'https://backlinkr.herokuapp.com';
         const config = {
