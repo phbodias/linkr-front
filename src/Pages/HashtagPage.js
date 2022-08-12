@@ -57,10 +57,11 @@ export default function HashtagPage() {
             postList.map((p,index) =>
                 <Post
                     key={index}
-                    name={p.userOwner.name}
-                    profilePic={p.userOwner.profilePic}
-                    urlData={p.url}
+                    id={p.postId}
+                    userData={p.userOwner}
+                    urlData={p.urlData}
                     comment={p.comment}
+                    likesCount={p.likesCount}
                     likes={p.likes}
                 />
             )
