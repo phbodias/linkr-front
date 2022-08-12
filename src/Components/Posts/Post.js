@@ -30,6 +30,12 @@ export default function Post({ id, userData,
         return textOutput
     }
 
+    function moveCursorAtEnd(e) {
+        const temp_value = e.target.value
+        e.target.value = ''
+        e.target.value = temp_value
+      }
+
     function InputFocus() {
         const inputRef = useRef();
         useEffect(() => {
@@ -37,14 +43,16 @@ export default function Post({ id, userData,
         }, []);
 
         return <EditInput
+            wrap='soft'
+            rows='3'
             ref={inputRef}
-            type="text"
+            onFocus={moveCursorAtEnd}
             value={currComment}
             onChange={e => setComment(e.target.value)}
             onKeyDown={e => handleEdit(e.code)}
             disabled={disable}
             changeOpacity={disable}
-        />;
+            />;
     }
 
     function handleEdit(code) {
@@ -184,7 +192,7 @@ align-items:center;
 color:#FFFFFF;
 font-size:20px;
 `
-const EditInput = styled.input`
+const EditInput = styled.textarea`
 opacity:${({ changeOpacity }) => changeOpacity ? '0.5' : '1'};
 border:none;
 border-radius:5px;

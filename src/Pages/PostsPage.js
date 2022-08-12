@@ -5,9 +5,8 @@ import styled from "styled-components";
 import UserContext from "../contexts/UserContext";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
-import Modal from 'react-modal';
+import ModalForDelete from "../Components/Posts/ModalForDelete";
 
-Modal.setAppElement('#root');
 
 
 export default function PostsPage() {
@@ -23,7 +22,7 @@ export default function PostsPage() {
         url: "",
         comment: ""
     })
-
+    
     const postsList = (
         postList?.length > 0 ?
             postList.map((p, index) =>
@@ -43,8 +42,8 @@ export default function PostsPage() {
                 <ThreeDots color="#FFF" height={50} width={100} />
                 :
                 <p>There are no posts yet</p>
-
     );
+
     const forms = (
         <CreatePost disable={disable}>
             <img src={userData.profilePic} alt="" />
@@ -110,8 +109,6 @@ export default function PostsPage() {
 
     }, [token]);
 
-
-
     function createNewPost(e) {
         e.preventDefault();
         setDisable(true);
@@ -160,8 +157,6 @@ export default function PostsPage() {
         setIsOpen(true);
         setDelete(id);
     }
-    function afterOpenModal() {
-    }
 
     function closeModal() {
         setIsOpen(false);
@@ -170,88 +165,19 @@ export default function PostsPage() {
     return (
         <Container>
             <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                onAfterOpen={afterOpenModal}
-                style={ModalCustomStyles}
-            >
-                {loading ?
-                    <ThreeDots color="#FFF" height={50} width={100} />
-                    :
-                    <h1
-                        style={Modalh1Style}>
-                        Are you sure you want <br /> to delete this post?
-                    </h1>}
-                <div>
-                    <button
-                        disabled={disable}
-                        style={ModalNButtonStyle}
-                        onClick={closeModal}>
-                        No, go back
-                    </button>
-                    <button
-                        disabled={disable}
-                        style={ModalYButtonStyle}
-                        onClick={deletePost}>
-                        Yes, delete it
-                    </button>
-                </div>
-            </Modal>
+            <ModalForDelete
+            modalIsOpen={modalIsOpen}
+            loading={loading}
+            disable={disable}
+            closeModal={closeModal}
+            deletePost={deletePost}
+            />
         </Container>
     );
 }
 
 
 
-const ModalCustomStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: '#333333',
-        borderRadius: '50px',
-        padding: '40px 130px',
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-};
-const Modalh1Style = {
-    color: '#FFFFFF',
-    fontSize: '34px',
-    textAlign: 'center',
-    fontWeight: '700',
-    lineHeight: '40px',
-    marginBottom: '20px'
-}
-const ModalNButtonStyle = {
-    border: 'none',
-    borderRadius: '5px',
-    backgroundColor: '#FFFFFF',
-    width: '138px',
-    height: '40px',
-    color: '#1877F2',
-    fontWeight: '700',
-    fontSize: '18px',
-    margin: '20px'
-}
-const ModalYButtonStyle = {
-    border: 'none',
-    borderRadius: '5px',
-    backgroundColor: '#1877F2',
-    width: '138px',
-    height: '40px',
-    color: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: '18px',
-    margin: '20px'
-
-}
 const Container = styled.div`
 background-color:#333333;
 height:100%;
