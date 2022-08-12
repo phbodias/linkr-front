@@ -6,26 +6,26 @@ import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 
-export default function Post({ id, userData, 
-    urlData, comment, likesCount, likes, openModal }) {
-
+export default function Post({ id, userData,
+    urlData, comment, likesCount, likes, openModal, isFromAuthUser }) {
+        
     const [currComment, setComment] = useState(comment)
     const [editPost, setEditMode] = useState(false)
     const [disable, setDisable] = useState(false);
     const token = localStorage.getItem('tokenLinker');
 
-    let description = formatUrlData(urlData.description,'description')
+    let description = formatUrlData(urlData.description, 'description')
     let title = formatUrlData(urlData.title)
     let url = formatUrlData(urlData.url)
 
-    function formatUrlData(text,field='') {
+    function formatUrlData(text, field = '') {
         let textOutput
-        if(field==='description'){
+        if (field === 'description') {
             textOutput = text.substring(0, 150);
-            if(textOutput.length === 150) textOutput += '...'
+            if (textOutput.length === 150) textOutput += '...'
         } else {
             textOutput = text.substring(0, 55);
-            if(textOutput.length === 55) textOutput += '...'
+            if (textOutput.length === 55) textOutput += '...'
         }
         return textOutput
     }
@@ -34,7 +34,7 @@ export default function Post({ id, userData,
         const temp_value = e.target.value
         e.target.value = ''
         e.target.value = temp_value
-      }
+    }
 
     function InputFocus() {
         const inputRef = useRef();
@@ -52,7 +52,7 @@ export default function Post({ id, userData,
             onKeyDown={e => handleEdit(e.code)}
             disabled={disable}
             changeOpacity={disable}
-            />;
+        />;
     }
 
     function handleEdit(code) {
@@ -73,7 +73,7 @@ export default function Post({ id, userData,
         }
     }
 
-    function updatePost () {
+    function updatePost() {
         setDisable(true);
         const URL = `https://backlinkr.herokuapp.com/posts/${id}`
         const config = {
@@ -81,16 +81,16 @@ export default function Post({ id, userData,
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.put(URL, {comment:currComment}, config);
-        promise.then(()=>{
+        const promise = axios.put(URL, { comment: currComment }, config);
+        promise.then(() => {
             window.location.reload(false);
         })
-        promise.catch(()=>{
+        promise.catch(() => {
             alert('Your changes could not be saved');
             setDisable(false);
         })
     }
-    
+
 
     const navigate = useNavigate();
 
@@ -106,10 +106,14 @@ export default function Post({ id, userData,
             <span>
                 <div>
                     <h2>{userData.name}</h2>
-                    <Icons>
-                        <MdEdit onClick={()=>handleEdit('ClickIcon')} />
-                        <AiFillDelete onClick={() => openModal(id)} />
-                    </Icons>
+                    {isFromAuthUser ?
+                        <Icons>
+                            <MdEdit onClick={() => handleEdit('ClickIcon')} />
+                            <AiFillDelete onClick={() => openModal(id)} />
+                        </Icons>
+                        :
+                        ""
+                    }
                 </div>
                 {editPost ?
                     <InputFocus />
