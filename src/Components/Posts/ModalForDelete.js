@@ -4,7 +4,7 @@ import { ThreeDots } from "react-loader-spinner";
 Modal.setAppElement('#root');
 
 export default function ModalForDelete (
-    {disable,modalIsOpen,loading,closeModal,deletePost}) {
+    {modalIsOpen,loading,closeModal,deletePost}) {
         
     return (
     <Modal
@@ -21,13 +21,13 @@ export default function ModalForDelete (
             </h1>}
         <div>
             <button
-                disabled={disable}
+                disabled={loading}
                 style={ModalNButtonStyle}
                 onClick={closeModal}>
                 No, go back
             </button>
             <button
-                disabled={disable}
+                disabled={loading}
                 style={ModalYButtonStyle}
                 onClick={deletePost}>
                 Yes, delete it
