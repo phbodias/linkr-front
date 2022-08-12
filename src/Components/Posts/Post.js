@@ -195,7 +195,7 @@ const Container = styled.div`
     display:flex;
     background-color:#171717;
     border-radius:10px;
-    padding:18px 18px;
+    padding:18px;
     margin:15px 0;
     img{
         border-radius:50px;
@@ -232,6 +232,25 @@ const Container = styled.div`
         display:flex;
         justify-content:space-between;
     }
+
+    @media (max-width: 1130px) {
+        margin:5px 0;
+        padding:12px;
+        img{
+            width:40px;
+            height:40px;
+        }
+        >div{
+            width:40px;
+            margin-right:15px;
+        }
+        h2{
+            font-size:18px;
+        }
+        p{
+            font-size:15px;
+        }
+    }
 `
 
 const Icons = styled.div`
@@ -241,6 +260,10 @@ justify-content:space-between;
 align-items:center;
 color:#FFFFFF;
 font-size:20px;
+
+@media (max-width: 1130px) {
+    font-size:18px;
+}
 `
 const Heart = styled.div`
 width:100%;
@@ -266,6 +289,9 @@ font-family:'Lato', sans-serif;
 color:#4C4C4C;
 padding:5px 10px;
 box-sizing:border-box;
+@media (max-width: 1130px) {
+    font-size:14px;
+}
 `
 
 const URLdiv = styled.a`
@@ -313,4 +339,17 @@ h3{
     text-align:start;
 }
 
+@media (max-width: 1130px) {
+    height:120px;
+    h3{
+        font-size:10px;
+    }
+    p{
+        font-size:9px;
+        margin:5px 0;
+    }
+    span{
+        padding:8px;
+    }
+}
 `
