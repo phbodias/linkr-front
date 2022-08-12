@@ -57,8 +57,9 @@ export default function PostsPage() {
                     onChange={handleInputChange}
                     required
                     disabled={disable} />
-                <input
+                <textarea
                     type='text'
+                    rows='3'
                     name='comment'
                     placeholder="Comment"
                     value={newPost.comment}
@@ -194,6 +195,15 @@ h1{
     color:#FFFFFF;
 }
 
+@media (max-width: 1130px) {
+    padding-top: 0;
+    h1{
+        font-size:34px;
+        width:100%;
+        margin:20px 0;
+    }
+  }
+
 `
 
 const CreatePost = styled.div`
@@ -222,7 +232,7 @@ form{
     align-items:flex-start;
     width:100%;
 }
-input{
+input, textarea{
     opacity:${({ disable }) => disable ? '0.5' : '1'};
     width:100%;
     box-sizing:border-box;
@@ -235,6 +245,9 @@ input{
     border-radius:5px;
     padding:10px 15px;
     margin-bottom:5px;
+}
+textarea{
+    height:70px;
 }
 
 button{
@@ -251,4 +264,29 @@ button{
     width:120px;
     height:30px;
 }
+
+@media (max-width: 1130px) {
+    padding: 10px 18px;
+    margin-bottom:8px;
+    h2{
+        font-size:18px;
+    }
+    img{
+        display:none;
+    }
+    input,textarea{
+        font-size:13px;
+    }
+    textarea{
+        height:54px;
+    }
+    button{
+        height:22px;
+        bottom:12px;
+        right:18px;
+    }
+    form{
+        padding:0 0 28px 0;
+    }
+  }
 `
