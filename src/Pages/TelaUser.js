@@ -2,114 +2,121 @@ import React from "react"
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import { ThreeDots } from "react-loader-spinner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "../Components/Posts/Post"
 import { FeedPage } from "../shared/Feed/FeedPage";
 
 
 
+
 export default function TelaUser(){
 
-    const [postList, setPostList] = useState([]);
+    const [postList, setPostList] = useState(null);
+    const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState('')
-    const [hashtags, setHashtags] =useState(null);
+    let name;
+
+    if(postList!=null && postList.length>0){
+        console.log('entrou no if nao nulo')
+        name = postList[0].userOwner.name
+    }
     
-
-  
-    const {id} = useParams()
     const token = localStorage.getItem('tokenLinker');
+    console.log(token)
+    const {id} = useParams();
 
-    React.useEffect(()=>{
+    useEffect(() => {
+        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
         setLoading(true);
-
-        const users = axios.get(`http://localhost:4001/user/${id}`)
-        users.then(getUserSucess)
-        users.catch(getUserFail)
-
-        const posts = axios.get(`http://localhost:4001/posts/${id}`)
-        posts.then(getPostSucess)
-        posts.catch(getUserFail)
-
-        axios.get(`https://backlinkr.herokuapp.com/hashtags`, config)
-        .then( res => {
-            const arrayHashtags=[];
-            for (const hash of res.data){
-                arrayHashtags.push(hash.text);
-            }
-            setHashtags([...arrayHashtags]);
-        })
-        .catch(err => {
-            console.log(err.response.data);
-            alert("An error occured while trying to fetch the trenddins, please refresh the page");
-            setLoading(false);
+        const promise = axios.get(`http://localhost:4001/posts/${id}`);
+        promise.then(response => {
+            setPostList(response.data);
+           
+        });
+        promise.catch((error) => {
+            console.log(error.response.data);
+            alert("Erro ao pegar os posts");
+         
         });
 
-    },[token,id])
+        axios.get(`${URL}/hashtags`, config)
+            .then( res => {
+                const arrayHashtags=[];
+                for (const hash of res.data){
+                    arrayHashtags.push(hash.text);
+                }
+                setHashtags([...arrayHashtags]);
+            })
+            .catch(err => {
+                console.log(err.response.data);
+                alert("An error occured while trying to fetch the trenddins, please refresh the page");
+                setLoading(false);
+            });
 
+        
+    }, [token, id]);
 
-    function getUserSucess(response){
-         setUser(response.data)
-         setLoading(false);
-    }
-
-    function getUserFail(){
-        console.log('fail')
-        setLoading(false);
-    }
-
-    function getPostSucess(response){
-        setPostList(response.data)
-        console.log(response.data)
-    }
-
-   
-
-    
 
     const postsList= (
         postList?.length > 0 ?
             postList.map((p,index) =>
                 <Post
                     key={index}
-                    name={p.userName}
-                    profilePic={p.profilePic}
-                    urlData={p.postUrl}
-                    comment={p.postComment}
+                    id={p.postId}
+                    userData={p.userOwner}
+                    urlData={p.urlData}
+                    comment={p.comment}
+                    likesCount={p.likesCount}
                     likes={p.likes}
                 />
             )
             :
-            loading || !postList ?
-                <ThreeDots color="#FFF" height={50} width={100} />
-                :
+            loading || !postList || !hashtags  ?
                 <p>There are no posts yet</p>
+                :
+                <ThreeDots color="#FFF" height={50} width={100} />
         
     );
-
-    return(
-        <FeedPage title={`${user[0]?.name}'s posts`} posts={postsList} hashtags={hashtags}  />
+    
+    return (
+        <FeedPage title={name} posts={postsList} hashtags={hashtags}  />
     )
 }
 
-const Timeline = styled.div`
-width:50%;
-box-sizing:border-box;
+
+
+
+const Container = styled.div`
+background-color:#333333;
+height:100%;
+width:100%;
 display:flex;
 flex-direction:column;
 align-items:center;
-font-size:20px;
-color:#FFFFFF;
-margin:8px 0;
-text-align:center;
-`
+box-sizing:border-box;
+padding:100px 0 500px 0;
+h1{
+    font-family: 'Oswald', sans-serif;
+    font-size:44px;
+    font-weight:bold;
+    margin:30px 0;
+    width:50%;
+    color:#FFFFFF;
+}
 
-const Pa = styled.p`
-color: black;
+@media (max-width: 1130px) {
+    padding-top: 0;
+    h1{
+        font-size:34px;
+        width:100%;
+        margin:20px 0;
+    }
+  }
+
 `

@@ -57,7 +57,7 @@ export default function PostsPage() {
                     onChange={handleInputChange}
                     required
 
-                    disabled={disable} />
+                    disabled={loading} />
                 <textarea
                     type='text'
                     rows='3'
