@@ -7,14 +7,13 @@ import LogoComponent from "./LogoComponent";
 
 export default function SignIn() {
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-
-  if (localStorage.getItem("tokenLinker")) return navigate("/timeline");
 
   function handleRegister(e) {
     e.preventDefault();
