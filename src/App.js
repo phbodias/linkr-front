@@ -18,7 +18,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={token ? <Navigate to="/timeline" /> : <SignIn />}
+            element={(token !== false) ? <Navigate to="/timeline" /> : <SignIn />}
           />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/user/:id" element={<TelaUser />} />
