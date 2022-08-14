@@ -8,9 +8,9 @@ import ClickAwayListener from "react-click-away-listener";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { userData, setUserData, setToken } = useContext(UserContext);
+  const { userData, setUserData, token, setToken } = useContext(UserContext);
+  if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
-  const token = localStorage.getItem("tokenLinker");
   const URL = `http://backlinkr.herokuapp.com/me`;
   const config = {
     headers: {
