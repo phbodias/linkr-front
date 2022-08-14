@@ -8,9 +8,6 @@ import LogoComponent from "./LogoComponent";
 export default function SignIn() {
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('tokenLinker')
-  if (token !== null) navigate('/timeline');
-
   const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState({
