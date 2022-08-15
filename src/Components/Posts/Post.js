@@ -105,20 +105,20 @@ export default function Post({ id, userData,
 
   function addLike() {
     setLiked(true);
-    console.log("aaAAAAAAAAAAAAAAAAAAAAAAAAaa", id);
-    //const URL = `https://backlinkr.herokuapp.com/likes/${}`;
+    console.log(likes);
+    const URL = `https://backlinkr.herokuapp.com/likes`;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    /* const promise = axios.post(URL, config);
+    const promise = axios.post(URL, {id}, config);
     promise.then(() => {
       window.location.reload(false);
     });
-    promise.catch(() => {
-      alert("Your changes could not be saved");
-    }); */
+    promise.catch((e) => {
+      alert(e);
+    });
   }
   function removeLike() {
     setLiked(false);
@@ -137,6 +137,8 @@ export default function Post({ id, userData,
         })*/
   }
 
+  
+  console.log(userData);
 
     return (
         <Container>
@@ -146,7 +148,8 @@ export default function Post({ id, userData,
                 </Link>
                 <Heart>
                     {
-                        liked ?
+                      //likes.map(l=>l.id).includes(userData.id)
+                      likes.filter((l)  => l.id === userData.id).length > 0 ?
                             <FaHeart style={{color:'#AC0000'}} onClick={removeLike} />
                             :
                             <FaRegHeart onClick={addLike} />
