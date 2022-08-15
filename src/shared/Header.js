@@ -11,7 +11,7 @@ export default function Header() {
   const navigate = useNavigate();
   const { userData, setUserData } = useContext(UserContext);
   const token = localStorage.getItem("tokenLinker");
-  if ( token === null) navigate("/");
+  if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
   const URL = useContext(UrlContext);
   console.log(URL);
@@ -38,6 +38,8 @@ export default function Header() {
       navigate("/");
     }
   }
+
+  console.log(userData);
 
   return (
     <Container>

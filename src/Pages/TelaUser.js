@@ -75,6 +75,7 @@ export default function TelaUser(){
                     comment={p.comment}
                     likesCount={p.likesCount}
                     likes={p.likes}
+                    idUser={p.userOwner.id}
                 />
             )
             :

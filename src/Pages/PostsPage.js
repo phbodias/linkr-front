@@ -38,6 +38,7 @@ export default function PostsPage() {
                     likes={p.likes}
                     isFromAuthUser={userData.id===p.userOwner.id}
                     openModal={openModal}
+                    idUser={p.userOwner.id}
                 />
             )
             :
