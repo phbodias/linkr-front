@@ -2,16 +2,17 @@ import React from "react"
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import { ThreeDots } from "react-loader-spinner";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext} from "react";
 import styled from "styled-components";
 import Post from "../Components/Posts/Post"
 import { FeedPage } from "../shared/Feed/FeedPage";
+import UrlContext from "../contexts/UrlContext";
 
 
 
 
-export default function TelaUser() {
-
+export default function TelaUser(){
+    const URL = useContext(UrlContext);
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -27,14 +28,13 @@ export default function TelaUser() {
     const { id } = useParams();
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
         setLoading(true);
-        const promise = axios.get(`http://localhost:4001/posts/${id}`);
+        const promise = axios.get(`${URL}/posts/${id}`);
         promise.then(response => {
             setPostList(response.data);
 

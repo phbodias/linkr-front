@@ -1,14 +1,13 @@
 import  { DebounceInput }  from  'react-debounce-input' ;
-import React from 'react';
+import React, {useContext} from 'react';
 import axios from "axios";
 import styled from "styled-components";
-
-
 import CardUser from './CardUser';
+import UrlContext from '../../contexts/UrlContext';
 
 
 export default function InputSearchUsers(){
-
+    const URL = useContext(UrlContext);
 
     const token = localStorage.getItem('tokenLinker')
     const [users, setUsers] = React.useState("")
@@ -19,13 +18,12 @@ export default function InputSearchUsers(){
     React.useEffect(()=>{
         console.log('useEffect')
         if(searchWords.length>2){
-            const URL = `http://backlinkr.herokuapp.com/busca/${searchWords}`
             const config = { 
                 headers: { 
                     Authorization: `Bearer ${token}` 
                 } 
             } 
-            const getUsersByName = axios.get(URL,config)
+            const getUsersByName = axios.get(`${URL}/${searchWords}`,config)
             getUsersByName.then(getUsersByNameSucess)
             getUsersByName.catch(getUsersByNameFail)
         }

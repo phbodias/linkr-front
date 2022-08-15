@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import { Container, Input, Button, StyledLink } from "./AuthStyle";
 import LogoComponent from "./LogoComponent";
+import UrlContext from "../../contexts/UrlContext";
 
 export default function SignUp() {
+  const URL = useContext(UrlContext);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
 
-    const promise = axios.post("https://backlinkr.herokuapp.com/sign-up", data);
+    const promise = axios.post(`${URL}/sign-up`, data);
 
     promise
       .then((res) => {
