@@ -12,7 +12,7 @@ export default function Header() {
   const token = localStorage.getItem("tokenLinker");
   if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
-  const URL = `http://backlinkr.herokuapp.com/me`;
+  const URL = `https://backlinkr.herokuapp.com/me`;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
