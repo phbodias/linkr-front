@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
+import UrlContext from "../../contexts/UrlContext";
 
-import ReactTooltip from 'react-tooltip';
+import ReactTooltip from "react-tooltip";
 
 export default function Post({
   id,
@@ -23,7 +24,6 @@ export default function Post({
 }) {
   const { userData } = useContext(UserContext);
   const URL = useContext(UrlContext);
-
   const [currComment, setComment] = useState(comment);
   const [editPost, setEditMode] = useState(false);
   const [disable, setDisable] = useState(false);
@@ -154,60 +154,63 @@ export default function Post({
       alert(e.message);
     });
   }
-  
-  function messageLikes () {
-    if(likesCount===0){
-      return `Ninguém curtiu esse post ainda`
-    } else if (likesCount===1){
-      return `${likes[0]?.name}`
-    } else if (likesCount===2){
-      return `${likes[0]?.name} e ${likes[1]?.name}`
+
+  function messageLikes() {
+    if (likesCount === 0) {
+      return `Ninguém curtiu esse post ainda`;
+    } else if (likesCount === 1) {
+      return `${likes[0]?.name}`;
+    } else if (likesCount === 2) {
+      return `${likes[0]?.name} e ${likes[1]?.name}`;
     } else {
-      return `${likes[0]?.name},${likes[1]?.name} e outras ${likesCount-2} pessoas`
+      return `${likes[0]?.name},${likes[1]?.name} e outras ${
+        likesCount - 2
+      } pessoas`;
     }
   }
-  console.log(messageLikes())
-    return (
-        <Container>
-            <div>
-                <Link to={"/user/"+idUser}>
-                    <img src={userOwner.picture} alt="" />
-                </Link>
-                <Heart>
-                    {
-                        liked ?
-                            <FaHeart style={{color:'#AC0000'}} onClick={removeLike} />
-                            :
-                            <FaRegHeart onClick={addLike} />
-                    }
-                    <p data-tip={messageLikes()}>{likesCount} likes</p>
-                <ReactTooltip />
-                </Heart>
-                
-            </div>
-            <span>
-                <div>
-                    <Link to={"/user/"+idUser}>
-                        <h2>{userOwner.name}</h2>
-                    </Link>
-                    {userData[0]?.id === userOwner.id?
-                        <Icons>
-                            <MdEdit onClick={() => handleEdit('ClickIcon')} />
-                            <AiFillDelete onClick={() => openModal(id)} />
-                        </Icons>
-                        :
-                        ""
-                    }
-                </div>
-                {editPost ?
-                    <InputFocus />
-                    :
-                    <ReactTagify
-                        tagStyle={tagStyle}
-                        tagClicked={(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
-                    >
-                        <p>{currComment}</p>
-                    </ReactTagify>}
+  console.log(messageLikes());
+  return (
+    <Container>
+      <div>
+        <Link to={"/user/" + idUser}>
+          <img src={userOwner.picture} alt="" />
+        </Link>
+        <Heart>
+          {likes.filter((l) => l.id === userData[0].id).length > 0 ? (
+            <FaHeart style={{ color: "#AC0000" }} onClick={removeLike} />
+          ) : (
+            <FaRegHeart onClick={addLike} />
+          )}
+          <p data-tip={messageLikes()}>{likesCount} likes</p>
+          <ReactTooltip />
+        </Heart>
+      </div>
+      <span>
+        <div>
+          <Link to={"/user/" + idUser}>
+            <h2>{userOwner.name}</h2>
+          </Link>
+          {userData[0]?.id === userOwner.id ? (
+            <Icons>
+              <MdEdit onClick={() => handleEdit("ClickIcon")} />
+              <AiFillDelete onClick={() => openModal(id)} />
+            </Icons>
+          ) : (
+            ""
+          )}
+        </div>
+        {editPost ? (
+          <InputFocus />
+        ) : (
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${textWithoutHashtag(tag)}`)
+            }
+          >
+            <p>{currComment}</p>
+          </ReactTagify>
+        )}
 
         <URLdiv href={urlData.url} target="_blank" rel="noreferrer">
           <span>
