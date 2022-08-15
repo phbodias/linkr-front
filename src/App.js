@@ -12,7 +12,6 @@ import UrlContext from "./contexts/UrlContext";
 function App() {
   const [userData, setUserData] = useState({});
   const url = process.env.REACT_APP_MODE === "DEV" ? "http://localhost:4000" : "https://backlinkr.herokuapp.com";
-  console.log(process.env.REACT_APP_MODE);
   const [URL, _] = useState(url);
 
   return (
