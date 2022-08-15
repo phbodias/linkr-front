@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
+import ReactTooltip from 'react-tooltip';
+
 
 export default function Post({ id, userOwner,
     urlData, comment, likesCount, likes, openModal, idUser }) {
@@ -142,7 +144,18 @@ export default function Post({ id, userOwner,
         })*/
   }
 
-
+  function messageLikes () {
+    if(likesCount===0){
+      return `Ninguém curtiu esse post ainda`
+    } else if (likesCount===1){
+      return `${likes[0]?.name}`
+    } else if (likesCount===2){
+      return `${likes[0]?.name} e ${likes[1]?.name}`
+    } else {
+      return `${likes[0]?.name},${likes[1]?.name} e outras ${likesCount-2} pessoas`
+    }
+  }
+  console.log(messageLikes())
     return (
         <Container>
             <div>
@@ -156,8 +169,10 @@ export default function Post({ id, userOwner,
                             :
                             <FaRegHeart onClick={addLike} />
                     }
-                    <p>{likesCount} likes</p>
+                    <p data-tip={messageLikes()}>{likesCount} likes</p>
+                <ReactTooltip />
                 </Heart>
+                
             </div>
             <span>
                 <div>
