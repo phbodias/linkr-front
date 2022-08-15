@@ -5,12 +5,14 @@ import { AiFillDelete } from "react-icons/ai";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import UserContext from "../../contexts/UserContext";
 
-export default function Post({ id, userData,
-    urlData, comment, likesCount, likes, openModal, isFromAuthUser, idUser }) {
+export default function Post({ id, userOwner,
+    urlData, comment, likesCount, likes, openModal, idUser }) {
 
+    const { userData } = useContext(UserContext);
     const [currComment, setComment] = useState(comment)
     const [editPost, setEditMode] = useState(false)
     const [disable, setDisable] = useState(false);
@@ -145,7 +147,7 @@ export default function Post({ id, userData,
         <Container>
             <div>
                 <Link to={"/user/"+idUser}>
-                    <img src={userData.picture} alt="" />
+                    <img src={userOwner.picture} alt="" />
                 </Link>
                 <Heart>
                     {
@@ -160,9 +162,9 @@ export default function Post({ id, userData,
             <span>
                 <div>
                     <Link to={"/user/"+idUser}>
-                        <h2>{userData.name}</h2>
+                        <h2>{userOwner.name}</h2>
                     </Link>
-                    {isFromAuthUser ?
+                    {userData[0]?.id === userOwner.id?
                         <Icons>
                             <MdEdit onClick={() => handleEdit('ClickIcon')} />
                             <AiFillDelete onClick={() => openModal(id)} />

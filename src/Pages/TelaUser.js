@@ -10,21 +10,21 @@ import { FeedPage } from "../shared/Feed/FeedPage";
 
 
 
-export default function TelaUser(){
+export default function TelaUser() {
 
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
     let name;
 
-    if(postList!=null && postList.length>0){
+    if (postList != null && postList.length > 0) {
         console.log('entrou no if nao nulo')
         name = postList[0].userOwner.name
     }
-    
+
     const token = localStorage.getItem('tokenLinker');
     console.log(token)
-    const {id} = useParams();
+    const { id } = useParams();
 
     useEffect(() => {
         const URL = 'https://backlinkr.herokuapp.com';
@@ -37,18 +37,18 @@ export default function TelaUser(){
         const promise = axios.get(`http://localhost:4001/posts/${id}`);
         promise.then(response => {
             setPostList(response.data);
-           
+
         });
         promise.catch((error) => {
             console.log(error.response.data);
             alert("Erro ao pegar os posts");
-         
+
         });
 
         axios.get(`${URL}/hashtags`, config)
-            .then( res => {
-                const arrayHashtags=[];
-                for (const hash of res.data){
+            .then(res => {
+                const arrayHashtags = [];
+                for (const hash of res.data) {
                     arrayHashtags.push(hash.text);
                 }
                 setHashtags([...arrayHashtags]);
@@ -59,34 +59,37 @@ export default function TelaUser(){
                 setLoading(false);
             });
 
-        
+
     }, [token, id]);
 
 
-    const postsList= (
-        postList?.length > 0 ?
-            postList.map((p,index) =>
-                <Post
-                    key={index}
-                    id={p.postId}
-                    userData={p.userOwner}
-                    urlData={p.urlData}
-                    comment={p.comment}
-                    likesCount={p.likesCount}
-                    likes={p.likes}
-                    idUser={p.userOwner.id}
-                />
-            )
-            :
-            loading || !postList || !hashtags  ?
-                <p>There are no posts yet</p>
+    function postsList(openModal) {
+        return (
+            postList?.length > 0 ?
+                postList.map((p, index) =>
+                    <Post
+                        key={index}
+                        id={p.postId}
+                        userOwner={p.userOwner}
+                        urlData={p.urlData}
+                        comment={p.comment}
+                        likesCount={p.likesCount}
+                        likes={p.likes}
+                        openModal={openModal}
+                        idUser={p.userOwner.id}
+                    />
+                )
                 :
-                <ThreeDots color="#FFF" height={50} width={100} />
-        
-    );
-    
+                loading || !postList || !hashtags ?
+                    <p>There are no posts yet</p>
+                    :
+                    <ThreeDots color="#FFF" height={50} width={100} />
+
+        );
+    }
+
     return (
-        <FeedPage title={name} posts={postsList} hashtags={hashtags}  />
+        <FeedPage title={name} posts={postsList} hashtags={hashtags} />
     )
 }
 
