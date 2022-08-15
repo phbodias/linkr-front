@@ -134,5 +134,8 @@ const Container = styled.div`
   display: flex;
   box-sizing: border-box;
 
-
+  @media (max-width: 563px){
+    display: flex;
+    justify-content: space-evenly;
+  }
 `;

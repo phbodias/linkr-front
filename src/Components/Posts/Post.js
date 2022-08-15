@@ -158,17 +158,21 @@ export default function Post({
   function messageLikes() {
     if (likesCount === 0) {
       return `Ninguém curtiu esse post ainda`;
-    } else if (likesCount === 1) {
-      return `${likes[0]?.name}`;
-    } else if (likesCount === 2) {
-      return `${likes[0]?.name} e ${likes[1]?.name}`;
     } else {
-      return `${likes[0]?.name},${likes[1]?.name} e outras ${
-        likesCount - 2
-      } pessoas`;
+      let user1 = "";
+      if (likes.filter((l) => l.id === userData[0].id).length > 0) {
+        user1 = "Você";
+      } else user1 = likes[0]?.name;
+      if (likesCount === 1) {
+        return `${user1}`;
+      } else if (likesCount === 2) {
+        return `${user1} e ${likes[1]?.name}`;
+      } else {
+        return `${user1},${likes[1]?.name} e outras ${likesCount - 2} pessoas`;
+      }
     }
   }
-  console.log(messageLikes());
+
   return (
     <Container>
       <div>
