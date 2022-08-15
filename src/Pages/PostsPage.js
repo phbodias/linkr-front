@@ -1,13 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import styled from "styled-components";
-import UserContext from "../contexts/UserContext";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
-import ModalForDelete from "../Components/Posts/ModalForDelete";
+import UserContext from "../contexts/UserContext";
 import UrlContext from "../contexts/UrlContext";
-
 
 
 export default function PostsPage() {
@@ -15,8 +13,6 @@ export default function PostsPage() {
     console.log(URL);
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
-    const [postToDelete, setDelete] = useState('');
-    const [modalIsOpen, setIsOpen] = useState(false);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('tokenLinker');
@@ -25,18 +21,18 @@ export default function PostsPage() {
         comment: ""
     })
     
-    const postsList = (
+    function postsList (openModal) {
+        return(
         postList?.length > 0 ?
             postList.map((p, index) =>
                 <Post
                     key={index}
                     id={p.postId}
-                    userData={p.userOwner}
+                    userOwner={p.userOwner}
                     urlData={p.urlData}
                     comment={p.comment}
                     likesCount={p.likesCount}
                     likes={p.likes}
-                    isFromAuthUser={userData.id===p.userOwner.id}
                     openModal={openModal}
                     idUser={p.userOwner.id}
                 />
@@ -47,10 +43,11 @@ export default function PostsPage() {
                 :
                 <p>There are no posts yet</p>
     );
+}
 
     const forms = (
         <CreatePost disable={loading}>
-            <img src={userData.profilePic} alt="" />
+            <img src={userData[0]?.profilePic} alt="" />
             <form onSubmit={createNewPost}>
                 <h2>What are you going to share today?</h2>
                 <input
@@ -60,7 +57,6 @@ export default function PostsPage() {
                     value={newPost.url}
                     onChange={handleInputChange}
                     required
-
                     disabled={loading} />
                 <textarea
                     type='text'
@@ -137,44 +133,10 @@ export default function PostsPage() {
         setNewPost({ ...newPost, [e.target.name]: e.target.value });
     }
 
-    function deletePost() {
-        setLoading(true);
-        // const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const promise = axios.delete(`${URL}/posts/${postToDelete}`, config);
-        promise.then(() => {
-            window.location.reload(false);
-        })
-        promise.catch((error) => {
-            setLoading(false);
-            closeModal();
-            console.log(error.response.data);
-            alert("The post could not be deleted");
-        })
-    }
-
-    function openModal(id) {
-        setIsOpen(true);
-        setDelete(id);
-    }
-
-    function closeModal() {
-        setIsOpen(false);
-    }
 
     return (
         <Container>
             <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
-            <ModalForDelete
-            modalIsOpen={modalIsOpen}
-            loading={loading}
-            closeModal={closeModal}
-            deletePost={deletePost}
-            />
         </Container>
     );
 }
