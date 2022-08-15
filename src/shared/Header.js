@@ -28,6 +28,7 @@ export default function Header() {
         alert(
           `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
         );
+        localStorage.removeItem("tokenLinker");
         navigate("/");
       });
   }, []);
