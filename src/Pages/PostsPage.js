@@ -12,7 +12,6 @@ import UrlContext from "../contexts/UrlContext";
 
 export default function PostsPage() {
     const URL = useContext(UrlContext);
-    console.log(URL);
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
     const [postToDelete, setDelete] = useState('');
