@@ -1,6 +1,7 @@
 import styled from "styled-components"; 
 
 const Container = styled.main`
+   margin-top: 20px;
     min-height:100vh;
     display:flex;
     width:100%;

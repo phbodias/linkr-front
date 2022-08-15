@@ -106,6 +106,20 @@ overflow-y: scroll;
 display: flex;
 flex-direction: column;
 
+@media (max-width: 563px) {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 95vw;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 563px) and (max-width:880px) {
+    width: 280px;
+  }
+
 `
 
 const Users = styled.div`

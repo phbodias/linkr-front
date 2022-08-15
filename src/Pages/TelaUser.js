@@ -16,13 +16,13 @@ export default function TelaUser(){
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
-    let name;
-
-    if (postList != null && postList.length > 0) {
-        console.log('entrou no if nao nulo')
-        name = postList[0].userOwner.name
-    }
-
+    const [name, setName] = useState('')
+    // let name;
+    // if (postList != null && postList.length > 0) {
+    //     console.log('entrou no if nao nulo')
+    //     name = postList[0].userOwner.name
+    // }
+    
     const token = localStorage.getItem('tokenLinker');
     console.log(token)
     const { id } = useParams();
@@ -44,6 +44,15 @@ export default function TelaUser(){
             alert("Erro ao pegar os posts");
 
         });
+
+        axios.get(`${URL}/user/${id}`, config)
+            .then(res=>{
+                console.log(res.data[0])
+                setName(res.data[0].name)
+            })
+            .catch(err=>{
+                console.log(err)
+            })
 
         axios.get(`${URL}/hashtags`, config)
             .then(res => {
