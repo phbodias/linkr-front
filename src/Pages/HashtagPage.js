@@ -73,6 +73,8 @@ export default function HashtagPage() {
                 <p>There are no posts yet</p>
         
     );
+
+    console.log("bbbbb", postList)
     
     return (
         <FeedPage title={`# ${hashtag}`} posts={postsList} hashtags={hashtags}  />
