@@ -10,25 +10,33 @@ import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import UrlContext from "../../contexts/UrlContext";
 
-export default function Post({ id, userOwner,
-    urlData, comment, likesCount, likes, openModal, idUser }) {
-    const { userData } = useContext(UserContext);
-    const URL = useContext(UrlContext);
+export default function Post({
+  id,
+  userOwner,
+  urlData,
+  comment,
+  likesCount,
+  likes,
+  openModal,
+  idUser,
+}) {
+  const { userData } = useContext(UserContext);
+  const URL = useContext(UrlContext);
 
-    const [currComment, setComment] = useState(comment)
-    const [editPost, setEditMode] = useState(false)
-    const [disable, setDisable] = useState(false);
-    const [liked,setLiked] = useState(false)
-    const token = localStorage.getItem('tokenLinker');
-    const navigate = useNavigate();
+  const [currComment, setComment] = useState(comment);
+  const [editPost, setEditMode] = useState(false);
+  const [disable, setDisable] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const token = localStorage.getItem("tokenLinker");
+  const navigate = useNavigate();
 
   function textWithoutHashtag(text) {
     return text?.replace("#", "");
   }
 
-  useEffect(()=>{
-      setComment(comment)
-    },[comment])
+  useEffect(() => {
+    setComment(comment);
+  }, [comment]);
 
   let description = formatUrlData(urlData.description, "description");
   let title = formatUrlData(urlData.title);
@@ -45,8 +53,6 @@ export default function Post({ id, userOwner,
     }
     return textOutput;
   }
-
-  
 
   function moveCursorAtEnd(e) {
     const temp_value = e.target.value;
@@ -93,33 +99,36 @@ export default function Post({ id, userOwner,
     }
   }
 
-    function updatePost() {
-        setDisable(true);
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const promise = axios.put(`${URL}/posts/${id}`, { comment: currComment }, config);
-        promise.then(() => {
-            window.location.reload(false);
-        })
-        promise.catch(() => {
-            alert('Your changes could not be saved');
-            setDisable(false);
-        })
-    }
+  function updatePost() {
+    setDisable(true);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.put(
+      `${URL}/posts/${id}`,
+      { comment: currComment },
+      config
+    );
+    promise.then(() => {
+      window.location.reload(false);
+    });
+    promise.catch(() => {
+      alert("Your changes could not be saved");
+      setDisable(false);
+    });
+  }
 
   function addLike() {
     setLiked(true);
-    console.log(likes);
     const URL = `https://backlinkr.herokuapp.com/likes`;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    const promise = axios.post(URL, {id}, config);
+    const promise = axios.post(URL, { id }, config);
     promise.then(() => {
       window.location.reload(false);
     });
@@ -129,64 +138,63 @@ export default function Post({ id, userOwner,
   }
   function removeLike() {
     setLiked(false);
-    /*const URL = `https://backlinkr.herokuapp.com/likes/${id}`
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const promise = axios.delete(URL, { postId,userId }, config);
-        promise.then(() => {
-            window.location.reload(false);
-        })
-        promise.catch(() => {
-            alert('Your changes could not be saved');
-        })*/
+    console.log(id, token);
+    const URL = `https://backlinkr.herokuapp.com/likes/${id}`;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.delete(URL, config);
+    promise.then(() => {
+      window.location.reload(false);
+    });
+    promise.catch((e) => {
+      alert(e.message);
+    });
   }
 
-  
-  console.log(userData);
-
-    return (
-        <Container>
-            <div>
-                <Link to={"/user/"+idUser}>
-                    <img src={userOwner.picture} alt="" />
-                </Link>
-                <Heart>
-                    {
-                      //likes.map(l=>l.id).includes(userData.id)
-                      likes.filter((l)  => l.id === userData.id).length > 0 ?
-                            <FaHeart style={{color:'#AC0000'}} onClick={removeLike} />
-                            :
-                            <FaRegHeart onClick={addLike} />
-                    }
-                    <p>{likesCount} likes</p>
-                </Heart>
-            </div>
-            <span>
-                <div>
-                    <Link to={"/user/"+idUser}>
-                        <h2>{userOwner.name}</h2>
-                    </Link>
-                    {userData[0]?.id === userOwner.id?
-                        <Icons>
-                            <MdEdit onClick={() => handleEdit('ClickIcon')} />
-                            <AiFillDelete onClick={() => openModal(id)} />
-                        </Icons>
-                        :
-                        ""
-                    }
-                </div>
-                {editPost ?
-                    <InputFocus />
-                    :
-                    <ReactTagify
-                        tagStyle={tagStyle}
-                        tagClicked={(tag) => navigate(`/hashtag/${textWithoutHashtag(tag)}`)}
-                    >
-                        <p>{currComment}</p>
-                    </ReactTagify>}
+  return (
+    <Container>
+      <div>
+        <Link to={"/user/" + idUser}>
+          <img src={userOwner.picture} alt="" />
+        </Link>
+        <Heart>
+          {likes.filter((l) => l.id === userData[0].id).length > 0 ? (
+            <FaHeart style={{ color: "#AC0000" }} onClick={removeLike} />
+          ) : (
+            <FaRegHeart onClick={addLike} />
+          )}
+          <p>{likesCount} likes</p>
+        </Heart>
+      </div>
+      <span>
+        <div>
+          <Link to={"/user/" + idUser}>
+            <h2>{userOwner.name}</h2>
+          </Link>
+          {userData[0]?.id === userOwner.id ? (
+            <Icons>
+              <MdEdit onClick={() => handleEdit("ClickIcon")} />
+              <AiFillDelete onClick={() => openModal(id)} />
+            </Icons>
+          ) : (
+            ""
+          )}
+        </div>
+        {editPost ? (
+          <InputFocus />
+        ) : (
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${textWithoutHashtag(tag)}`)
+            }
+          >
+            <p>{currComment}</p>
+          </ReactTagify>
+        )}
 
         <URLdiv href={urlData.url} target="_blank" rel="noreferrer">
           <span>
@@ -256,7 +264,7 @@ const Container = styled.div`
   @media (max-width: 1130px) {
     margin: 5px 0;
     padding: 12px;
-    border-radius:0;
+    border-radius: 0;
     img {
       width: 40px;
       height: 40px;
