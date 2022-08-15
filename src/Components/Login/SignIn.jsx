@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import { Container, Input, Button, StyledLink } from "./AuthStyle";
 import LogoComponent from "./LogoComponent";
+import UrlContext from "../../contexts/UrlContext";
 
 export default function SignIn() {
-  const URL = "http://localhost:4000";
+  const URL = useContext(UrlContext);
 
   const navigate = useNavigate();
 

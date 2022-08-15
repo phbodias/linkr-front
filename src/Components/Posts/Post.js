@@ -5,10 +5,13 @@ import { AiFillDelete } from 'react-icons/ai'
 import { FaRegHeart, FaHeart } from 'react-icons/fa'
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import UrlContext from "../../contexts/UrlContext";
 
 export default function Post({ id, userData,
     urlData, comment, likesCount, likes, openModal, isFromAuthUser }) {
+
+    const URL = useContext(UrlContext);
 
     const [currComment, setComment] = useState(comment)
     const [editPost, setEditMode] = useState(false)
@@ -82,13 +85,12 @@ export default function Post({ id, userData,
 
     function updatePost() {
         setDisable(true);
-        const URL = `https://backlinkr.herokuapp.com/posts/${id}`
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.put(URL, { comment: currComment }, config);
+        const promise = axios.put(`${URL}/posts/${id}`, { comment: currComment }, config);
         promise.then(() => {
             window.location.reload(false);
         })

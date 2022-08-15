@@ -5,6 +5,7 @@ import UserContext from "../contexts/UserContext";
 import InputSearchUsers from "../Components/InputSearch/InputSearchUsers";
 import { useNavigate } from "react-router-dom";
 import ClickAwayListener from "react-click-away-listener";
+import UrlContext from "../contexts/UrlContext";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -12,8 +13,8 @@ export default function Header() {
   const token = localStorage.getItem("tokenLinker");
   if ( token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
-  // const URL = `http://backlinkr.herokuapp.com/me`;
-  const URL = "http://localhost:4000";
+  const URL = useContext(UrlContext);
+  console.log(URL);
   
   useEffect(() => {
     const config = {

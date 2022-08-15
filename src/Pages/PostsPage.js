@@ -6,11 +6,13 @@ import UserContext from "../contexts/UserContext";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
 import ModalForDelete from "../Components/Posts/ModalForDelete";
+import UrlContext from "../contexts/UrlContext";
 
 
 
 export default function PostsPage() {
-    const URL = "http://localhost:4000";
+    const URL = useContext(UrlContext);
+    console.log(URL);
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
     const [postToDelete, setDelete] = useState('');
@@ -76,7 +78,6 @@ export default function PostsPage() {
         </CreatePost>);
 
     useEffect(() => {
-        // const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
