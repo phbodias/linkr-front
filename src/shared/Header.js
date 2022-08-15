@@ -10,7 +10,7 @@ export default function Header() {
   const navigate = useNavigate();
   const { userData, setUserData } = useContext(UserContext);
   const token = localStorage.getItem("tokenLinker");
-  if ( token === null) navigate("/");
+  if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
   const URL = `http://backlinkr.herokuapp.com/me`;
   const config = {
@@ -27,7 +27,7 @@ export default function Header() {
           `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
         )
       );
-  });
+  }, []);
 
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {
