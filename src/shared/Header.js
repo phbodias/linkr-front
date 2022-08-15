@@ -15,7 +15,7 @@ export default function Header() {
   const [showLogout, setShowLogout] = useState(false);
   const URL = useContext(UrlContext);
   console.log(URL);
-  
+
   useEffect(() => {
     const config = {
       headers: {
@@ -25,21 +25,19 @@ export default function Header() {
     const promise = axios.get(`${URL}/me`, config);
     promise
       .then((res) => setUserData(res.data))
-      .catch((error) =>
+      .catch((error) => {
         alert(
           `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
-        )
-      );
-  },[setUserData,token]);
-
+        );
+        navigate("/");
+      });
+  }, []);
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {
       localStorage.removeItem("tokenLinker");
       navigate("/");
     }
   }
-
-  console.log(userData);
 
   return (
     <Container>
