@@ -24,20 +24,19 @@ export default function Header() {
     const promise = axios.get(`${URL}/me`, config);
     promise
       .then((res) => setUserData(res.data))
-      .catch((error) =>
+      .catch((error) => {
         alert(
           `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
-        )
-      );
-  },[setUserData,token]);
-
+        );
+        navigate("/");
+      });
+  }, []);
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {
       localStorage.removeItem("tokenLinker");
       navigate("/");
     }
   }
-
 
   return (
     <Container>
