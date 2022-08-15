@@ -63,6 +63,7 @@ export default function HashtagPage() {
                     comment={p.comment}
                     likesCount={p.likesCount}
                     likes={p.likes}
+                    idUser={p.userOwner.id}
                 />
             )
             :

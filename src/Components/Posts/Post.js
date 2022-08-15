@@ -6,9 +6,10 @@ import { FaRegHeart, FaHeart } from 'react-icons/fa'
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function Post({ id, userData,
-    urlData, comment, likesCount, likes, openModal, isFromAuthUser }) {
+    urlData, comment, likesCount, likes, openModal, isFromAuthUser, idUser }) {
 
     const [currComment, setComment] = useState(comment)
     const [editPost, setEditMode] = useState(false)
@@ -135,7 +136,9 @@ export default function Post({ id, userData,
     return (
         <Container>
             <div>
-                <img src={userData.picture} alt="" />
+                <Link to={"/user/"+idUser}>
+                    <img src={userData.picture} alt="" />
+                </Link>
                 <Heart>
                     {
                         liked ?
@@ -148,7 +151,9 @@ export default function Post({ id, userData,
             </div>
             <span>
                 <div>
-                    <h2>{userData.name}</h2>
+                    <Link to={"/user/"+idUser}>
+                        <h2>{userData.name}</h2>
+                    </Link>
                     {isFromAuthUser ?
                         <Icons>
                             <MdEdit onClick={() => handleEdit('ClickIcon')} />
