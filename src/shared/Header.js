@@ -22,11 +22,12 @@ export default function Header() {
     const promise = axios.get(URL, config);
     promise
       .then((res) => setUserData(res.data))
-      .catch((error) =>
+      .catch((error) => {
         alert(
           `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
-        )
-      );
+        );
+        navigate("/");
+      });
   }, []);
 
   function logout() {
@@ -35,8 +36,6 @@ export default function Header() {
       navigate("/");
     }
   }
-
-  console.log(userData);
 
   return (
     <Container>
