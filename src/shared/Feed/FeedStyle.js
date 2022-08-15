@@ -9,7 +9,11 @@ const Container = styled.main`
     flex-direction:column;
     justify-content:center;
     background-color:#333333;
+    box-sizing:border-box;
     padding: 72px 18% 0 16%;
+    @media (max-width: 1130px) {
+        padding:35px 0 0 0;
+        }
 `;
 
 const Title = styled.h1`
@@ -19,6 +23,12 @@ const Title = styled.h1`
     margin:53px 0 43px 0;
     color:#FFFFFF;
     height:fit-content;
+    @media (max-width: 1130px) {
+        padding:20px 0 0 15px;
+        font-size:34px;
+        margin-bottom:20px;
+        width:100%;
+        }
 `;
 
 const InnerContainer = styled.div`
@@ -32,6 +42,9 @@ const LeftInnerContainer = styled.div`
     display:flex;
     flex-direction:column;
     align-items:center;
+    @media (max-width: 1130px) {
+        width:100%;
+        }
 `;
 
 const RightInnerContainer = styled.div`
@@ -42,6 +55,10 @@ const RightInnerContainer = styled.div`
     flex-direction:column;
     align-items:center;
     border-radius: 1rem;
+    @media (max-width: 1130px) {
+    display:none;
+    }
+
 `;
 
 const SubTitle = styled.div`
