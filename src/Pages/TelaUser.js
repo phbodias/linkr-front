@@ -35,7 +35,7 @@ export default function TelaUser(){
             }
         }
         setLoading(true);
-        const promise = axios.get(`${URL}/posts/${id}`);
+        const promise = axios.get(`${URL}/posts/${id}`,config);
         promise.then(response => {
             setPostList(response.data);
            
@@ -87,7 +87,7 @@ export default function TelaUser(){
     );
     
     return (
-        <FeedPage title={name} posts={postsList} hashtags={hashtags}  />
+        <FeedPage title={`${name}'s Posts`} posts={postsList} hashtags={hashtags}  />
     )
 }
 
