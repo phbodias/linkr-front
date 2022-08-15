@@ -1,22 +1,21 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
-import UserContext from "../../contexts/UserContext";
 import { Container, Input, Button, StyledLink } from "./AuthStyle";
 import LogoComponent from "./LogoComponent";
 
 export default function SignIn() {
   const navigate = useNavigate();
 
-  const { setToken } = useContext(UserContext);
-
-  const [loading, setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+  if (localStorage.getItem("tokenLinker") !== null) navigate("/timeline");
 
   function handleRegister(e) {
     e.preventDefault();
@@ -27,7 +26,6 @@ export default function SignIn() {
     promise
       .then((res) => {
         localStorage.setItem("tokenLinker", res.data.token);
-        setToken(res.data.token)
         navigate("/timeline");
       })
 

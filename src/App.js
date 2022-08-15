@@ -10,16 +10,12 @@ import HashtagPage from "./Pages/HashtagPage";
 
 function App() {
   const [userData, setUserData] = useState({});
-  const [token, setToken] = useState(localStorage.getItem("tokenLinker"));
 
   return (
-    <UserContext.Provider value={{ userData, setUserData, token, setToken }}>
+    <UserContext.Provider value={{ userData, setUserData }}>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={(token !== false) ? <Navigate to="/timeline" /> : <SignIn />}
-          />
+          <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/user/:id" element={<TelaUser />} />
           <Route path="/buscar" element={<InputSearchUsers />} />

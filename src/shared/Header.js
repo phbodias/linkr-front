@@ -8,8 +8,9 @@ import ClickAwayListener from "react-click-away-listener";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { userData, setUserData, token, setToken } = useContext(UserContext);
-  if (localStorage.getItem("tokenLinker") === null) navigate("/");
+  const { userData, setUserData } = useContext(UserContext);
+  const token = localStorage.getItem("tokenLinker");
+  if ( token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
   const URL = `http://backlinkr.herokuapp.com/me`;
   const config = {
@@ -31,7 +32,6 @@ export default function Header() {
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {
       localStorage.removeItem("tokenLinker");
-      setToken(false);
       navigate("/");
     }
   }
