@@ -33,8 +33,9 @@ export default function PostsPage() {
                     comment={p.comment}
                     likesCount={p.likesCount}
                     likes={p.likes}
-                    isFromAuthUser={userData.id===p.userOwner.id}
+                    isFromAuthUser={userData[0]?.id===p.userOwner.id}
                     openModal={openModal}
+                    idUser={p.userOwner.id}
                 />
             )
             :
@@ -46,7 +47,7 @@ export default function PostsPage() {
 
     const forms = (
         <CreatePost disable={loading}>
-            <img src={userData.profilePic} alt="" />
+            <img src={userData[0]?.profilePic} alt="" />
             <form onSubmit={createNewPost}>
                 <h2>What are you going to share today?</h2>
                 <input
@@ -57,7 +58,7 @@ export default function PostsPage() {
                     onChange={handleInputChange}
                     required
                     disabled={loading} />
-                <input
+                <textarea
                     type='text'
                     rows='3'
                     name='comment'
