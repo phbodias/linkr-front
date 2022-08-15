@@ -5,6 +5,7 @@ import UserContext from "../contexts/UserContext";
 import InputSearchUsers from "../Components/InputSearch/InputSearchUsers";
 import { useNavigate } from "react-router-dom";
 import ClickAwayListener from "react-click-away-listener";
+import UrlContext from "../contexts/UrlContext";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -12,14 +13,16 @@ export default function Header() {
   const token = localStorage.getItem("tokenLinker");
   if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
-  const URL = `https://backlinkr.herokuapp.com/me`;
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  const URL = useContext(UrlContext);
+  console.log(URL);
+  
   useEffect(() => {
-    const promise = axios.get(URL, config);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/me`, config);
     promise
       .then((res) => setUserData(res.data))
       .catch((error) =>
@@ -27,7 +30,7 @@ export default function Header() {
           `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
         )
       );
-  }, []);
+  },[setUserData,token]);
 
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {

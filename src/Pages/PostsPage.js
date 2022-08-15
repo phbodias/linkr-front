@@ -6,10 +6,13 @@ import UserContext from "../contexts/UserContext";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
 import ModalForDelete from "../Components/Posts/ModalForDelete";
+import UrlContext from "../contexts/UrlContext";
 
 
 
 export default function PostsPage() {
+    const URL = useContext(UrlContext);
+    console.log(URL);
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
     const [postToDelete, setDelete] = useState('');
@@ -76,7 +79,6 @@ export default function PostsPage() {
         </CreatePost>);
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -113,13 +115,14 @@ export default function PostsPage() {
     function createNewPost(e) {
         e.preventDefault();
         setLoading(true);
-        const URL = 'https://backlinkr.herokuapp.com/posts';
+        // const URL = 'https://backlinkr.herokuapp.com/posts';
+        
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(URL, newPost, config)
+        const promise = axios.post(`${URL}/posts`, newPost, config)
         promise.then(() => {
             window.location.reload(false);
         })
@@ -136,13 +139,13 @@ export default function PostsPage() {
 
     function deletePost() {
         setLoading(true);
-        const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
+        // const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.delete(URL, config);
+        const promise = axios.delete(`${URL}/posts/${postToDelete}`, config);
         promise.then(() => {
             window.location.reload(false);
         })
