@@ -15,8 +15,6 @@ export default function SignIn() {
     password: "",
   });
 
-  if (localStorage.getItem("tokenLinker")) navigate("/timeline");
-
   function handleRegister(e) {
     e.preventDefault();
     setLoading(true);

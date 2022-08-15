@@ -36,6 +36,8 @@ export default function Header() {
     }
   }
 
+  console.log(userData);
+
   return (
     <Container>
       <Title onClick={() => navigate("/timeline")}>linkr</Title>

@@ -109,8 +109,8 @@ export default function Post({
 
   function addLike() {
     setLiked(true);
-    console.log("aaAAAAAAAAAAAAAAAAAAAAAAAAaa", token);
-    const URL = `https://backlinkr.herokuapp.com/likes/${id}`;
+    console.log("aaAAAAAAAAAAAAAAAAAAAAAAAAaa", id);
+    //const URL = `https://backlinkr.herokuapp.com/likes/${}`;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

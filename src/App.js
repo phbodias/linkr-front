@@ -15,7 +15,10 @@ function App() {
     <UserContext.Provider value={{ userData, setUserData }}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SignIn />} />
+          <Route
+            path="/"
+            element={localStorage.getItem("tokenLinker") ? <PostsPage /> : <SignIn />}
+          />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/user/:id" element={<TelaUser />} />
           <Route path="/buscar" element={<InputSearchUsers />} />
