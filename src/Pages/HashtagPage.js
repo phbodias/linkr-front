@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
+import UrlContext from "../contexts/UrlContext";
 
 
-export default function HashtagPage() {
+export default function HashtagPage() { 
+
+    const URL = useContext(UrlContext);
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -16,7 +19,6 @@ export default function HashtagPage() {
     const { hashtag } = useParams();
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`

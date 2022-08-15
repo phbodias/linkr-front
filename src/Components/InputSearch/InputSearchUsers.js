@@ -1,14 +1,13 @@
 import  { DebounceInput }  from  'react-debounce-input' ;
-import React from 'react';
+import React, {useContext} from 'react';
 import axios from "axios";
 import styled from "styled-components";
-
-
 import CardUser from './CardUser';
+import UrlContext from '../../contexts/UrlContext';
 
 
 export default function InputSearchUsers(){
-
+    const URL = useContext(UrlContext);
 
     const token = localStorage.getItem('tokenLinker')
     const [users, setUsers] = React.useState("")
@@ -19,13 +18,12 @@ export default function InputSearchUsers(){
     React.useEffect(()=>{
         console.log('useEffect')
         if(searchWords.length>2){
-            const URL = `http://backlinkr.herokuapp.com/busca/${searchWords}`
             const config = { 
                 headers: { 
                     Authorization: `Bearer ${token}` 
                 } 
             } 
-            const getUsersByName = axios.get(URL,config)
+            const getUsersByName = axios.get(`${URL}/busca/${searchWords}`,config)
             getUsersByName.then(getUsersByNameSucess)
             getUsersByName.catch(getUsersByNameFail)
         }
@@ -67,7 +65,7 @@ export default function InputSearchUsers(){
             minLength={3} 
             debounceTimeout={300} 
             onChange={(event) => setsearchWords(event.target.value)}
-            
+            placeholder={'Search for people and friends'}
             />
         </Input>
 
@@ -102,24 +100,41 @@ margin: 0 auto;
 border-radius: 8px;
 padding: 0;
 width: 563px;
+height: ${props=> props.selecionado?"150px":"45px"};
 background-color:#E7E7E7;
 overflow-y: scroll;
 display: flex;
 flex-direction: column;
+
+@media (max-width: 563px) {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 95vw;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 563px) and (max-width:880px) {
+    width: 280px;
+  }
+
 `
 
 const Users = styled.div`
     margin-top: 3px;
     width: 100%;
-    height: 130px;
+    height: 135px;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
     display : ${props=> props.selecionado?"block":"none"};
 
+
     h4{
         margin-top: 15px;
         text-align: center;
-        color: red;
+        color: blue;
     }
 `

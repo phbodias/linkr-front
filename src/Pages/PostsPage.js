@@ -5,9 +5,11 @@ import styled from "styled-components";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
 import UserContext from "../contexts/UserContext";
+import UrlContext from "../contexts/UrlContext";
 
 
 export default function PostsPage() {
+    const URL = useContext(UrlContext);
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
@@ -72,7 +74,6 @@ export default function PostsPage() {
         </CreatePost>);
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -109,13 +110,14 @@ export default function PostsPage() {
     function createNewPost(e) {
         e.preventDefault();
         setLoading(true);
-        const URL = 'https://backlinkr.herokuapp.com/posts';
+        // const URL = 'https://backlinkr.herokuapp.com/posts';
+        
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(URL, newPost, config)
+        const promise = axios.post(`${URL}/posts`, newPost, config)
         promise.then(() => {
             window.location.reload(false);
         })
@@ -130,7 +132,6 @@ export default function PostsPage() {
         setNewPost({ ...newPost, [e.target.name]: e.target.value });
     }
 
-    
 
     return (
             <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />

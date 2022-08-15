@@ -2,39 +2,39 @@ import React from "react"
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import { ThreeDots } from "react-loader-spinner";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext} from "react";
 import styled from "styled-components";
 import Post from "../Components/Posts/Post"
 import { FeedPage } from "../shared/Feed/FeedPage";
+import UrlContext from "../contexts/UrlContext";
 
 
 
 
-export default function TelaUser() {
-
+export default function TelaUser(){
+    const URL = useContext(UrlContext);
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
-    let name;
-
-    if (postList != null && postList.length > 0) {
-        console.log('entrou no if nao nulo')
-        name = postList[0].userOwner.name
-    }
-
+    const [name, setName] = useState('')
+    // let name;
+    // if (postList != null && postList.length > 0) {
+    //     console.log('entrou no if nao nulo')
+    //     name = postList[0].userOwner.name
+    // }
+    
     const token = localStorage.getItem('tokenLinker');
     console.log(token)
     const { id } = useParams();
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
         setLoading(true);
-        const promise = axios.get(`http://localhost:4001/posts/${id}`);
+        const promise = axios.get(`${URL}/posts/${id}`,config);
         promise.then(response => {
             setPostList(response.data);
 
@@ -44,6 +44,15 @@ export default function TelaUser() {
             alert("Erro ao pegar os posts");
 
         });
+
+        axios.get(`${URL}/user/${id}`, config)
+            .then(res=>{
+                console.log(res.data[0])
+                setName(res.data[0].name)
+            })
+            .catch(err=>{
+                console.log(err)
+            })
 
         axios.get(`${URL}/hashtags`, config)
             .then(res => {
@@ -89,7 +98,7 @@ export default function TelaUser() {
     }
 
     return (
-        <FeedPage title={name} posts={postsList} hashtags={hashtags} />
+        <FeedPage title={`${name}'s Posts`} posts={postsList} hashtags={hashtags}  />
     )
 }
 
