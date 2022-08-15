@@ -6,6 +6,8 @@ import { Container, Input, Button, StyledLink } from "./AuthStyle";
 import LogoComponent from "./LogoComponent";
 
 export default function SignIn() {
+  const URL = "http://localhost:4000";
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ export default function SignIn() {
     e.preventDefault();
     setLoading(true);
 
-    const promise = axios.post("https://backlinkr.herokuapp.com/signin", data);
+    const promise = axios.post(`${URL}/signin`, data);
 
     promise
       .then((res) => {

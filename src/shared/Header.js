@@ -12,14 +12,16 @@ export default function Header() {
   const token = localStorage.getItem("tokenLinker");
   if ( token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
-  const URL = `http://backlinkr.herokuapp.com/me`;
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  // const URL = `http://backlinkr.herokuapp.com/me`;
+  const URL = "http://localhost:4000";
+  
   useEffect(() => {
-    const promise = axios.get(URL, config);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/me`, config);
     promise
       .then((res) => setUserData(res.data))
       .catch((error) =>
@@ -27,7 +29,7 @@ export default function Header() {
           `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
         )
       );
-  });
+  },[setUserData,token]);
 
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {
