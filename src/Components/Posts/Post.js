@@ -11,25 +11,33 @@ import UserContext from "../../contexts/UserContext";
 
 import ReactTooltip from 'react-tooltip';
 
-export default function Post({ id, userOwner,
-    urlData, comment, likesCount, likes, openModal, idUser }) {
-    const { userData } = useContext(UserContext);
-    const URL = useContext(UrlContext);
+export default function Post({
+  id,
+  userOwner,
+  urlData,
+  comment,
+  likesCount,
+  likes,
+  openModal,
+  idUser,
+}) {
+  const { userData } = useContext(UserContext);
+  const URL = useContext(UrlContext);
 
-    const [currComment, setComment] = useState(comment)
-    const [editPost, setEditMode] = useState(false)
-    const [disable, setDisable] = useState(false);
-    const [liked,setLiked] = useState(false)
-    const token = localStorage.getItem('tokenLinker');
-    const navigate = useNavigate();
+  const [currComment, setComment] = useState(comment);
+  const [editPost, setEditMode] = useState(false);
+  const [disable, setDisable] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const token = localStorage.getItem("tokenLinker");
+  const navigate = useNavigate();
 
   function textWithoutHashtag(text) {
     return text?.replace("#", "");
   }
 
-  useEffect(()=>{
-      setComment(comment)
-    },[comment])
+  useEffect(() => {
+    setComment(comment);
+  }, [comment]);
 
   let description = formatUrlData(urlData.description, "description");
   let title = formatUrlData(urlData.title);
@@ -46,8 +54,6 @@ export default function Post({ id, userOwner,
     }
     return textOutput;
   }
-
-  
 
   function moveCursorAtEnd(e) {
     const temp_value = e.target.value;
@@ -94,56 +100,61 @@ export default function Post({ id, userOwner,
     }
   }
 
-    function updatePost() {
-        setDisable(true);
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const promise = axios.put(`${URL}/posts/${id}`, { comment: currComment }, config);
-        promise.then(() => {
-            window.location.reload(false);
-        })
-        promise.catch(() => {
-            alert('Your changes could not be saved');
-            setDisable(false);
-        })
-    }
-
-  function addLike() {
-    setLiked(true);
-    //const URL = `https://backlinkr.herokuapp.com/likes/${}`;
+  function updatePost() {
+    setDisable(true);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    /* const promise = axios.post(URL, config);
+    const promise = axios.put(
+      `${URL}/posts/${id}`,
+      { comment: currComment },
+      config
+    );
     promise.then(() => {
       window.location.reload(false);
     });
     promise.catch(() => {
       alert("Your changes could not be saved");
-    }); */
+      setDisable(false);
+    });
+  }
+
+  function addLike() {
+    setLiked(true);
+    const URL = `https://backlinkr.herokuapp.com/likes`;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.post(URL, { id }, config);
+    promise.then(() => {
+      window.location.reload(false);
+    });
+    promise.catch((e) => {
+      alert(e);
+    });
   }
   function removeLike() {
     setLiked(false);
-    /*const URL = `https://backlinkr.herokuapp.com/likes/${id}`
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const promise = axios.delete(URL, { postId,userId }, config);
-        promise.then(() => {
-            window.location.reload(false);
-        })
-        promise.catch(() => {
-            alert('Your changes could not be saved');
-        })*/
+    console.log(id, token);
+    const URL = `https://backlinkr.herokuapp.com/likes/${id}`;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.delete(URL, config);
+    promise.then(() => {
+      window.location.reload(false);
+    });
+    promise.catch((e) => {
+      alert(e.message);
+    });
   }
-
+  
   function messageLikes () {
     if(likesCount===0){
       return `Ninguém curtiu esse post ainda`
@@ -266,7 +277,7 @@ const Container = styled.div`
   @media (max-width: 1130px) {
     margin: 5px 0;
     padding: 12px;
-    border-radius:0;
+    border-radius: 0;
     img {
       width: 40px;
       height: 40px;
