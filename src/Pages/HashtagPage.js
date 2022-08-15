@@ -13,10 +13,10 @@ export default function HashtagPage() {
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
-    
+
     const token = localStorage.getItem('tokenLinker');
 
-    const {hashtag} = useParams();
+    const { hashtag } = useParams();
 
     useEffect(() => {
         const config = {
@@ -28,18 +28,18 @@ export default function HashtagPage() {
         const promise = axios.get(`${URL}/hashtags/${hashtag}`, config);
         promise.then(response => {
             setPostList(response.data);
-           
+
         });
         promise.catch((error) => {
             console.log(error.response.data);
             alert("An error occured while trying to fetch the posts, please refresh the page");
-         
+
         });
 
         axios.get(`${URL}/hashtags`, config)
-            .then( res => {
-                const arrayHashtags=[];
-                for (const hash of res.data){
+            .then(res => {
+                const arrayHashtags = [];
+                for (const hash of res.data) {
                     arrayHashtags.push(hash.text);
                 }
                 setHashtags([...arrayHashtags]);
@@ -50,36 +50,39 @@ export default function HashtagPage() {
                 setLoading(false);
             });
 
-        
+
     }, [token, hashtag]);
 
 
-    const postsList= (
-        postList?.length > 0 ?
-            postList.map((p,index) =>
-                <Post
-                    key={index}
-                    id={p.postId}
-                    userData={p.userOwner}
-                    urlData={p.urlData}
-                    comment={p.comment}
-                    likesCount={p.likesCount}
-                    likes={p.likes}
-                    idUser={p.userOwner.id}
-                />
-            )
-            :
-            loading || !postList || !hashtags  ?
-                <ThreeDots color="#FFF" height={50} width={100} />
+    function postsList(openModal) {
+        return (
+            postList?.length > 0 ?
+                postList.map((p, index) =>
+                    <Post
+                        key={index}
+                        id={p.postId}
+                        userOwner={p.userOwner}
+                        urlData={p.urlData}
+                        comment={p.comment}
+                        likesCount={p.likesCount}
+                        likes={p.likes}
+                        openModal={openModal}
+                        idUser={p.userOwner.id}
+                    />
+                )
                 :
-                <p>There are no posts yet</p>
-        
-    );
+                loading || !postList || !hashtags ?
+                    <ThreeDots color="#FFF" height={50} width={100} />
+                    :
+                    <p>There are no posts yet</p>
+
+        );
+    }
 
     console.log("bbbbb", postList)
-    
+
     return (
-        <FeedPage title={`# ${hashtag}`} posts={postsList} hashtags={hashtags}  />
+        <FeedPage title={`# ${hashtag}`} posts={postsList} hashtags={hashtags} />
     )
 }
 

@@ -7,11 +7,12 @@ import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import UserContext from "../../contexts/UserContext";
 import UrlContext from "../../contexts/UrlContext";
 
-export default function Post({ id, userData,
-    urlData, comment, likesCount, likes, openModal, isFromAuthUser, idUser }) {
-
+export default function Post({ id, userOwner,
+    urlData, comment, likesCount, likes, openModal, idUser }) {
+    const { userData } = useContext(UserContext);
     const URL = useContext(UrlContext);
 
     const [currComment, setComment] = useState(comment)
@@ -24,6 +25,10 @@ export default function Post({ id, userData,
   function textWithoutHashtag(text) {
     return text?.replace("#", "");
   }
+
+  useEffect(()=>{
+      setComment(comment)
+    },[comment])
 
   let description = formatUrlData(urlData.description, "description");
   let title = formatUrlData(urlData.title);
@@ -40,6 +45,8 @@ export default function Post({ id, userData,
     }
     return textOutput;
   }
+
+  
 
   function moveCursorAtEnd(e) {
     const temp_value = e.target.value;
@@ -144,7 +151,7 @@ export default function Post({ id, userData,
         <Container>
             <div>
                 <Link to={"/user/"+idUser}>
-                    <img src={userData.picture} alt="" />
+                    <img src={userOwner.picture} alt="" />
                 </Link>
                 <Heart>
                     {
@@ -160,9 +167,9 @@ export default function Post({ id, userData,
             <span>
                 <div>
                     <Link to={"/user/"+idUser}>
-                        <h2>{userData.name}</h2>
+                        <h2>{userOwner.name}</h2>
                     </Link>
-                    {isFromAuthUser ?
+                    {userData[0]?.id === userOwner.id?
                         <Icons>
                             <MdEdit onClick={() => handleEdit('ClickIcon')} />
                             <AiFillDelete onClick={() => openModal(id)} />
@@ -249,6 +256,7 @@ const Container = styled.div`
   @media (max-width: 1130px) {
     margin: 5px 0;
     padding: 12px;
+    border-radius:0;
     img {
       width: 40px;
       height: 40px;
