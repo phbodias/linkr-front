@@ -14,8 +14,7 @@ export default function Header() {
   if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
   const URL = useContext(UrlContext);
-  console.log(URL);
-
+  
   useEffect(() => {
     const config = {
       headers: {
@@ -134,4 +133,6 @@ const Container = styled.div`
   padding: 10px 0;
   display: flex;
   box-sizing: border-box;
+
+
 `;
