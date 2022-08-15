@@ -251,6 +251,7 @@ const Container = styled.div`
   @media (max-width: 1130px) {
     margin: 5px 0;
     padding: 12px;
+    border-radius:0;
     img {
       width: 40px;
       height: 40px;

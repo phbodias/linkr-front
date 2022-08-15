@@ -133,42 +133,11 @@ export default function PostsPage() {
     
 
     return (
-        <Container>
             <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
-        </Container>
     );
 }
 
 
-
-const Container = styled.div`
-background-color:#333333;
-height:100%;
-width:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-box-sizing:border-box;
-padding:100px 0 500px 0;
-h1{
-    font-family: 'Oswald', sans-serif;
-    font-size:44px;
-    font-weight:bold;
-    margin:30px 0;
-    width:50%;
-    color:#FFFFFF;
-}
-
-@media (max-width: 1130px) {
-    padding-top: 0;
-    h1{
-        font-size:34px;
-        width:100%;
-        margin:20px 0;
-    }
-  }
-
-`
 
 const CreatePost = styled.div`
 background-color:#FFFFFF;
@@ -232,8 +201,11 @@ button{
 @media (max-width: 1130px) {
     padding: 10px 18px;
     margin-bottom:8px;
+    border-radius:0;
     h2{
         font-size:18px;
+        text-align:center;
+        width:100%;
     }
     img{
         display:none;
