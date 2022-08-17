@@ -33,10 +33,8 @@ export default function Header() {
       });
   }, [URL, navigate, token, setUserData]);
   function logout() {
-    if (window.confirm("Deseja realmente fazer logout?")) {
-      localStorage.removeItem("tokenLinker");
-      navigate("/");
-    }
+    localStorage.removeItem("tokenLinker");
+    navigate("/");
   }
 
   return (
@@ -133,9 +131,12 @@ const Container = styled.div`
   color: #ffffff;
   padding: 10px 0;
   display: flex;
-  box-sizing: border-box;
+  box-sizing: content-box;
   @media (max-width: 563px) {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100vw;
+    padding: 0;
   }
 `;
