@@ -120,8 +120,12 @@ export default function Post({
     promise.then(() => {
       window.location.reload(false);
     });
-    promise.catch(() => {
+    promise.catch(error => {
+      if(error.response.status===401){
+        navigate("/")
+    } else {
       alert("Your changes could not be saved");
+    }
       setDisable(false);
     });
   }
@@ -136,8 +140,12 @@ export default function Post({
     promise.then(() => {
       window.location.reload(false);
     });
-    promise.catch((e) => {
-      alert(e);
+    promise.catch(error => {
+      if(error.response.status===401){
+        navigate("/")
+    } else {
+        alert("The post could not be liked");
+    }
     });
   }
   function removeLike() {
@@ -151,8 +159,12 @@ export default function Post({
     promise.then(() => {
       window.location.reload(false);
     });
-    promise.catch((e) => {
-      alert(e.message);
+    promise.catch(error => {
+      if(error.response.status===401){
+      navigate("/")
+  } else {
+      alert("The post could not be disliked");
+  }
     });
   }
 

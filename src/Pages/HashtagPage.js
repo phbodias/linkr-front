@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import Post from "../Components/Posts/Post/Post";
-import { FeedPage } from "../shared/Feed/FeedPage";
+import { FeedPage } from "../Components/shared/Feed/FeedPage";
 import UrlContext from "../contexts/UrlContext";
 
 
