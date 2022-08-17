@@ -3,8 +3,8 @@ import { ThreeDots } from "react-loader-spinner";
 
 Modal.setAppElement('#root');
 
-export default function ModalForDelete (
-    {modalIsOpen,loading,closeModal,deletePost}) {
+export default function ModalForPostActions (
+    {modalIsOpen,loading,closeModal,postFunction,questionAnswers}) {
         
     return (
     <Modal
@@ -17,20 +17,20 @@ export default function ModalForDelete (
             :
             <h1
                 style={Modalh1Style}>
-                Are you sure you want <br /> to delete this post?
+                {questionAnswers[0]}
             </h1>}
         <div>
             <button
                 disabled={loading}
                 style={ModalNButtonStyle}
                 onClick={closeModal}>
-                No, go back
+                {questionAnswers[1]}
             </button>
             <button
                 disabled={loading}
                 style={ModalYButtonStyle}
-                onClick={deletePost}>
-                Yes, delete it
+                onClick={postFunction}>
+                {questionAnswers[2]}
             </button>
         </div>
     </Modal>)
@@ -46,7 +46,7 @@ const ModalCustomStyles = {
         transform: 'translate(-50%, -50%)',
         backgroundColor: '#333333',
         borderRadius: '50px',
-        padding: '40px 130px',
+        padding: '40px 30px',
         boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
@@ -59,7 +59,8 @@ const Modalh1Style = {
     textAlign: 'center',
     fontWeight: '700',
     lineHeight: '40px',
-    marginBottom: '20px'
+    marginBottom: '20px',
+    width:'75%'
 }
 const ModalNButtonStyle = {
     border: 'none',
