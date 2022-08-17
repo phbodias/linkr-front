@@ -8,6 +8,7 @@ import TelaUser from "./Pages/TelaUser.js";
 import PostsPage from "./Pages/PostsPage";
 import HashtagPage from "./Pages/HashtagPage";
 import UrlContext from "./contexts/UrlContext";
+import SearchNewUpdates from "./Components/Posts/SearchNewUpdates";
 
 function App() {
   const [userData, setUserData] = useState({});
@@ -22,7 +23,7 @@ function App() {
             <Route path="/" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/user/:id" element={<TelaUser />} />
-            <Route path="/buscar" element={<InputSearchUsers />} />
+            <Route path="/buscar" element={<SearchNewUpdates/>} />
             <Route path="/timeline" element={<PostsPage />} />
             <Route path="/hashtag/:hashtag" element={<HashtagPage />} />
           </Routes>
