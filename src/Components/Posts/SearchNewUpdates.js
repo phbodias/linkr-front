@@ -62,15 +62,15 @@ export default function SearchNewUpdates(){
     }
 
 
+
     return(
-        <>
         <AreaNewPost visible={visible} onClick={()=>window.location.reload(true)}>
             <div>
+                <div>
                 {currentValue-oldValue} new posts, load more!<AiOutlineReload/> 
+                </div>
             </div>
         </AreaNewPost>
-        <h1>dsadsadsadsads</h1>
-        </>
     )
 }
 
