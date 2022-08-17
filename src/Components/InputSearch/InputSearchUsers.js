@@ -16,7 +16,6 @@ export default function InputSearchUsers() {
 
   console.log("renderizou");
   React.useEffect(() => {
-    console.log("useEffect");
     if (searchWords.length > 2) {
       const config = {
         headers: {
