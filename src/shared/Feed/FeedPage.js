@@ -95,10 +95,11 @@ export function FeedPage({ title, forms, posts, hashtags }) {
                 <InnerContainer>
                     <LeftInnerContainer>
                         {forms ? <CreatePost /> : null}
+                        <SearchNewUpdates/>
                         {posts(openModal)}
 
-                        <SearchNewUpdates>
-                        </SearchNewUpdates>
+                        
+                       
 
                     </LeftInnerContainer>
                     <RightInnerContainer>
