@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import axios from "axios"
 import { ThreeDots } from "react-loader-spinner";
 import { useEffect, useState, useContext} from "react";
-import styled from "styled-components";
+// import styled from "styled-components";
 import Post from "../Components/Posts/Post"
 import { FeedPage } from "../shared/Feed/FeedPage";
 import UrlContext from "../contexts/UrlContext";
@@ -69,7 +69,7 @@ export default function TelaUser(){
             });
 
 
-    }, [token, id]);
+    }, [token, id, URL]);
 
 
     function postsList(openModal) {
@@ -81,7 +81,7 @@ export default function TelaUser(){
                         id={p.postId}
                         userOwner={p.userOwner}
                         urlData={p.urlData}
-                        comment={p.comment}
+                        description={p.description}
                         likesCount={p.likesCount}
                         likes={p.likes}
                         openModal={openModal}
@@ -105,31 +105,31 @@ export default function TelaUser(){
 
 
 
-const Container = styled.div`
-background-color:#333333;
-height:100%;
-width:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-box-sizing:border-box;
-padding:100px 0 500px 0;
-h1{
-    font-family: 'Oswald', sans-serif;
-    font-size:44px;
-    font-weight:bold;
-    margin:30px 0;
-    width:50%;
-    color:#FFFFFF;
-}
+// const Container = styled.div`
+// background-color:#333333;
+// height:100%;
+// width:100%;
+// display:flex;
+// flex-direction:column;
+// align-items:center;
+// box-sizing:border-box;
+// padding:100px 0 500px 0;
+// h1{
+//     font-family: 'Oswald', sans-serif;
+//     font-size:44px;
+//     font-weight:bold;
+//     margin:30px 0;
+//     width:50%;
+//     color:#FFFFFF;
+// }
 
-@media (max-width: 1130px) {
-    padding-top: 0;
-    h1{
-        font-size:34px;
-        width:100%;
-        margin:20px 0;
-    }
-  }
+// @media (max-width: 1130px) {
+//     padding-top: 0;
+//     h1{
+//         font-size:34px;
+//         width:100%;
+//         margin:20px 0;
+//     }
+//   }
 
-`
+// `

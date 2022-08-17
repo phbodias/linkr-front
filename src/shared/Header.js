@@ -31,7 +31,7 @@ export default function Header() {
         localStorage.removeItem("tokenLinker");
         navigate("/");
       });
-  }, []);
+  }, [URL, navigate, token, setUserData]);
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {
       localStorage.removeItem("tokenLinker");

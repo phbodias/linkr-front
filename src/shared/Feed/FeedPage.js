@@ -2,12 +2,14 @@ import { Container, Title, InnerContainer, RightInnerContainer, LeftInnerContain
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import ModalForDelete from "../../Components/Posts/ModalForDelete";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
+import UrlContext from "../../contexts/UrlContext";
 import SearchNewUpdates from "../../Components/Posts/SearchNewUpdates";
 
 export function FeedPage({title, forms, posts, hashtags}){
     const navigate = useNavigate();
+    const URL = useContext(UrlContext);
     const [postToDelete, setDelete] = useState('');
     const [modalIsOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -15,13 +17,12 @@ export function FeedPage({title, forms, posts, hashtags}){
 
     function deletePost() {
         setLoading(true);
-        const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.delete(URL, config);
+        const promise = axios.delete(`${URL}/posts/${postToDelete}`, config);
         promise.then(() => {
             window.location.reload(false);
         })

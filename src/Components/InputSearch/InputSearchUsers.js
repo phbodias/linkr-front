@@ -29,7 +29,7 @@ export default function InputSearchUsers(){
         }
        
             
-    },[searchWords,token])
+    },[searchWords,token, URL])
     
     function getUsersByNameSucess(response){
         console.log(response)
