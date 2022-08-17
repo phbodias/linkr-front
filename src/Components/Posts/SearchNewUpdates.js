@@ -10,9 +10,7 @@ export default function SearchNewUpdates(){
     const URL = useContext(UrlContext);
     const [oldValue, setOldValue] = React.useState(0)
     const [currentValue, setcurrentValue] = React.useState(0)
-    const [postList, setPostList] = React.useState(null);
     const token = localStorage.getItem('tokenLinker');
-    
 
     let visible = false
 
@@ -44,6 +42,7 @@ export default function SearchNewUpdates(){
         const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
             if(response.data.length>oldValue){
+                console.log('entrou no if ')
                 setcurrentValue(response.data.length)
             }
             
@@ -86,7 +85,9 @@ const AreaNewPost = styled.div`
     display: table-cell;
     font-size: 16px;
     color: #FFFFFF;
-
+    margin: 10px;
+    padding: 10px;
+    cursor:pointer;
     div{
         display: flex;
         align-items: center;
