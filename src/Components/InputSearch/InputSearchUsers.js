@@ -2,6 +2,7 @@ import { DebounceInput } from "react-debounce-input";
 import React, { useContext } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import ClickAwayListener from "react-click-away-listener";
 import CardUser from "./CardUser";
 import UrlContext from "../../contexts/UrlContext";
 
@@ -58,7 +59,7 @@ export default function InputSearchUsers() {
   }
 
   return (
-    <>
+    <ClickAwayListener onClickAway={() => setActiveButton(false)}>
       <Body
         selecionado={activeButton}
         onClick={() => setActiveButton(!activeButton)}
@@ -74,7 +75,7 @@ export default function InputSearchUsers() {
 
         <Users selecionado={activeButton}>{showUsers()}</Users>
       </Body>
-    </>
+    </ClickAwayListener>
   );
 }
 
