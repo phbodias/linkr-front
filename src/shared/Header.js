@@ -26,7 +26,7 @@ export default function Header() {
       .then((res) => setUserData(res.data))
       .catch((error) => {
         alert(
-          `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
+          `Erro: \n\n${error.response.status} - ${error.response.data}`
         );
         localStorage.removeItem("tokenLinker");
         navigate("/");
