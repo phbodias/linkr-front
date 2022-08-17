@@ -4,8 +4,8 @@ import axios from "axios"
 import { ThreeDots } from "react-loader-spinner";
 import { useEffect, useState, useContext} from "react";
 // import styled from "styled-components";
-import Post from "../Components/Posts/Post"
-import { FeedPage } from "../shared/Feed/FeedPage";
+import Post from "../Components/Posts/Post/Post"
+import { FeedPage } from "../Components/shared/Feed/FeedPage";
 import UrlContext from "../contexts/UrlContext";
 
 
