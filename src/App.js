@@ -8,7 +8,6 @@ import PostsPage from "./Components/Posts/PostsPage";
 import HashtagPage from "./Pages/HashtagPage";
 import UrlContext from "./contexts/UrlContext";
 import SearchNewUpdates from "./Components/Posts/SearchNewUpdates";
-import Comments from "./Components/Posts/Comments/CommentsIcon";
 
 function App() {
   const [userData, setUserData] = useState({});
@@ -26,7 +25,6 @@ function App() {
             <Route path="/buscar" element={<SearchNewUpdates/>} />
             <Route path="/timeline" element={<PostsPage />} />
             <Route path="/hashtag/:hashtag" element={<HashtagPage />} />
-            <Route path="/comments" element={<Comments/>} />
           </Routes>
         </BrowserRouter>
       </UserContext.Provider>

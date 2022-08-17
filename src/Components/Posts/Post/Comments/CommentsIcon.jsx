@@ -2,18 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import { AiOutlineComment } from "react-icons/ai";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
-import UrlContext from "../../../contexts/UrlContext.js";
+import UrlContext from "../../../../contexts/UrlContext.js";
 import { BottomContainer, Container, UpperContainer } from "./CommentsIconStyle.js"
 import { useNavigate } from "react-router-dom";
 
-export default function CommentsIcon({ }) {
+export default function CommentsIcon({postId}) {
     const URL = useContext(UrlContext);
     // const [comments, setComments] = useState(null);
     const [commentsCount, setCommentsCount] = useState(null);
     const navigate = useNavigate();
     const token = localStorage.getItem('tokenLinker');
-    //colocar para receber por props
-    const postId = 26;
     //colocar no componente post
     const [clicked, setClicked] = useState(false);
 
@@ -27,6 +25,7 @@ export default function CommentsIcon({ }) {
         axios.get(`${URL}/comments/commentsCount/${postId}`,config)
             .then(res => {
                 setCommentsCount(res.data.commentsCount);
+                console.log(res.data.commentsCount)
             })
             .catch(err => {
                 console.log(err.response.data);
@@ -42,12 +41,12 @@ export default function CommentsIcon({ }) {
     return (
         <Container>
             <UpperContainer>
-                <AiOutlineComment style={{ color: "#000000" }} />
+                <AiOutlineComment  />
             </UpperContainer>
             <BottomContainer>
                 { commentsCount
                     ?
-                    (commentsCount === 1 || commentsCount === 0) 
+                    (commentsCount=== "1" || commentsCount === "0") 
                         ? 
                      `${commentsCount} comentário`
                      :
