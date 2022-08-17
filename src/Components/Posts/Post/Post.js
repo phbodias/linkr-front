@@ -1,16 +1,17 @@
-import styled from "styled-components";
+import { Container, tagStyle, Icons, Heart, RepostStyle, EditInput, URLdiv } from "./PostStyle";
 import axios from "axios";
 import { MdEdit } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { BiRepost } from "react-icons/bi";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../../contexts/UserContext";
-import UrlContext from "../../contexts/UrlContext";
-
+import UserContext from "../../../contexts/UserContext";
+import UrlContext from "../../../contexts/UrlContext";
 import ReactTooltip from "react-tooltip";
+
 
 export default function Post({
   id,
@@ -18,18 +19,22 @@ export default function Post({
   urlData,
   description,
   likesCount,
+  repostCount,
   likes,
+  reposts,
   openModal,
   idUser,
 }) {
+
+
   const { userData } = useContext(UserContext);
   const URL = useContext(UrlContext);
   const [currDescription, setDescription] = useState(description);
   const [editPost, setEditMode] = useState(false);
   const [disable, setDisable] = useState(false);
-  const [liked, setLiked] = useState(false);
   const token = localStorage.getItem("tokenLinker");
   const navigate = useNavigate();
+
 
   function textWithoutHashtag(text) {
     return text?.replace("#", "");
@@ -122,7 +127,6 @@ export default function Post({
   }
 
   function addLike() {
-    setLiked(true);     
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -137,7 +141,6 @@ export default function Post({
     });
   }
   function removeLike() {
-    setLiked(false);
     console.log(id, token);
     const config = {
       headers: {
@@ -158,15 +161,15 @@ export default function Post({
       return `Ninguém curtiu esse post ainda`;
     } else {
       let user1 = "";
-      if (likes.filter((l) => l.id === userData[0].id).length > 0) {
+      if (likes.filter((l) => l.id === userData[0]?.id).length > 0) {
         user1 = "Você";
       } else user1 = likes[0]?.name;
       if (likesCount === 1) {
-        return `${user1}`;
+        return `${user1} curtiu`;
       } else if (likesCount === 2) {
-        return `${user1} e ${likes[1]?.name}`;
+        return `${user1} e ${likes[1]?.name} curtiram`;
       } else {
-        return `${user1},${likes[1]?.name} e outras ${likesCount - 2} pessoas`;
+        return `${user1},${likes[1]?.name} e outras ${likesCount - 2} pessoas curtiram`;
       }
     }
   }
@@ -178,14 +181,20 @@ export default function Post({
           <img src={userOwner.picture} alt="" />
         </Link>
         <Heart>
-          {likes.filter((l) => l.id === userData[0].id).length > 0 ? (
+          {likes.filter((l) => l.id === userData[0]?.id).length > 0 ? (
             <FaHeart style={{ color: "#AC0000" }} onClick={removeLike} />
           ) : (
             <FaRegHeart onClick={addLike} />
           )}
-          <p data-tip={messageLikes()}>{likesCount} likes</p>
+          <p data-tip={messageLikes()}>
+            {likesCount} likes</p>
           <ReactTooltip />
         </Heart>
+
+        <RepostStyle>
+          <BiRepost onClick={() => openModal(id,'repost')} />
+          <p>{repostCount} re-posts</p>
+        </RepostStyle>
       </div>
       <span>
         <div>
@@ -195,7 +204,7 @@ export default function Post({
           {userData[0]?.id === userOwner.id ? (
             <Icons>
               <MdEdit onClick={() => handleEdit("ClickIcon")} />
-              <AiFillDelete onClick={() => openModal(id)} />
+              <AiFillDelete onClick={() => openModal(id,'delete')} />
             </Icons>
           ) : (
             ""
@@ -229,174 +238,3 @@ export default function Post({
   );
 }
 
-const tagStyle = {
-  color: "white",
-  fontWeight: 700,
-  cursor: "pointer",
-};
-
-const Container = styled.div`
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  background-color: #171717;
-  border-radius: 10px;
-  padding: 18px;
-  margin: 15px 0;
-  img {
-    border-radius: 50px;
-    width: 50px;
-    height: 50px;
-  }
-  > div {
-    width: 50px;
-    margin-right: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  h2 {
-    font-size: 20px;
-    color: #ffffff;
-    margin: 8px 0 10px 0;
-  }
-  p {
-    font-size: 17px;
-    color: #b7b7b7;
-    width: 100%;
-    text-align: start;
-  }
-  span {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  span > div {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  @media (max-width: 1130px) {
-    margin: 5px 0;
-    padding: 12px;
-    border-radius: 0;
-    img {
-      width: 40px;
-      height: 40px;
-    }
-    > div {
-      width: 40px;
-      margin-right: 15px;
-    }
-    h2 {
-      font-size: 18px;
-    }
-    p {
-      font-size: 15px;
-    }
-  }
-`;
-
-const Icons = styled.div`
-  width: 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #ffffff;
-  font-size: 20px;
-
-  @media (max-width: 1130px) {
-    font-size: 18px;
-  }
-`;
-const Heart = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 24px;
-  color: #ffffff;
-  font-size: 20px;
-  p {
-    font-size: 11px;
-    text-align: center;
-    line-height: 18px;
-  }
-`;
-const EditInput = styled.textarea`
-  opacity: ${({ changeOpacity }) => (changeOpacity ? "0.5" : "1")};
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  font-size: 16px;
-  font-family: "Lato", sans-serif;
-  color: #4c4c4c;
-  padding: 5px 10px;
-  box-sizing: border-box;
-  @media (max-width: 1130px) {
-    font-size: 14px;
-  }
-`;
-
-const URLdiv = styled.a`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  box-sizing: border-box;
-  height: 160px;
-  width: 100%;
-  border: 1px solid #c4c4c4;
-  border-radius: 10px;
-  overflow: hidden;
-
-  div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30%;
-    height: 100%;
-    overflow: hidden;
-  }
-  img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 0;
-  }
-  span {
-    width: 70%;
-    padding: 25px;
-    box-sizing: border-box;
-  }
-  p {
-    color: #9b9595;
-    font-size: 12px;
-    margin: 10px 0;
-    line-height: 13px;
-  }
-  p:last-child {
-    color: #cecece;
-  }
-  h3 {
-    color: #cecece;
-    font-size: 16px;
-    text-align: start;
-  }
-
-  @media (max-width: 1130px) {
-    height: 120px;
-    h3 {
-      font-size: 10px;
-    }
-    p {
-      font-size: 9px;
-      margin: 5px 0;
-    }
-    span {
-      padding: 8px;
-    }
-  }
-`;
