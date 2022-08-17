@@ -52,11 +52,11 @@ export default function Post({
   function formatUrlData(text, field = "") {
     let textOutput;
     if (field === "description") {
-      textOutput = text.substring(0, 150);
-      if (textOutput.length === 150) textOutput += "...";
+      textOutput = text?.substring(0, 150);
+      if (textOutput?.length === 150) textOutput += "...";
     } else {
-      textOutput = text.substring(0, 55);
-      if (textOutput.length === 55) textOutput += "...";
+      textOutput = text?.substring(0, 55);
+      if (textOutput?.length === 55) textOutput += "...";
     }
     return textOutput;
   }

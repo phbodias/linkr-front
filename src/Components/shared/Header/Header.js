@@ -14,7 +14,7 @@ export default function Header() {
   if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
   const URL = useContext(UrlContext);
-  
+
   useEffect(() => {
     const config = {
       headers: {
@@ -25,18 +25,14 @@ export default function Header() {
     promise
       .then((res) => setUserData(res.data))
       .catch((error) => {
-        alert(
-          `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
-        );
+        alert(`Erro: \n\n${error.response.status} - ${error.response.data}`);
         localStorage.removeItem("tokenLinker");
         navigate("/");
       });
-  }, []);
+  }, [URL, navigate, token, setUserData]);
   function logout() {
-    if (window.confirm("Deseja realmente fazer logout?")) {
-      localStorage.removeItem("tokenLinker");
-      navigate("/");
-    }
+    localStorage.removeItem("tokenLinker");
+    navigate("/");
   }
 
   return (
@@ -55,15 +51,15 @@ export default function Header() {
           ) : (
             ""
           )}
+          {showLogout ? (
+            <Logout onClick={logout}>
+              <p>Logout</p>
+            </Logout>
+          ) : (
+            ""
+          )}
         </Profile>
       </ClickAwayListener>
-      {showLogout ? (
-        <Logout>
-          <p onClick={logout}>Logout</p>
-        </Logout>
-      ) : (
-        ""
-      )}
     </Container>
   );
 }
@@ -72,13 +68,14 @@ const Logout = styled.div`
   position: absolute;
   width: 150px;
   height: 47px;
+  top: 80px;
   right: 0;
   background: #151515;
   border-radius: 0 0 0 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 70px;
+  cursor: pointer;
   p {
     width: 57px;
     height: 20px;
@@ -133,10 +130,13 @@ const Container = styled.div`
   color: #ffffff;
   padding: 10px 0;
   display: flex;
-  box-sizing: border-box;
-
-  @media (max-width: 563px){
+  align-items: center;
+  box-sizing: content-box;
+  @media (max-width: 563px) {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100vw;
+    padding: 0;
   }
 `;
