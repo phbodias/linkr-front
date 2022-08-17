@@ -8,12 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function CommentsIcon({postId}) {
     const URL = useContext(UrlContext);
-    // const [comments, setComments] = useState(null);
     const [commentsCount, setCommentsCount] = useState(null);
     const navigate = useNavigate();
     const token = localStorage.getItem('tokenLinker');
-    //colocar no componente post
-    const [clicked, setClicked] = useState(false);
 
     useEffect(() => {
         const config = {
@@ -34,7 +31,7 @@ export default function CommentsIcon({postId}) {
             })
 
     },
-        [token]);
+        [token, URL, navigate, postId ]);
 
 
 
