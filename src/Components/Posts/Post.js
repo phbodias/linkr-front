@@ -16,7 +16,7 @@ export default function Post({
   id,
   userOwner,
   urlData,
-  comment,
+  description,
   likesCount,
   likes,
   openModal,
@@ -24,7 +24,7 @@ export default function Post({
 }) {
   const { userData } = useContext(UserContext);
   const URL = useContext(UrlContext);
-  const [currComment, setComment] = useState(comment);
+  const [currDescription, setDescription] = useState(description);
   const [editPost, setEditMode] = useState(false);
   const [disable, setDisable] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -36,10 +36,10 @@ export default function Post({
   }
 
   useEffect(() => {
-    setComment(comment);
-  }, [comment]);
+    setDescription(description);
+  }, [description]);
 
-  let description = formatUrlData(urlData.description, "description");
+  let urlDescription = formatUrlData(urlData.urlDescription, "description");
   let title = formatUrlData(urlData.title);
   let url = formatUrlData(urlData.url);
 
@@ -73,8 +73,8 @@ export default function Post({
         rows="3"
         ref={inputRef}
         onFocus={moveCursorAtEnd}
-        value={currComment}
-        onChange={(e) => setComment(e.target.value)}
+        value={currDescription}
+        onChange={(e) => setDescription(e.target.value)}
         onKeyDown={(e) => handleEdit(e.code)}
         disabled={disable}
         changeOpacity={disable}
@@ -88,11 +88,11 @@ export default function Post({
         updatePost();
         break;
       case "Escape":
-        setComment(comment);
+        setDescription(description);
         setEditMode(false);
         break;
       case "ClickIcon":
-        if (editPost) setComment(comment);
+        if (editPost) setDescription(description);
         setEditMode(!editPost);
         break;
       default:
@@ -109,7 +109,7 @@ export default function Post({
     };
     const promise = axios.put(
       `${URL}/posts/${id}`,
-      { comment: currComment },
+      { description: currDescription },
       config
     );
     promise.then(() => {
@@ -122,14 +122,13 @@ export default function Post({
   }
 
   function addLike() {
-    setLiked(true);
-    const URL = `https://backlinkr.herokuapp.com/likes`;
+    setLiked(true);     
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    const promise = axios.post(URL, { id }, config);
+    const promise = axios.post(`${URL}/likes`, { id }, config);
     promise.then(() => {
       window.location.reload(false);
     });
@@ -140,13 +139,12 @@ export default function Post({
   function removeLike() {
     setLiked(false);
     console.log(id, token);
-    const URL = `https://backlinkr.herokuapp.com/likes/${id}`;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    const promise = axios.delete(URL, config);
+    const promise = axios.delete(`${URL}/likes/${id}`, config);
     promise.then(() => {
       window.location.reload(false);
     });
@@ -212,14 +210,14 @@ export default function Post({
               navigate(`/hashtag/${textWithoutHashtag(tag)}`)
             }
           >
-            <p>{currComment}</p>
+            <p>{currDescription}</p>
           </ReactTagify>
         )}
 
         <URLdiv href={urlData.url} target="_blank" rel="noreferrer">
           <span>
             <h3>{title}</h3>
-            <p>{description}</p>
+            <p>{urlDescription}</p>
             <p>{url}</p>
           </span>
           <div>

@@ -51,7 +51,7 @@ export default function HashtagPage() {
             });
 
 
-    }, [token, hashtag]);
+    }, [token, hashtag, URL]);
 
 
     function postsList(openModal) {
@@ -63,7 +63,7 @@ export default function HashtagPage() {
                         id={p.postId}
                         userOwner={p.userOwner}
                         urlData={p.urlData}
-                        comment={p.comment}
+                        description={p.description}
                         likesCount={p.likesCount}
                         likes={p.likes}
                         openModal={openModal}

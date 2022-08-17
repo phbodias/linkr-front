@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes} from "react-router-dom";
 import UserContext from "./contexts/UserContext";
 import SignUp from "./Components/Login/SignUp";
 import SignIn from "./Components/Login/SignIn";
@@ -12,7 +12,7 @@ import UrlContext from "./contexts/UrlContext";
 function App() {
   const [userData, setUserData] = useState({});
   const url = process.env.REACT_APP_MODE === "DEV" ? "http://localhost:4000" : "https://backlinkr.herokuapp.com";
-  const [URL, _] = useState(url);
+  const [URL] = useState(url);
 
   return (
     <UrlContext.Provider value={URL}>

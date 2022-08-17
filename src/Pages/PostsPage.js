@@ -17,7 +17,7 @@ export default function PostsPage() {
     const token = localStorage.getItem('tokenLinker');
     const [newPost, setNewPost] = useState({
         url: "",
-        comment: ""
+        description: ""
     })
     
     function postsList (openModal) {
@@ -29,7 +29,7 @@ export default function PostsPage() {
                     id={p.postId}
                     userOwner={p.userOwner}
                     urlData={p.urlData}
-                    comment={p.comment}
+                    description={p.description}
                     likesCount={p.likesCount}
                     likes={p.likes}
                     openModal={openModal}
@@ -60,9 +60,9 @@ export default function PostsPage() {
                 <textarea
                     type='text'
                     rows='3'
-                    name='comment'
-                    placeholder="Comment"
-                    value={newPost.comment}
+                    name='description'
+                    placeholder="description"
+                    value={newPost.description}
                     onChange={handleInputChange}
                     disabled={loading} />
                 <button
@@ -105,7 +105,7 @@ export default function PostsPage() {
                 setLoading(false);
             });
 
-    }, [token]);
+    }, [token, URL]);
 
     function createNewPost(e) {
         e.preventDefault();
