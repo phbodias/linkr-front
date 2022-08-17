@@ -8,6 +8,7 @@ import UserContext from "../contexts/UserContext";
 import UrlContext from "../contexts/UrlContext";
 
 
+
 export default function PostsPage() {
     const URL = useContext(UrlContext);
     const { userData } = useContext(UserContext);

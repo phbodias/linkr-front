@@ -4,6 +4,7 @@ import Header from "../Header";
 import ModalForDelete from "../../Components/Posts/ModalForDelete";
 import { useState } from "react";
 import axios from "axios";
+import SearchNewUpdates from "../../Components/Posts/SearchNewUpdates";
 
 export function FeedPage({title, forms, posts, hashtags}){
     const navigate = useNavigate();
@@ -47,10 +48,16 @@ export function FeedPage({title, forms, posts, hashtags}){
             <Title>
                 {title}
             </Title>
+
+
             <InnerContainer>
                 <LeftInnerContainer>
                     {forms ? forms : null}
                     {posts(openModal)}
+                    
+                    <SearchNewUpdates>
+                    </SearchNewUpdates>
+
                 </LeftInnerContainer>
                 <RightInnerContainer>
                     <SubTitle>
