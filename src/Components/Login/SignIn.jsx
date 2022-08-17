@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import { Container, Input, Button, StyledLink } from "./AuthStyle";
 import LogoComponent from "./LogoComponent";
+import UrlContext from "../../contexts/UrlContext";
 
 export default function SignIn() {
+  const URL = useContext(UrlContext);
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -15,11 +18,27 @@ export default function SignIn() {
     password: "",
   });
 
+  useEffect(() => {
+    if (localStorage.getItem("tokenLinker")) {
+      const token = localStorage.getItem("tokenLinker");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const promise = axios.post(
+        "https://backlinkr.herokuapp.com/token",
+        config
+      );
+      promise.then(navigate("/timeline"));
+    }
+  });
+
   function handleRegister(e) {
     e.preventDefault();
     setLoading(true);
 
-    const promise = axios.post("https://backlinkr.herokuapp.com/signin", data);
+    const promise = axios.post(`${URL}/signin`, data);
 
     promise
       .then((res) => {

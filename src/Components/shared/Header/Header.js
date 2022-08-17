@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import UserContext from "../contexts/UserContext";
-import InputSearchUsers from "../Components/InputSearch/InputSearchUsers";
+import UserContext from "../../../contexts/UserContext";
+import InputSearchUsers from "../../InputSearch/InputSearchUsers";
 import { useNavigate } from "react-router-dom";
 import ClickAwayListener from "react-click-away-listener";
-import UrlContext from "../contexts/UrlContext";
+import UrlContext from "../../../contexts/UrlContext";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function Header() {
   if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
   const URL = useContext(UrlContext);
-
+  
   useEffect(() => {
     const config = {
       headers: {
@@ -31,7 +31,7 @@ export default function Header() {
         localStorage.removeItem("tokenLinker");
         navigate("/");
       });
-  }, [URL, navigate, token, setUserData]);
+  }, []);
   function logout() {
     if (window.confirm("Deseja realmente fazer logout?")) {
       localStorage.removeItem("tokenLinker");
@@ -134,7 +134,8 @@ const Container = styled.div`
   padding: 10px 0;
   display: flex;
   box-sizing: border-box;
-  @media (max-width: 563px) {
+
+  @media (max-width: 563px){
     display: flex;
     justify-content: space-evenly;
   }

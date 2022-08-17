@@ -1,40 +1,40 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import styled from "styled-components";
-import UserContext from "../contexts/UserContext";
 import Post from "../Components/Posts/Post";
 import { FeedPage } from "../shared/Feed/FeedPage";
-import ModalForDelete from "../Components/Posts/ModalForDelete";
+import UserContext from "../contexts/UserContext";
+import UrlContext from "../contexts/UrlContext";
 
 
 
 export default function PostsPage() {
+    const URL = useContext(UrlContext);
     const { userData } = useContext(UserContext);
     const [postList, setPostList] = useState(null);
-    const [postToDelete, setDelete] = useState('');
-    const [modalIsOpen, setIsOpen] = useState(false);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [disable, setDisable] = useState(false);
     const token = localStorage.getItem('tokenLinker');
     const [newPost, setNewPost] = useState({
         url: "",
-        comment: ""
+        description: ""
     })
     
-    const postsList = (
+    function postsList (openModal) {
+        return(
         postList?.length > 0 ?
             postList.map((p, index) =>
                 <Post
                     key={index}
                     id={p.postId}
-                    userData={p.userOwner}
+                    userOwner={p.userOwner}
                     urlData={p.urlData}
-                    comment={p.comment}
+                    description={p.description}
                     likesCount={p.likesCount}
                     likes={p.likes}
                     openModal={openModal}
+                    idUser={p.userOwner.id}
                 />
             )
             :
@@ -43,10 +43,11 @@ export default function PostsPage() {
                 :
                 <p>There are no posts yet</p>
     );
+}
 
     const forms = (
-        <CreatePost disable={disable}>
-            <img src={userData.profilePic} alt="" />
+        <CreatePost disable={loading}>
+            <img src={userData[0]?.profilePic} alt="" />
             <form onSubmit={createNewPost}>
                 <h2>What are you going to share today?</h2>
                 <input
@@ -56,24 +57,24 @@ export default function PostsPage() {
                     value={newPost.url}
                     onChange={handleInputChange}
                     required
-                    disabled={disable} />
-                <input
+                    disabled={loading} />
+                <textarea
                     type='text'
-                    name='comment'
-                    placeholder="Comment"
-                    value={newPost.comment}
+                    rows='3'
+                    name='description'
+                    placeholder="description"
+                    value={newPost.description}
                     onChange={handleInputChange}
-                    disabled={disable} />
+                    disabled={loading} />
                 <button
                     type='submit'
-                    disabled={disable}>
-                    {disable ? 'Publishing...' : 'Publish'}
+                    disabled={loading}>
+                    {loading ? 'Publishing...' : 'Publish'}
                 </button>
             </form>
         </CreatePost>);
 
     useEffect(() => {
-        const URL = 'https://backlinkr.herokuapp.com';
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -105,25 +106,26 @@ export default function PostsPage() {
                 setLoading(false);
             });
 
-    }, [token]);
+    }, [token, URL]);
 
     function createNewPost(e) {
         e.preventDefault();
-        setDisable(true);
-        const URL = 'https://backlinkr.herokuapp.com/posts';
+        setLoading(true);
+        // const URL = 'https://backlinkr.herokuapp.com/posts';
+        
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(URL, newPost, config)
+        const promise = axios.post(`${URL}/posts`, newPost, config)
         promise.then(() => {
             window.location.reload(false);
         })
         promise.catch((error) => {
             console.log(error.response.data);
             alert('Houve um erro ao publicar seu link')
-            setDisable(false);
+            setLoading(false);
         })
     }
 
@@ -131,70 +133,13 @@ export default function PostsPage() {
         setNewPost({ ...newPost, [e.target.name]: e.target.value });
     }
 
-    function deletePost() {
-        setLoading(true);
-        const URL = `https://backlinkr.herokuapp.com/posts/${postToDelete}`;
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const promise = axios.delete(URL, config);
-        promise.then(() => {
-            window.location.reload(false);
-        })
-        promise.catch((error) => {
-            setLoading(false);
-            closeModal();
-            console.log(error.response.data);
-            alert("The post could not be deleted");
-        })
-    }
-
-    function openModal(id) {
-        setIsOpen(true);
-        setDelete(id);
-    }
-
-    function closeModal() {
-        setIsOpen(false);
-    }
 
     return (
-        <Container>
             <FeedPage title='timeline' forms={forms} posts={postsList} hashtags={hashtags} />
-            <ModalForDelete
-            modalIsOpen={modalIsOpen}
-            loading={loading}
-            disable={disable}
-            closeModal={closeModal}
-            deletePost={deletePost}
-            />
-        </Container>
     );
 }
 
 
-
-const Container = styled.div`
-background-color:#333333;
-height:100%;
-width:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-box-sizing:border-box;
-padding:100px 0 500px 0;
-h1{
-    font-family: 'Oswald', sans-serif;
-    font-size:44px;
-    font-weight:bold;
-    margin:30px 0;
-    width:50%;
-    color:#FFFFFF;
-}
-
-`
 
 const CreatePost = styled.div`
 background-color:#FFFFFF;
@@ -222,7 +167,7 @@ form{
     align-items:flex-start;
     width:100%;
 }
-input{
+input, textarea{
     opacity:${({ disable }) => disable ? '0.5' : '1'};
     width:100%;
     box-sizing:border-box;
@@ -235,6 +180,9 @@ input{
     border-radius:5px;
     padding:10px 15px;
     margin-bottom:5px;
+}
+textarea{
+    height:70px;
 }
 
 button{
@@ -251,4 +199,32 @@ button{
     width:120px;
     height:30px;
 }
+
+@media (max-width: 1130px) {
+    padding: 10px 18px;
+    margin-bottom:8px;
+    border-radius:0;
+    h2{
+        font-size:18px;
+        text-align:center;
+        width:100%;
+    }
+    img{
+        display:none;
+    }
+    input,textarea{
+        font-size:13px;
+    }
+    textarea{
+        height:54px;
+    }
+    button{
+        height:22px;
+        bottom:12px;
+        right:18px;
+    }
+    form{
+        padding:0 0 28px 0;
+    }
+  }
 `
