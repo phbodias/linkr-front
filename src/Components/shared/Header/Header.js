@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import UserContext from "../contexts/UserContext";
-import InputSearchUsers from "../Components/InputSearch/InputSearchUsers";
+import UserContext from "../../../contexts/UserContext";
+import InputSearchUsers from "../../InputSearch/InputSearchUsers";
 import { useNavigate } from "react-router-dom";
 import ClickAwayListener from "react-click-away-listener";
-import UrlContext from "../contexts/UrlContext";
+import UrlContext from "../../../contexts/UrlContext";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function Header() {
   if (token === null) navigate("/");
   const [showLogout, setShowLogout] = useState(false);
   const URL = useContext(UrlContext);
-
+  
   useEffect(() => {
     const config = {
       headers: {
@@ -26,15 +26,17 @@ export default function Header() {
       .then((res) => setUserData(res.data))
       .catch((error) => {
         alert(
-          `Erro: \n\n${error.response.status} - ${error.response.data}`
+          `Erro ao logar: \n\n${error.response.status} - ${error.response.data}`
         );
         localStorage.removeItem("tokenLinker");
         navigate("/");
       });
-  }, [URL, navigate, token, setUserData]);
+  }, []);
   function logout() {
-    localStorage.removeItem("tokenLinker");
-    navigate("/");
+    if (window.confirm("Deseja realmente fazer logout?")) {
+      localStorage.removeItem("tokenLinker");
+      navigate("/");
+    }
   }
 
   return (
@@ -131,12 +133,10 @@ const Container = styled.div`
   color: #ffffff;
   padding: 10px 0;
   display: flex;
-  box-sizing: content-box;
-  @media (max-width: 563px) {
+  box-sizing: border-box;
+
+  @media (max-width: 563px){
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 100vw;
-    padding: 0;
+    justify-content: space-evenly;
   }
 `;
