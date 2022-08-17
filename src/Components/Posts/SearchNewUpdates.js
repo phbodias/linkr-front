@@ -8,8 +8,8 @@ import axios from "axios";
 export default function SearchNewUpdates(){
 
     const URL = useContext(UrlContext);
-    const [oldValue, setOldValue] = React.useState(0)
-    const [currentValue, setcurrentValue] = React.useState(0)
+    const [arrPosts , setArrPosts] = React.useState([])
+    const [arrUpdatePosts, setArrUpdatePosts] = React.useState([])
     const token = localStorage.getItem('tokenLinker');
 
     let visible = false
@@ -20,15 +20,17 @@ export default function SearchNewUpdates(){
         }
     }
 
-    console.log(oldValue)
-    console.log(currentValue)
+    console.log(arrPosts)
+    console.log(arrUpdatePosts)
     
     useEffect(()=>{
         const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
-            setOldValue(response.data.length)
-            setcurrentValue(response.data.length)
-
+            let arr = []
+            for(let i=0; i<response.data.length;i++){
+                arr.push(response.data[i].postId)
+            }
+            setArrPosts(arr)
         });
         promise.catch((error) => {
             console.log(error.response.data);
@@ -41,36 +43,36 @@ export default function SearchNewUpdates(){
     useInterval(()=>{
         const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
-            if(response.data.length>oldValue){
-                console.log('entrou no if ')
-                setcurrentValue(response.data.length)
+            let arr = []
+            for(let i=0; i<response.data.length;i++){
+                arr.push(response.data[i].postId)
             }
-            
-
+            setArrUpdatePosts(arr)
         });
         promise.catch((error) => {
             console.log(error.response.data);
-            alert("erro no set interval ");
+            alert("error useEffect do search nwe update postes ");
         });
+        
 
         console.log('setinterval')
     },15000)
 
-  
-    if(currentValue>oldValue){
-        visible=true
+    let dif = arrUpdatePosts.filter(item=>!arrPosts.includes(item))
+
+   
+    if(dif.length!=0){
+         visible=true
     }
 
-
     return(
-        <>
         <AreaNewPost visible={visible} onClick={()=>window.location.reload(true)}>
             <div>
-                {currentValue-oldValue} new posts, load more!<AiOutlineReload/> 
+                <div>
+                {dif.length} new posts, load more!<AiOutlineReload/> 
+                </div>
             </div>
         </AreaNewPost>
-        <h1>dsadsadsadsads</h1>
-        </>
     )
 }
 
@@ -81,8 +83,9 @@ const AreaNewPost = styled.div`
     background-color: #1877F2;
     text-align: center;
     border-radius: 16px;
-    vertical-align: middle;
-    display: table-cell;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 16px;
     color: #FFFFFF;
     margin: 10px;
