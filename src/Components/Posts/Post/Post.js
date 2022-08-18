@@ -1,4 +1,4 @@
-import { Container, tagStyle, Icons, Heart, RepostStyle, EditInput, URLdiv } from "./PostStyle";
+import { OutterContainer, tagStyle, Icons, Heart, RepostStyle, RepostSpan, InnerContainer, EditInput, URLdiv } from "./PostStyle";
 import axios from "axios";
 import { MdEdit } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
@@ -11,7 +11,8 @@ import { Link } from "react-router-dom";
 import UserContext from "../../../contexts/UserContext";
 import UrlContext from "../../../contexts/UrlContext";
 import ReactTooltip from "react-tooltip";
-
+import CommentsIcon from './Comments/CommentsIcon/CommentsIcon.jsx';
+import CommentsText from "./Comments/CommentsTexts/CommentsTexts.jsx";
 
 export default function Post({
   id,
@@ -21,20 +22,20 @@ export default function Post({
   likesCount,
   repostCount,
   likes,
-  reposts,
+  repostedBy,
   openModal,
   idUser,
 }) {
 
-
   const { userData } = useContext(UserContext);
   const URL = useContext(UrlContext);
   const [currDescription, setDescription] = useState(description);
+  const [following, setFollowing] = useState([]);
   const [editPost, setEditMode] = useState(false);
   const [disable, setDisable] = useState(false);
   const token = localStorage.getItem("tokenLinker");
   const navigate = useNavigate();
-
+  const [commentClicked, setCommentClicked] = useState(false);
 
   function textWithoutHashtag(text) {
     return text?.replace("#", "");
@@ -47,7 +48,7 @@ export default function Post({
   let urlDescription = formatUrlData(urlData.urlDescription, "description");
   let title = formatUrlData(urlData.title);
   let url = formatUrlData(urlData.url);
-
+  
   function formatUrlData(text, field = "") {
     let textOutput;
     if (field === "description") {
@@ -59,6 +60,25 @@ export default function Post({
     }
     return textOutput;
   }
+
+  useEffect(()=>{
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/follow`, config);
+    promise.then(response => {
+      setFollowing(response.data)
+    });
+    promise.catch(error => {
+      if (error.response.status === 401) {
+        navigate("/")
+      } else {
+        alert("Followers could not be retrieved");
+      }
+    });
+  },[URL,token])
 
   function moveCursorAtEnd(e) {
     const temp_value = e.target.value;
@@ -121,11 +141,11 @@ export default function Post({
       window.location.reload(false);
     });
     promise.catch(error => {
-      if(error.response.status===401){
+      if (error.response.status === 401) {
         navigate("/")
-    } else {
-      alert("Your changes could not be saved");
-    }
+      } else {
+        alert("Your changes could not be saved");
+      }
       setDisable(false);
     });
   }
@@ -141,11 +161,11 @@ export default function Post({
       window.location.reload(false);
     });
     promise.catch(error => {
-      if(error.response.status===401){
+      if (error.response.status === 401) {
         navigate("/")
-    } else {
+      } else {
         alert("The post could not be liked");
-    }
+      }
     });
   }
   function removeLike() {
@@ -160,11 +180,11 @@ export default function Post({
       window.location.reload(false);
     });
     promise.catch(error => {
-      if(error.response.status===401){
-      navigate("/")
-  } else {
-      alert("The post could not be disliked");
-  }
+      if (error.response.status === 401) {
+        navigate("/")
+      } else {
+        alert("The post could not be disliked");
+      }
     });
   }
 
@@ -186,67 +206,102 @@ export default function Post({
     }
   }
 
-  return (
-    <Container>
-      <div>
-        <Link to={"/user/" + idUser}>
-          <img src={userOwner.picture} alt="" />
-        </Link>
-        <Heart>
-          {likes.filter((l) => l.id === userData[0]?.id).length > 0 ? (
-            <FaHeart style={{ color: "#AC0000" }} onClick={removeLike} />
-          ) : (
-            <FaRegHeart onClick={addLike} />
-          )}
-          <p data-tip={messageLikes()}>
-            {likesCount} likes</p>
-          <ReactTooltip />
-        </Heart>
+  function nameRepost () {
+    if(repostedBy===userData[0].id){
+      return 'you';
+    } else if (following.includes(repostedBy)){
+      return 'your Friend X';
+    } else {
+      return 'should not appear in your feed';
+    }
+  }
 
-        <RepostStyle>
-          <BiRepost onClick={() => openModal(id,'repost')} />
-          <p>{repostCount} re-posts</p>
-        </RepostStyle>
-      </div>
-      <span>
+  return (
+
+    <OutterContainer>
+      {(following.includes(repostedBy)||repostedBy===userData[0].id) ?
+        <>
+          <RepostSpan>
+            <BiRepost onClick={() => openModal(id, 'repost')} />
+          <p>Re-posted by {nameRepost()}</p>
+          </RepostSpan>
+        </>
+        : null}
+      <InnerContainer>
         <div>
           <Link to={"/user/" + idUser}>
-            <h2>{userOwner.name}</h2>
+            <img src={userOwner.picture} alt="" onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            }} />
           </Link>
-          {userData[0]?.id === userOwner.id ? (
-            <Icons>
-              <MdEdit onClick={() => handleEdit("ClickIcon")} />
-              <AiFillDelete onClick={() => openModal(id,'delete')} />
-            </Icons>
-          ) : (
-            ""
-          )}
-        </div>
-        {editPost ? (
-          <InputFocus />
-        ) : (
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={(tag) =>
-              navigate(`/hashtag/${textWithoutHashtag(tag)}`)
-            }
-          >
-            <p>{currDescription}</p>
-          </ReactTagify>
-        )}
+          <Heart>
+            {likes.filter((l) => l.id === userData[0]?.id).length > 0 ? (
+              <FaHeart style={{ color: "#AC0000" }} onClick={removeLike} />
+            ) : (
+              <FaRegHeart onClick={addLike} />
+            )}
+            <p data-tip={messageLikes()}>
+              {likesCount} likes</p>
+            <ReactTooltip />
+          </Heart>
 
-        <URLdiv href={urlData.url} target="_blank" rel="noreferrer">
-          <span>
-            <h3>{title}</h3>
-            <p>{urlDescription}</p>
-            <p>{url}</p>
-          </span>
+          <CommentsIcon postId={id} clicked={{ commentClicked, setCommentClicked }} />
+
+          <RepostStyle>
+            <BiRepost onClick={() => openModal(id, 'repost')} />
+            <p>{repostCount} re-posts</p>
+          </RepostStyle>
+        </div>
+        <span>
           <div>
-            <img src={urlData.image} alt="" />
+            <Link to={"/user/" + idUser}>
+              <h2>{userOwner.name}</h2>
+            </Link>
+            {userData[0]?.id === userOwner.id ? (
+              <Icons>
+                <MdEdit onClick={() => handleEdit("ClickIcon")} />
+                <AiFillDelete onClick={() => openModal(id, 'delete')} />
+              </Icons>
+            ) : (
+              ""
+            )}
           </div>
-        </URLdiv>
-      </span>
-    </Container>
+          {editPost ? (
+            <InputFocus />
+          ) : (
+            <ReactTagify
+              tagStyle={tagStyle}
+              tagClicked={(tag) =>
+                navigate(`/hashtag/${textWithoutHashtag(tag)}`)
+              }
+            >
+              <p>{currDescription}</p>
+            </ReactTagify>
+          )}
+
+          <URLdiv href={urlData.url} target="_blank" rel="noreferrer">
+            <span>
+              <h3>{title}</h3>
+              <p>{urlDescription}</p>
+              <p>{url}</p>
+            </span>
+            <div>
+              <img src={urlData.image} alt="" onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src = "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png";
+              }} />
+            </div>
+          </URLdiv>
+        </span>
+      </InnerContainer>
+      {commentClicked
+        ?
+        <CommentsText postId={id} />
+        :
+        null
+      }
+    </OutterContainer>
   );
 }
 

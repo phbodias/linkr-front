@@ -11,11 +11,12 @@ import { useNavigate } from "react-router-dom";
 export default function PostsPage() {
     const URL = useContext(UrlContext);
     const [postList, setPostList] = useState(null);
+    // const [clickedComments, setClickedComments] = useState([]);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [friends, setFriends] = useState(null)
     const token = localStorage.getItem('tokenLinker');
     const navigate = useNavigate();
-    
     function postsList (openModal) {
         return(
         postList?.length > 0 ?
@@ -28,8 +29,8 @@ export default function PostsPage() {
                     description={p.description}
                     likesCount={p.likesCount}
                     repostCount={p.repostCount}
+                    repostedBy={p.repostedBy}
                     likes={p.likes}
-                    reposts={p.reposts}
                     openModal={openModal}
                     idUser={p.userOwner.id}
                 />
@@ -38,7 +39,7 @@ export default function PostsPage() {
             loading || !postList || !hashtags ?
                 <ThreeDots color="#FFF" height={50} width={100} />
                 :
-                <p>There are no posts yet</p>
+                <p>No posts found from your friends</p>
     );
 }
 
@@ -53,7 +54,8 @@ export default function PostsPage() {
         const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
             setPostList(response.data)
-
+            // const arrayClicked = Array.from({length: response.data.length},()=>false);
+            // setClickedComments([...arrayClicked]);
         });
         promise.catch((error) => {
             if(error.response.status===401){
@@ -81,11 +83,24 @@ export default function PostsPage() {
                 setLoading(false);
             });
 
+
+            axios.get(`${URL}/follow`, config)
+            .then(res=>{
+                setFriends(res.data)
+            })
+            .catch(err=>{
+                if(err.response.status===401){
+                    navigate("/")
+                } else {
+                    alert("An error occured while trying to fetch the trendings, please refresh the page");
+                }
+            })
+
     }, [token, URL]);
 
-    
+    // if(clickedComments) console.log(clickedComments);   
 
     return (
-            <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} />
+            <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} friends={friends} />
     );
 }

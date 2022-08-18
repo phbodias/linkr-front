@@ -68,7 +68,6 @@ export default function TelaUser() {
       .then((res) => {
         if (res.data.filter((friendId) => friendId === parseInt(id)).length > 0)
           setIsFriend(true);
-        console.log("Isfriend", isFriend)
       })
       .catch((e) => alert(e.message));
   }, [token, id, URL, isFriend]);

@@ -6,22 +6,35 @@ const tagStyle = {
     cursor: "pointer",
   };
   
-  const Container = styled.div`
+   const OutterContainer=styled.div`
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    width:100%;
+    margin: 15px 0;
+    border-radius: 1rem;
+    @media (max-width: 1130px) {
+      margin: 5px 0;
+    }
+    
+  `;
+ 
+  const InnerContainer = styled.div`
     width: 100%;
     box-sizing: border-box;
     display: flex;
     background-color: #171717;
-    border-radius: 10px;
+    border-radius: 1rem 1rem 0 0;
     padding: 18px;
-    margin: 15px 0;
+
     img {
       border-radius: 50px;
       width: 50px;
       height: 50px;
     }
-    > div {
-      width: 50px;
-      margin-right: 20px;
+    > div:first-child {
+      width: 100px;
+      /* margin-right: 10px; */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -58,9 +71,9 @@ const tagStyle = {
         width: 40px;
         height: 40px;
       }
-      > div {
-        width: 40px;
-        margin-right: 15px;
+      > div:first-child {
+        width: 80px;
+        margin-right: 10px;
       }
       h2 {
         font-size: 18px;
@@ -70,6 +83,18 @@ const tagStyle = {
       }
     }
   `;
+
+  const RepostSpan = styled.span`
+  display:flex;
+  align-items:center;
+  color: #ffffff;
+  font-size: 30px;
+  padding:5px 15px 0 15px;
+  p{
+    font-size:12px;
+    margin-left:5px;
+  }
+  `
   
   const Icons = styled.div`
     width: 50px;
@@ -188,4 +213,5 @@ const tagStyle = {
   `;
   
 
-  export {tagStyle,Container,Icons,Heart,RepostStyle,EditInput,URLdiv}
+  export {tagStyle,Icons,Heart,RepostStyle,InnerContainer,RepostSpan,EditInput,URLdiv,OutterContainer}
+

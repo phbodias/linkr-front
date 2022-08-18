@@ -101,7 +101,6 @@ const TextContent = styled.h4`
 
 const Follow = styled.div`
   position: absolute;
-  z-index: 2;
   width: 112px;
   height: 31px;
   left: 73vw;
