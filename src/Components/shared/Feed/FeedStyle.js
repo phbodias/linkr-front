@@ -7,7 +7,6 @@ const Container = styled.main`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   background-color: #333333;
   box-sizing: border-box;
   padding: 72px 18% 0 16%;
@@ -20,7 +19,7 @@ const Title = styled.h1`
   font-family: "Oswald", sans-serif;
   font-size: 2.75rem;
   font-weight: 700;
-  margin: 53px 0 43px 0;
+  margin: 70px 0 43px 0;
   color: #ffffff;
   height: fit-content;
   @media (max-width: 1130px) {
@@ -28,6 +27,9 @@ const Title = styled.h1`
     font-size: 34px;
     margin-bottom: 20px;
     width: 100%;
+  }
+  @media (max-width: 563px){
+    margin-top: 100px;
   }
 `;
 
@@ -101,13 +103,21 @@ const Follow = styled.div`
   width: 112px;
   height: 31px;
   left: 73vw;
-  top: 150px;
+  top: 170px;
   background: #1877f2;
   border-radius: 5px;
   color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  @media (max-width: 1130px) {
+    top: 150px;
+  }
+
+  @media (max-width: 563px){
+    top: 177px;
+  }
 `;
 
 const Unfollow = styled.div`
@@ -115,7 +125,7 @@ const Unfollow = styled.div`
   width: 112px;
   height: 31px;
   left: 73vw;
-  top: 150px;
+  top: 170px;
   background: #ffffff;
   border-radius: 5px;
   text-align: center;
@@ -123,6 +133,13 @@ const Unfollow = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  @media (max-width: 1130px) {
+    top: 150px;
+  }
+  @media (max-width: 563px){
+    top: 177px;
+  }
 `;
 
 export {

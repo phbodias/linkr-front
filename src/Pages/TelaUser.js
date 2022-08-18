@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useEffect, useState, useContext } from "react";
-// import styled from "styled-components";
 import Post from "../Components/Posts/Post/Post";
 import { FeedPage } from "../Components/shared/Feed/FeedPage";
 import UrlContext from "../contexts/UrlContext";
@@ -11,9 +10,11 @@ import { Follow, Unfollow } from "../Components/shared/Feed/FeedStyle";
 
 export default function TelaUser() {
   const URL = useContext(UrlContext);
+  const userLoggedId = parseInt(localStorage.getItem("userLinkerId"));
   const [postList, setPostList] = useState(null);
   const [hashtags, setHashtags] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingFollow, setLoadingFollow] = useState(false);
   const [name, setName] = useState("");
   const [isFriend, setIsFriend] = useState(false);
 
@@ -65,42 +66,45 @@ export default function TelaUser() {
     const friends = axios.get(`${URL}/follow`, config);
     friends
       .then((res) => {
-        if (res.data.filter((friend) => friend.id === id).length > 0)
+        if (res.data.filter((friendId) => friendId === parseInt(id)).length > 0)
           setIsFriend(true);
-        console.log(isFriend);
       })
       .catch((e) => alert(e.message));
   }, [token, id, URL, isFriend]);
 
   function follow() {
+    setLoadingFollow(true);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    axios.post(`${URL}/follow/${id}`, config);
-    axios
+    const promise = axios.post(`${URL}/follow/${parseInt(id)}`, {}, config);
+    promise
       .then((res) => {
         setIsFriend(true);
+        setLoadingFollow(false);
       })
-      .catch((e) => {
-        alert(e.message);
+      .catch((err) => {
+        alert(err.message);
       });
   }
 
-  function follow() {
+  function unfollow() {
+    setLoadingFollow(true);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    axios.delete(`${URL}/follow/${id}`, config);
-    axios
+    const promise = axios.delete(`${URL}/follow/${id}`, config);
+    promise
       .then((res) => {
         setIsFriend(false);
+        setLoadingFollow(false);
       })
-      .catch((e) => {
-        alert(e.message);
+      .catch((err) => {
+        alert(err.message);
       });
   }
 
@@ -132,8 +136,21 @@ export default function TelaUser() {
         title={`${name}'s Posts`}
         posts={postsList}
         hashtags={hashtags}
+        isFriend={isFriend}
       />
-      {isFriend ? <Unfollow>Unfollow</Unfollow> : <Follow onClick={() => follow()}>Follow</Follow>}
+      {userLoggedId !== parseInt(id) ? (
+        loadingFollow ? (
+          <Follow>
+            <ThreeDots color="#FFF" height={50} width={100} />
+          </Follow>
+        ) : isFriend ? (
+          <Unfollow onClick={unfollow}>Unfollow</Unfollow>
+        ) : (
+          <Follow onClick={follow}>Follow</Follow>
+        )
+      ) : (
+        ""
+      )}
     </>
   );
 }
