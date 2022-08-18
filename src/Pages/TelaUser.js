@@ -118,6 +118,8 @@ export default function TelaUser() {
           urlData={p.urlData}
           description={p.description}
           likesCount={p.likesCount}
+          repostCount={p.repostCount}
+          repostedBy={p.repostedBy}
           likes={p.likes}
           openModal={openModal}
           idUser={p.userOwner.id}

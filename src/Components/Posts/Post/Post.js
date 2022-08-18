@@ -1,4 +1,4 @@
-import { OutterContainer, Container, tagStyle, Icons, Heart, RepostStyle, EditInput, URLdiv } from "./PostStyle";
+import { OutterContainer, tagStyle, Icons, Heart, RepostStyle, RepostSpan, InnerContainer, EditInput, URLdiv } from "./PostStyle";
 import axios from "axios";
 import { MdEdit } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
@@ -22,7 +22,7 @@ export default function Post({
   likesCount,
   repostCount,
   likes,
-  reposts,
+  repostedBy,
   openModal,
   idUser,
 }) {
@@ -30,6 +30,7 @@ export default function Post({
   const { userData } = useContext(UserContext);
   const URL = useContext(UrlContext);
   const [currDescription, setDescription] = useState(description);
+  const [following, setFollowing] = useState([]);
   const [editPost, setEditMode] = useState(false);
   const [disable, setDisable] = useState(false);
   const token = localStorage.getItem("tokenLinker");
@@ -47,7 +48,7 @@ export default function Post({
   let urlDescription = formatUrlData(urlData.urlDescription, "description");
   let title = formatUrlData(urlData.title);
   let url = formatUrlData(urlData.url);
-
+  
   function formatUrlData(text, field = "") {
     let textOutput;
     if (field === "description") {
@@ -59,6 +60,25 @@ export default function Post({
     }
     return textOutput;
   }
+
+  useEffect(()=>{
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/follow`, config);
+    promise.then(response => {
+      setFollowing(response.data)
+    });
+    promise.catch(error => {
+      if (error.response.status === 401) {
+        navigate("/")
+      } else {
+        alert("Followers could not be retrieved");
+      }
+    });
+  },[URL,token])
 
   function moveCursorAtEnd(e) {
     const temp_value = e.target.value;
@@ -186,9 +206,28 @@ export default function Post({
     }
   }
 
+  function nameRepost () {
+    if(repostedBy===userData[0].id){
+      return 'you';
+    } else if (following.includes(repostedBy)){
+      return 'your Friend X';
+    } else {
+      return 'should not appear in your feed';
+    }
+  }
+
   return (
+
     <OutterContainer>
-      <Container>
+      {(following.includes(repostedBy)||repostedBy===userData[0].id) ?
+        <>
+          <RepostSpan>
+            <BiRepost onClick={() => openModal(id, 'repost')} />
+          <p>Re-posted by {nameRepost()}</p>
+          </RepostSpan>
+        </>
+        : null}
+      <InnerContainer>
         <div>
           <Link to={"/user/" + idUser}>
             <img src={userOwner.picture} alt="" onError={({ currentTarget }) => {
@@ -206,7 +245,9 @@ export default function Post({
               {likesCount} likes</p>
             <ReactTooltip />
           </Heart>
+
           <CommentsIcon postId={id} clicked={{ commentClicked, setCommentClicked }} />
+
           <RepostStyle>
             <BiRepost onClick={() => openModal(id, 'repost')} />
             <p>{repostCount} re-posts</p>
@@ -253,7 +294,7 @@ export default function Post({
             </div>
           </URLdiv>
         </span>
-      </Container>
+      </InnerContainer>
       {commentClicked
         ?
         <CommentsText postId={id} />

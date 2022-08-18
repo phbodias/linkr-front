@@ -29,8 +29,8 @@ export default function PostsPage() {
                     description={p.description}
                     likesCount={p.likesCount}
                     repostCount={p.repostCount}
+                    repostedBy={p.repostedBy}
                     likes={p.likes}
-                    reposts={p.reposts}
                     openModal={openModal}
                     idUser={p.userOwner.id}
                 />

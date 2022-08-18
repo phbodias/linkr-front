@@ -106,7 +106,7 @@ export function FeedPage({ title, forms, posts, hashtags ,friends}) {
                         <SearchNewUpdates />
 
                     { 
-                        title!="timeline"?
+                        title!=="timeline"?
                         posts(openModal):
                         friends.length===0?
                         <h1>You don't follow anyone yet. Search for new Friends</h1>:
