@@ -11,18 +11,24 @@ export default function InputSearchUsers() {
 
   const token = localStorage.getItem("tokenLinker");
   const [users, setUsers] = React.useState("");
+  const [usersNotFollowed, setUsersNotFollowed] = React.useState("");
   const [searchWords, setsearchWords] = React.useState("");
   const [activeButton, setActiveButton] = React.useState(false);
+  const [friends, setFriends] = React.useState([]);
 
-  console.log("renderizou");
   React.useEffect(() => {
-    console.log("useEffect");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const friendsId = axios.get(`${URL}/follow`, config);
+    friendsId
+      .then((res) => {
+        setFriends(res.data);
+      })
+      .catch((e) => alert(e.message));
     if (searchWords.length > 2) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const getUsersByName = axios.get(`${URL}/busca/${searchWords}`, config);
       getUsersByName.then(getUsersByNameSucess);
       getUsersByName.catch(getUsersByNameFail);
@@ -30,8 +36,10 @@ export default function InputSearchUsers() {
   }, [searchWords, token, URL]);
 
   function getUsersByNameSucess(response) {
-    console.log(response);
-    setUsers(response.data);
+    setUsers(response.data.filter((friend) => friends.includes(friend.id)));
+    setUsersNotFollowed(
+      response.data.filter((friend) => !friends.includes(friend.id))
+    );
   }
 
   function getUsersByNameFail(error) {
@@ -40,12 +48,23 @@ export default function InputSearchUsers() {
   }
 
   function showUsers() {
-    if (users.length === 0) {
+    if (users.length === 0 && usersNotFollowed.length === 0) {
       return <h4>NO USER FOUND</h4>;
     } else {
       return (
         <>
           {users.map((el, i) => (
+            <UserFollowed>
+              <CardUser
+                key={i}
+                name={el.name}
+                profilePic={el.profilePic}
+                id={el.id}
+              />
+              <h1>• following</h1>
+            </UserFollowed>
+          ))}
+          {usersNotFollowed.map((el, i) => (
             <CardUser
               key={i}
               name={el.name}
@@ -86,18 +105,19 @@ const Input = styled.div`
   justify-content: center;
 
   input {
-    width:100%;
+    width: 563px;
     height: 45px;
     border-radius: 8px;
     border: none;
+    padding-left: 10px;
   }
 `;
 
 const Body = styled.div`
-  margin: 10px auto;
+  margin: 0 auto;
   border-radius: 8px;
   padding: 0;
-  width: 100vw;
+  width: 563px;
   height: ${(props) => (props.selecionado ? "150px" : "45px")};
   background-color: #e7e7e7;
   overflow-y: scroll;
@@ -115,13 +135,8 @@ const Body = styled.div`
   }
 
   @media (min-width: 563px) and (max-width: 880px) {
-    width: 45%;
+    width: 280px;
   }
-  @media (min-width: 881px) and (max-width: 1600px) {
-    width: 50%;
-  }
-
-  
 `;
 
 const Users = styled.div`
@@ -132,10 +147,27 @@ const Users = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props) => (props.selecionado ? "block" : "none")};
+  padding-left: 10px;
 
   h4 {
     margin-top: 15px;
     text-align: center;
     color: blue;
+  }
+`;
+
+const UserFollowed = styled.div`
+  display: flex;
+  align-items: center;
+
+  h1 {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 23px;
+    color: #c5c5c5;
+    margin-left: 7px;
+    margin-top: -2px;
   }
 `;
