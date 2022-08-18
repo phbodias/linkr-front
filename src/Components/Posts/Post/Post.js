@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import UserContext from "../../../contexts/UserContext";
 import UrlContext from "../../../contexts/UrlContext";
 import ReactTooltip from "react-tooltip";
+import CommentsIcon from './Comments/CommentsIcon.jsx';
 
 
 export default function Post({
@@ -202,7 +203,7 @@ export default function Post({
             {likesCount} likes</p>
           <ReactTooltip />
         </Heart>
-
+        <CommentsIcon postId={id}/>
         <RepostStyle>
           <BiRepost onClick={() => openModal(id,'repost')} />
           <p>{repostCount} re-posts</p>
