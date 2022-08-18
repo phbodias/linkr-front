@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 export default function PostsPage() {
     const URL = useContext(UrlContext);
     const [postList, setPostList] = useState([]);
+    // const [clickedComments, setClickedComments] = useState([]);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
     const [friends, setFriends] = useState([])
@@ -53,7 +54,8 @@ export default function PostsPage() {
         const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
             setPostList(response.data)
-
+            // const arrayClicked = Array.from({length: response.data.length},()=>false);
+            // setClickedComments([...arrayClicked]);
         });
         promise.catch((error) => {
             if(error.response.status===401){
@@ -96,7 +98,7 @@ export default function PostsPage() {
 
     }, [token, URL]);
 
-    
+    // if(clickedComments) console.log(clickedComments);   
 
     return (
             <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} friends={friends} />

@@ -42,7 +42,6 @@ export default function CommentsText({ postId }) {
     },
         [token, URL, navigate, postId]);
 
-    if (comments) console.log(comments[0].userOwner.picture);
 
     return (
         (!comments)
@@ -55,7 +54,8 @@ export default function CommentsText({ postId }) {
                 <Container style={{
                     color: "#ACACAC",
                     fontWeight: "400",
-                    fontSize: "0.875rem"
+                    fontSize: "0.875rem",
+                    padding: "2rem 0" 
                 }
                 }>
                     "No commentaries yet"
@@ -66,7 +66,10 @@ export default function CommentsText({ postId }) {
                     {comments.map((comment,index)=>(
                         <Box key={index}>
                         <LeftInnerBox onClick={()=>navigate(`/user/${comment.userOwner.id}`)}>
-                            <img src={comment.userOwner.picture} alt="User profile pic rounded"/>
+                            <img src={comment.userOwner.picture} alt="" onError={({ currentTarget }) => {
+                             currentTarget.onerror = null; // prevents looping
+                                currentTarget.src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+                            }}/>
                         </LeftInnerBox>
                         <RightInnerBox>
                             <TitleBox>

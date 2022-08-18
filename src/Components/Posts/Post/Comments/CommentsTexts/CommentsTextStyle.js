@@ -7,11 +7,9 @@ export const Container = styled.div`
     height: fit-content;
     width:100%;
     background-color: #1E1E1E;
-    border-radius:1rem;
-    position:absolute;
-    left:0;
-    bottom:1.5rem;
-    padding:1.5rem 1.25rem 0 1.25rem;
+    border-radius: 0 0 1rem 1rem;
+    padding:0.5rem 1.25rem;
+    z-index:0;
 `;
 
 export const Box = styled.div`
@@ -19,8 +17,6 @@ export const Box = styled.div`
     width:100%;
     display:flex;
     border-bottom: 1px solid #353535;
-    padding-top:1rem;
-
 `;
 
 export const LeftInnerBox = styled.div`

@@ -1,4 +1,4 @@
-import { Container, tagStyle, Icons, Heart, RepostStyle,RepostSpan, InnerContainer, EditInput, URLdiv } from "./PostStyle";
+import { OutterContainer, tagStyle, Icons, Heart, RepostStyle, RepostSpan, InnerContainer, EditInput, URLdiv } from "./PostStyle";
 import axios from "axios";
 import { MdEdit } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
@@ -12,7 +12,7 @@ import UserContext from "../../../contexts/UserContext";
 import UrlContext from "../../../contexts/UrlContext";
 import ReactTooltip from "react-tooltip";
 import CommentsIcon from './Comments/CommentsIcon/CommentsIcon.jsx';
-
+import CommentsText from "./Comments/CommentsTexts/CommentsTexts.jsx";
 
 export default function Post({
   id,
@@ -218,7 +218,7 @@ export default function Post({
 
   return (
 
-    <Container>
+    <OutterContainer>
       {(following.includes(repostedBy)||repostedBy===userData[0].id) ?
         <>
           <RepostSpan>
@@ -230,7 +230,10 @@ export default function Post({
       <InnerContainer>
         <div>
           <Link to={"/user/" + idUser}>
-            <img src={userOwner.picture} alt="" />
+            <img src={userOwner.picture} alt="" onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            }} />
           </Link>
           <Heart>
             {likes.filter((l) => l.id === userData[0]?.id).length > 0 ? (
@@ -242,7 +245,9 @@ export default function Post({
               {likesCount} likes</p>
             <ReactTooltip />
           </Heart>
-          <CommentsIcon postId={id} onClick={() => { setCommentClicked(!commentClicked) }} />
+
+          <CommentsIcon postId={id} clicked={{ commentClicked, setCommentClicked }} />
+
           <RepostStyle>
             <BiRepost onClick={() => openModal(id, 'repost')} />
             <p>{repostCount} re-posts</p>
@@ -282,12 +287,21 @@ export default function Post({
               <p>{url}</p>
             </span>
             <div>
-              <img src={urlData.image} alt="" />
+              <img src={urlData.image} alt="" onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src = "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png";
+              }} />
             </div>
           </URLdiv>
         </span>
       </InnerContainer>
-    </Container>
+      {commentClicked
+        ?
+        <CommentsText postId={id} />
+        :
+        null
+      }
+    </OutterContainer>
   );
 }
 
