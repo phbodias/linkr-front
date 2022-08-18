@@ -10,11 +10,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function PostsPage() {
     const URL = useContext(UrlContext);
-    const [postList, setPostList] = useState([]);
+    const [postList, setPostList] = useState(null);
     // const [clickedComments, setClickedComments] = useState([]);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [friends, setFriends] = useState([])
+    const [friends, setFriends] = useState(null)
     const token = localStorage.getItem('tokenLinker');
     const navigate = useNavigate();
     function postsList (openModal) {
@@ -39,7 +39,7 @@ export default function PostsPage() {
             loading || !postList || !hashtags ?
                 <ThreeDots color="#FFF" height={50} width={100} />
                 :
-                <p>There are no posts yet</p>
+                <p>No posts found from your friends</p>
     );
 }
 
