@@ -1,4 +1,4 @@
-import { Container, tagStyle, Icons, Heart, RepostStyle, EditInput, URLdiv } from "./PostStyle";
+import { OutterContainer, Container, tagStyle, Icons, Heart, RepostStyle, EditInput, URLdiv } from "./PostStyle";
 import axios from "axios";
 import { MdEdit } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
@@ -12,7 +12,7 @@ import UserContext from "../../../contexts/UserContext";
 import UrlContext from "../../../contexts/UrlContext";
 import ReactTooltip from "react-tooltip";
 import CommentsIcon from './Comments/CommentsIcon/CommentsIcon.jsx';
-
+import CommentsText from "./Comments/CommentsTexts/CommentsTexts.jsx";
 
 export default function Post({
   id,
@@ -187,66 +187,80 @@ export default function Post({
   }
 
   return (
-    <Container>
-      <div>
-        <Link to={"/user/" + idUser}>
-          <img src={userOwner.picture} alt="" />
-        </Link>
-        <Heart>
-          {likes.filter((l) => l.id === userData[0]?.id).length > 0 ? (
-            <FaHeart style={{ color: "#AC0000" }} onClick={removeLike} />
-          ) : (
-            <FaRegHeart onClick={addLike} />
-          )}
-          <p data-tip={messageLikes()}>
-            {likesCount} likes</p>
-          <ReactTooltip />
-        </Heart>
-        <CommentsIcon postId={id} onClick={() => { setCommentClicked(!commentClicked) }} />
-        <RepostStyle>
-          <BiRepost onClick={() => openModal(id, 'repost')} />
-          <p>{repostCount} re-posts</p>
-        </RepostStyle>
-      </div>
-      <span>
+    <OutterContainer>
+      <Container>
         <div>
           <Link to={"/user/" + idUser}>
-            <h2>{userOwner.name}</h2>
+            <img src={userOwner.picture} alt="" onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            }} />
           </Link>
-          {userData[0]?.id === userOwner.id ? (
-            <Icons>
-              <MdEdit onClick={() => handleEdit("ClickIcon")} />
-              <AiFillDelete onClick={() => openModal(id, 'delete')} />
-            </Icons>
-          ) : (
-            ""
-          )}
+          <Heart>
+            {likes.filter((l) => l.id === userData[0]?.id).length > 0 ? (
+              <FaHeart style={{ color: "#AC0000" }} onClick={removeLike} />
+            ) : (
+              <FaRegHeart onClick={addLike} />
+            )}
+            <p data-tip={messageLikes()}>
+              {likesCount} likes</p>
+            <ReactTooltip />
+          </Heart>
+          <CommentsIcon postId={id} clicked={{ commentClicked, setCommentClicked }} />
+          <RepostStyle>
+            <BiRepost onClick={() => openModal(id, 'repost')} />
+            <p>{repostCount} re-posts</p>
+          </RepostStyle>
         </div>
-        {editPost ? (
-          <InputFocus />
-        ) : (
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={(tag) =>
-              navigate(`/hashtag/${textWithoutHashtag(tag)}`)
-            }
-          >
-            <p>{currDescription}</p>
-          </ReactTagify>
-        )}
-
-        <URLdiv href={urlData.url} target="_blank" rel="noreferrer">
-          <span>
-            <h3>{title}</h3>
-            <p>{urlDescription}</p>
-            <p>{url}</p>
-          </span>
+        <span>
           <div>
-            <img src={urlData.image} alt="" />
+            <Link to={"/user/" + idUser}>
+              <h2>{userOwner.name}</h2>
+            </Link>
+            {userData[0]?.id === userOwner.id ? (
+              <Icons>
+                <MdEdit onClick={() => handleEdit("ClickIcon")} />
+                <AiFillDelete onClick={() => openModal(id, 'delete')} />
+              </Icons>
+            ) : (
+              ""
+            )}
           </div>
-        </URLdiv>
-      </span>
-    </Container>
+          {editPost ? (
+            <InputFocus />
+          ) : (
+            <ReactTagify
+              tagStyle={tagStyle}
+              tagClicked={(tag) =>
+                navigate(`/hashtag/${textWithoutHashtag(tag)}`)
+              }
+            >
+              <p>{currDescription}</p>
+            </ReactTagify>
+          )}
+
+          <URLdiv href={urlData.url} target="_blank" rel="noreferrer">
+            <span>
+              <h3>{title}</h3>
+              <p>{urlDescription}</p>
+              <p>{url}</p>
+            </span>
+            <div>
+              <img src={urlData.image} alt="" onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src = "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png";
+              }} />
+            </div>
+          </URLdiv>
+        </span>
+      </Container>
+      {commentClicked
+        ?
+        <CommentsText postId={id} />
+        :
+        null
+      }
+    </OutterContainer>
   );
 }
 

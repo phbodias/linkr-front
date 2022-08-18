@@ -6,7 +6,7 @@ import UrlContext from "../../../../../contexts/UrlContext.js";
 import { BottomContainer, Container, UpperContainer } from "./CommentsIconStyle.js"
 import { useNavigate } from "react-router-dom";
 
-export default function CommentsIcon({postId}) {
+export default function CommentsIcon({postId , clicked:{commentClicked, setCommentClicked}}) {
     const URL = useContext(UrlContext);
     const [commentsCount, setCommentsCount] = useState(null);
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ export default function CommentsIcon({postId}) {
 
 
     return (
-        <Container>
+        <Container onClick={()=>{setCommentClicked(!commentClicked)}}>
             <UpperContainer>
                 <AiOutlineComment  />
             </UpperContainer>
