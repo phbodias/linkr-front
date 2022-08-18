@@ -8,13 +8,12 @@ export const Container = styled.div`
     height: 2rem;
     width:fit-content;
     margin-top:24px;
-    
 `;
 
 export const UpperContainer = styled.div`
     font-size:1.25rem;
     color:#FFFFFF;
-`
+`;
 
 export const BottomContainer = styled.div`
     font-size:0.6875rem;
