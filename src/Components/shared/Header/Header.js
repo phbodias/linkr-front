@@ -21,8 +21,8 @@ export default function Header() {
         Authorization: `Bearer ${token}`,
       },
     };
-    const promise = axios.get(`${URL}/me`, config);
-    promise
+    const user = axios.get(`${URL}/me`, config);
+    user
       .then((res) => setUserData(res.data))
       .catch((error) => {
         alert(`Erro: \n\n${error.response.status} - ${error.response.data}`);
