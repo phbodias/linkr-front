@@ -6,14 +6,13 @@ const tagStyle = {
     cursor: "pointer",
   };
   
-  const Container = styled.div`
+  const InnerContainer = styled.div`
     width: 100%;
     box-sizing: border-box;
     display: flex;
     background-color: #171717;
     border-radius: 10px;
     padding: 18px;
-    margin: 15px 0;
     img {
       border-radius: 50px;
       width: 50px;
@@ -70,6 +69,24 @@ const tagStyle = {
       }
     }
   `;
+
+  const Container = styled.div`
+  margin: 15px 0;
+  background-color:#1e1e1e;
+  width:100%;
+  border-radius:10px 10px 0 0;
+  `
+  const RepostSpan = styled.span`
+  display:flex;
+  align-items:center;
+  color: #ffffff;
+  font-size: 30px;
+  padding:5px 15px 0 15px;
+  p{
+    font-size:12px;
+    margin-left:5px;
+  }
+  `
   
   const Icons = styled.div`
     width: 50px;
@@ -188,4 +205,4 @@ const tagStyle = {
   `;
   
 
-  export {tagStyle,Container,Icons,Heart,RepostStyle,EditInput,URLdiv}
+  export {tagStyle,Container,Icons,Heart,RepostStyle,InnerContainer,RepostSpan,EditInput,URLdiv}
