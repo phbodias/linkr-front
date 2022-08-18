@@ -8,7 +8,7 @@ import axios from "axios";
 import UrlContext from "../../../contexts/UrlContext";
 import SearchNewUpdates from "../../Posts/SearchNewUpdates";
 
-export function FeedPage({ title, forms, posts, hashtags }) {
+export function FeedPage({ title, forms, posts, hashtags ,friends}) {
     const navigate = useNavigate();
     const URL = useContext(UrlContext);
     const [postToDelete, setDelete] = useState('');
@@ -104,7 +104,16 @@ export function FeedPage({ title, forms, posts, hashtags }) {
                     <LeftInnerContainer>
                         {forms ? <CreatePost /> : null}
                         <SearchNewUpdates />
-                        {posts(openModal)}
+
+                    { 
+                        title!="timeline"?
+                        posts(openModal):
+                        friends.length===0?
+                        <h1>You don't follow anyone yet. Search for new Friends</h1>:
+                        posts.length>0?
+                        posts(openModal):
+                        <h1>No posts found from your friends</h1>
+                    }
 
                         
 
