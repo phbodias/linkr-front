@@ -86,7 +86,7 @@ const Input = styled.div`
   justify-content: center;
 
   input {
-    width: 563px;
+    width:100%;
     height: 45px;
     border-radius: 8px;
     border: none;
@@ -97,7 +97,7 @@ const Body = styled.div`
   margin: 0 auto;
   border-radius: 8px;
   padding: 0;
-  width: 563px;
+  width: 100vw;
   height: ${(props) => (props.selecionado ? "150px" : "45px")};
   background-color: #e7e7e7;
   overflow-y: scroll;
@@ -115,8 +115,13 @@ const Body = styled.div`
   }
 
   @media (min-width: 563px) and (max-width: 880px) {
-    width: 280px;
+    width: 45%;
   }
+  @media (min-width: 881px) and (max-width: 1600px) {
+    width: 50%;
+  }
+
+  
 `;
 
 const Users = styled.div`
