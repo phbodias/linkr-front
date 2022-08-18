@@ -94,7 +94,7 @@ const Input = styled.div`
 `;
 
 const Body = styled.div`
-  margin: 0 auto;
+  margin: 10px auto;
   border-radius: 8px;
   padding: 0;
   width: 100vw;
