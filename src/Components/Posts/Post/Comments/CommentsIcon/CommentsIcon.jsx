@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AiOutlineComment } from "react-icons/ai";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
-import UrlContext from "../../../../contexts/UrlContext.js";
+import UrlContext from "../../../../../contexts/UrlContext.js";
 import { BottomContainer, Container, UpperContainer } from "./CommentsIconStyle.js"
 import { useNavigate } from "react-router-dom";
 
@@ -45,9 +45,9 @@ export default function CommentsIcon({postId}) {
                     ?
                     (commentsCount=== "1" || commentsCount === "0") 
                         ? 
-                     `${commentsCount} comentário`
+                     `${commentsCount} comment`
                      :
-                     `${commentsCount} comentários`
+                     `${commentsCount} comments`
                     
                     :
                     <ThreeDots color="#FFF" height={50} width={100} />
