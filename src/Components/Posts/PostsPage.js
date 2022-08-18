@@ -10,12 +10,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function PostsPage() {
     const URL = useContext(UrlContext);
-    const [postList, setPostList] = useState(null);
+    const [postList, setPostList] = useState([]);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [friends, setFriends] = useState([])
     const token = localStorage.getItem('tokenLinker');
     const navigate = useNavigate();
-    
     function postsList (openModal) {
         return(
         postList?.length > 0 ?
@@ -81,11 +81,24 @@ export default function PostsPage() {
                 setLoading(false);
             });
 
+
+            axios.get(`${URL}/follow`, config)
+            .then(res=>{
+                setFriends(res.data)
+            })
+            .catch(err=>{
+                if(err.response.status===401){
+                    navigate("/")
+                } else {
+                    alert("An error occured while trying to fetch the trendings, please refresh the page");
+                }
+            })
+
     }, [token, URL]);
 
     
 
     return (
-            <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} />
+            <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} friends={friends} />
     );
 }
