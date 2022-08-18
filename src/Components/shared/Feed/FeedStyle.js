@@ -1,18 +1,19 @@
 import styled from "styled-components";
 
 const Container = styled.main`
-  margin-top: 20px;
-  min-height: 100vh;
-  display: flex;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #333333;
-  box-sizing: border-box;
-  padding: 72px 18% 0 16%;
-  @media (max-width: 1130px) {
-    padding: 35px 0 0 0;
-  }
+    margin-top: 35px;
+    min-height:100vh;
+    display:flex;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    background-color:#333333;
+    box-sizing:border-box;
+    padding: 72px 18% 0 16%;
+    @media (max-width: 1130px) {
+        padding:35px 0 0 0;
+        }
 `;
 
 const Title = styled.h1`
@@ -100,6 +101,7 @@ const TextContent = styled.h4`
 
 const Follow = styled.div`
   position: absolute;
+  z-index: 2;
   width: 112px;
   height: 31px;
   left: 73vw;
