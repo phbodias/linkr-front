@@ -6,20 +6,34 @@ const tagStyle = {
     cursor: "pointer",
   };
   
+  const OutterContainer=styled.div`
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    width:100%;
+    margin: 15px 0;
+    border-radius: 1rem;
+    @media (max-width: 1130px) {
+      margin: 5px 0;
+    }
+    
+  `;
+  
   const Container = styled.div`
     width: 100%;
     box-sizing: border-box;
     display: flex;
     background-color: #171717;
-    border-radius: 10px;
+    border-radius: 1rem 1rem 0 0;
     padding: 18px;
-    margin: 15px 0;
+    
+    
     img {
       border-radius: 50px;
       width: 50px;
       height: 50px;
     }
-    > div {
+    > div:first-child {
       width: 100px;
       /* margin-right: 10px; */
       display: flex;
@@ -58,7 +72,7 @@ const tagStyle = {
         width: 40px;
         height: 40px;
       }
-      > div {
+      > div:first-child {
         width: 80px;
         margin-right: 10px;
       }
@@ -188,4 +202,4 @@ const tagStyle = {
   `;
   
 
-  export {tagStyle,Container,Icons,Heart,RepostStyle,EditInput,URLdiv}
+  export {tagStyle,Container,Icons,Heart,RepostStyle,EditInput,URLdiv, OutterContainer}
