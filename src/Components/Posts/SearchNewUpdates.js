@@ -78,7 +78,7 @@ export default function SearchNewUpdates(){
 
 const AreaNewPost = styled.div`
     visibility: ${props => props.visible?"visible":"hidden"};
-    width: 611px;
+    width: 80vw;
     height: 61px;
     background-color: #1877F2;
     text-align: center;
@@ -96,4 +96,10 @@ const AreaNewPost = styled.div`
         align-items: center;
         justify-content: center;
     }
+
+    @media (min-width: 1130px) {
+        width: 45vw;
+    }
+
+
 `
