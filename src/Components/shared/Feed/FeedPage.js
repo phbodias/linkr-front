@@ -17,15 +17,15 @@ import axios from "axios";
 import UrlContext from "../../../contexts/UrlContext";
 import SearchNewUpdates from "../../Posts/SearchNewUpdates";
 
-export function FeedPage({ title, forms, posts, hashtags }) {
-  const navigate = useNavigate();
-  const URL = useContext(UrlContext);
-  const [postToDelete, setDelete] = useState("");
-  const [postToRepost, setRepost] = useState("");
-  const [deleteIsOpen, setDeleteOpen] = useState(false);
-  const [repostIsOpen, setRepostOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const token = localStorage.getItem("tokenLinker");
+export function FeedPage({ title, forms, posts, hashtags ,friends}) {
+    const navigate = useNavigate();
+    const URL = useContext(UrlContext);
+    const [postToDelete, setDelete] = useState('');
+    const [postToRepost, setRepost] = useState('');
+    const [deleteIsOpen, setDeleteOpen] = useState(false);
+    const [repostIsOpen, setRepostOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const token = localStorage.getItem('tokenLinker');
 
   function deletePost() {
     setLoading(true);
@@ -99,12 +99,39 @@ export function FeedPage({ title, forms, posts, hashtags }) {
       default:
         break;
     }
-  }
-  return (
-    <>
-      <Header />
-      <Container>
-        <Title>{title}</Title>
+
+    return (
+        <>
+            <Header />
+            <Container>
+                <Title>
+                    {title}
+                </Title>
+
+
+                <InnerContainer>
+                    <LeftInnerContainer>
+                        {forms ? <CreatePost /> : null}
+                        <SearchNewUpdates />
+
+                    { 
+                        title!="timeline"?
+                        posts(openModal):
+                        friends.length===0?
+                        <h1>You don't follow anyone yet. Search for new Friends</h1>:
+                        posts.length>0?
+                        posts(openModal):
+                        <h1>No posts found from your friends</h1>
+                    }
+
+                        
+
+                    </LeftInnerContainer>
+                    <RightInnerContainer>
+                        <SubTitle>
+                            trendings
+                        </SubTitle>
+                        <SubItems>
 
         <InnerContainer>
           <LeftInnerContainer>

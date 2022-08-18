@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import UserContext from "../../../contexts/UserContext";
 import UrlContext from "../../../contexts/UrlContext";
 import ReactTooltip from "react-tooltip";
+import CommentsIcon from './Comments/CommentsIcon/CommentsIcon.jsx';
 
 
 export default function Post({
@@ -26,7 +27,6 @@ export default function Post({
   idUser,
 }) {
 
-
   const { userData } = useContext(UserContext);
   const URL = useContext(UrlContext);
   const [currDescription, setDescription] = useState(description);
@@ -34,7 +34,7 @@ export default function Post({
   const [disable, setDisable] = useState(false);
   const token = localStorage.getItem("tokenLinker");
   const navigate = useNavigate();
-
+  const [commentClicked, setCommentClicked] = useState(false);
 
   function textWithoutHashtag(text) {
     return text?.replace("#", "");
@@ -121,11 +121,11 @@ export default function Post({
       window.location.reload(false);
     });
     promise.catch(error => {
-      if(error.response.status===401){
+      if (error.response.status === 401) {
         navigate("/")
-    } else {
-      alert("Your changes could not be saved");
-    }
+      } else {
+        alert("Your changes could not be saved");
+      }
       setDisable(false);
     });
   }
@@ -141,11 +141,11 @@ export default function Post({
       window.location.reload(false);
     });
     promise.catch(error => {
-      if(error.response.status===401){
+      if (error.response.status === 401) {
         navigate("/")
-    } else {
+      } else {
         alert("The post could not be liked");
-    }
+      }
     });
   }
   function removeLike() {
@@ -160,11 +160,11 @@ export default function Post({
       window.location.reload(false);
     });
     promise.catch(error => {
-      if(error.response.status===401){
-      navigate("/")
-  } else {
-      alert("The post could not be disliked");
-  }
+      if (error.response.status === 401) {
+        navigate("/")
+      } else {
+        alert("The post could not be disliked");
+      }
     });
   }
 
@@ -202,9 +202,9 @@ export default function Post({
             {likesCount} likes</p>
           <ReactTooltip />
         </Heart>
-
+        <CommentsIcon postId={id} onClick={() => { setCommentClicked(!commentClicked) }} />
         <RepostStyle>
-          <BiRepost onClick={() => openModal(id,'repost')} />
+          <BiRepost onClick={() => openModal(id, 'repost')} />
           <p>{repostCount} re-posts</p>
         </RepostStyle>
       </div>
@@ -216,7 +216,7 @@ export default function Post({
           {userData[0]?.id === userOwner.id ? (
             <Icons>
               <MdEdit onClick={() => handleEdit("ClickIcon")} />
-              <AiFillDelete onClick={() => openModal(id,'delete')} />
+              <AiFillDelete onClick={() => openModal(id, 'delete')} />
             </Icons>
           ) : (
             ""
