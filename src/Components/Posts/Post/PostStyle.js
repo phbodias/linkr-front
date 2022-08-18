@@ -20,8 +20,8 @@ const tagStyle = {
       height: 50px;
     }
     > div {
-      width: 50px;
-      margin-right: 20px;
+      width: 100px;
+      /* margin-right: 10px; */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -59,8 +59,8 @@ const tagStyle = {
         height: 40px;
       }
       > div {
-        width: 40px;
-        margin-right: 15px;
+        width: 80px;
+        margin-right: 10px;
       }
       h2 {
         font-size: 18px;
