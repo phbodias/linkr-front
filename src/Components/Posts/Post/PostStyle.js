@@ -12,7 +12,7 @@ const tagStyle = {
     background-color: #1e1e1e;
     height:auto;
     width:100%;
-    margin: 15px 0;
+    margin: 0 0 15px 0;
     border-radius: 1rem;
     @media (max-width: 1130px) {
       margin: 5px 0;

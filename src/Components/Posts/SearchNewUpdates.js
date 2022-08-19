@@ -78,8 +78,8 @@ export default function SearchNewUpdates(){
 
 const AreaNewPost = styled.div`
     visibility: ${props => props.visible?"visible":"hidden"};
-    width: 80vw;
-    height: 61px;
+    width: 70vw;
+    height: ${props => props.visible? "61px" : "0"};
     background-color: #1877F2;
     text-align: center;
     border-radius: 16px;
@@ -88,8 +88,8 @@ const AreaNewPost = styled.div`
     align-items: center;
     font-size: 16px;
     color: #FFFFFF;
-    margin: 10px;
-    padding: 10px;
+    margin: ${props => props.visible? "10px" : "0"};
+    padding: ${props => props.visible? "10px" : "0"};
     cursor:pointer;
     div{
         display: flex;

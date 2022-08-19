@@ -128,13 +128,13 @@ const Container = styled.div`
   width: 100%;
   top: 0;
   left: 0;
-  height: 75px;
+  height: 80px;
   background-color: #151515;
   color: #ffffff;
-  padding: 10px 0;
   display: flex;
-  align-items: flex-start;
-  box-sizing: content-box;
+  align-items: center;
+  padding-top: auto;
+  
   @media (max-width: 563px) {
     display: flex;
     justify-content: space-between;
