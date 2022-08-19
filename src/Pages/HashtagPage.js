@@ -5,6 +5,7 @@ import { ThreeDots } from "react-loader-spinner";
 import Post from "../Components/Posts/Post/Post";
 import { FeedPage } from "../Components/shared/Feed/FeedPage";
 import UrlContext from "../contexts/UrlContext";
+import styled from "styled-components";
 
 
 export default function HashtagPage() { 
@@ -76,15 +77,18 @@ export default function HashtagPage() {
                 loading || !postList || !hashtags ?
                     <ThreeDots color="#FFF" height={50} width={100} />
                     :
-                    <p>There are no posts yet</p>
+                    <NoPosts>There are no posts yet</NoPosts>
 
         );
     }
-
-    console.log("bbbbb", postList)
 
     return (
         <FeedPage title={`# ${hashtag}`} posts={postsList} hashtags={hashtags} />
     )
 }
+
+const NoPosts = styled.div`
+  text-align: center;
+  font-size: 25px;
+`;
 

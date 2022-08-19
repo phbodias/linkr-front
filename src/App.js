@@ -11,12 +11,13 @@ import SearchNewUpdates from "./Components/Posts/SearchNewUpdates";
 
 function App() {
   const [userData, setUserData] = useState({});
+  const [userPageId, setUserPageId] = useState({});
   const url = process.env.REACT_APP_MODE === "DEV" ? "http://localhost:4000" : "https://backlinkr.herokuapp.com";
   const [URL] = useState(url);
 
   return (
     <UrlContext.Provider value={URL}>
-      <UserContext.Provider value={{ userData, setUserData }}>
+      <UserContext.Provider value={{ userData, setUserData, userPageId, setUserPageId }}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<SignIn />} />

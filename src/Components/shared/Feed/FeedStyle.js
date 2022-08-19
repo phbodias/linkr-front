@@ -3,6 +3,7 @@ import styled from "styled-components";
 const Container = styled.main`
   margin-top: 35px;
   width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #333333;
@@ -124,7 +125,7 @@ const Unfollow = styled.div`
   width: 112px;
   height: 31px;
   left: 73vw;
-  top: 170px;
+  top: 175px;
   background: #ffffff;
   border-radius: 5px;
   text-align: center;
@@ -134,10 +135,14 @@ const Unfollow = styled.div`
   align-items: center;
   cursor: pointer;
   @media (max-width: 1130px) {
-    top: 150px;
+    top: 160px;
+    height: 26px;
+    left: 80vw;
   }
+
   @media (max-width: 563px) {
-    top: 177px;
+    top: 196px;
+    left: 68vw;
   }
 `;
 

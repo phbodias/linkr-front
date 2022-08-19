@@ -5,9 +5,11 @@ import styled from "styled-components";
 import ClickAwayListener from "react-click-away-listener";
 import CardUser from "./CardUser";
 import UrlContext from "../../contexts/UrlContext";
+import UserContext from "../../contexts/UserContext";
 
 export default function InputSearchUsers() {
   const URL = useContext(UrlContext);
+  const {setUserPageId} = useContext(UserContext);
 
   const token = localStorage.getItem("tokenLinker");
   const [users, setUsers] = React.useState("");
@@ -15,6 +17,7 @@ export default function InputSearchUsers() {
   const [searchWords, setsearchWords] = React.useState("");
   const [activeButton, setActiveButton] = React.useState(false);
   const [friends, setFriends] = React.useState([]);
+  const userLoggedId = parseInt(localStorage.getItem("userLinkerId"));
 
   React.useEffect(() => {
     const config = {
@@ -54,7 +57,7 @@ export default function InputSearchUsers() {
       return (
         <>
           {users.map((el, i) => (
-            <UserFollowed>
+            <UserFollowed onClick={() => setUserPageId(el.id)}>
               <CardUser
                 key={i}
                 name={el.name}
@@ -65,12 +68,17 @@ export default function InputSearchUsers() {
             </UserFollowed>
           ))}
           {usersNotFollowed.map((el, i) => (
-            <CardUser
-              key={i}
-              name={el.name}
-              profilePic={el.profilePic}
-              id={el.id}
-            />
+            <UserFollowed onClick={() => setUserPageId(el.id)}>
+              <CardUser
+                key={i}
+                name={el.name}
+                profilePic={el.profilePic}
+                id={el.id}
+              />
+              {el.id === userLoggedId ? (
+                <h1>• your profile</h1>
+              ) : ""}
+            </UserFollowed>
           ))}
         </>
       );
@@ -175,4 +183,3 @@ const UserFollowed = styled.div`
     margin-top: -2px;
   }
 `;
-
