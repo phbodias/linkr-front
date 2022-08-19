@@ -23,7 +23,10 @@ export default function Header() {
     };
     const promise = axios.get(`${URL}/me`, config);
     promise
-      .then((res) => setUserData(res.data))
+      .then((res) => {
+        setUserData(res.data);
+        localStorage.setItem("userLinkerId", res.data[0].id);
+      })
       .catch((error) => {
         alert(`Erro: \n\n${error.response.status} - ${error.response.data}`);
         localStorage.removeItem("tokenLinker");

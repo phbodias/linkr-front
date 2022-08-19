@@ -152,3 +152,4 @@ export function FeedPage({ title, forms, posts, hashtags ,friends}) {
         </>
     );
 }
+

@@ -10,7 +10,8 @@ import { Follow, Unfollow } from "../Components/shared/Feed/FeedStyle";
 
 export default function TelaUser() {
   const URL = useContext(UrlContext);
-  const userLoggedId = (parseInt(localStorage.getItem("userLinkerId")) === parseInt(useParams()));
+  const { id } = useParams();
+  const userLoggedId = (parseInt(localStorage.getItem("userLinkerId")) === parseInt(id));
   const [postList, setPostList] = useState(null);
   const [hashtags, setHashtags] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,6 @@ export default function TelaUser() {
   const [isFriend, setIsFriend] = useState(false);
 
   const token = localStorage.getItem("tokenLinker");
-  const { id } = useParams();
 
   useEffect(() => {
     const config = {
@@ -140,7 +140,7 @@ export default function TelaUser() {
         hashtags={hashtags}
         isFriend={isFriend}
       />
-      {userLoggedId ? (
+      {!userLoggedId ? (
         loadingFollow ? (
           <Follow>
             <ThreeDots color="#FFF" height={50} width={100} />
