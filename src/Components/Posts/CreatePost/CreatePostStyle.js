@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export default styled.div`
 background-color:#FFFFFF;
-margin-bottom:15px;
+margin-bottom:30px;
 display:flex;
 border-radius:10px;
 padding:18px 24px;
