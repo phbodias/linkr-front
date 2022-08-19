@@ -15,7 +15,7 @@ export default function PostsPage() {
   const [loading, setLoading] = useState(false);
   const [friends, setFriends] = useState(null);
   const [hasMore, setHasMore] = useState(true);
-  const initialLimit = 4;
+  const initialLimit = 10;
   const [limit, setLimit] = useState(initialLimit);
   const token = localStorage.getItem("tokenLinker");
   const navigate = useNavigate();
@@ -32,13 +32,13 @@ export default function PostsPage() {
     promise.then((response) => {
         if(postList.length===0){
           setPostList(response.data);
-          setLimit(limit+2);
+          setLimit(limit+10);
         } 
         
         if (response.data.length > postList.length) {
           setHasMore(true);
           setPostList(response.data);
-          setLimit(limit+2);
+          setLimit(limit+10);
         } else {
           setHasMore(false);
         }

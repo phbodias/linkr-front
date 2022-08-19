@@ -113,8 +113,7 @@ export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}
         <InnerContainer>
           <LeftInnerContainer>
             {forms ? <CreatePost /> : ''}
-            <SearchNewUpdates />
-
+            {title === "timeline" ? <SearchNewUpdates /> : ""}
             {title !== "timeline" ? (
               posts(openModal)
             ) : friends?.length === 0 ? (
