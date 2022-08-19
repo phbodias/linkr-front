@@ -9,6 +9,7 @@ const tagStyle = {
    const OutterContainer=styled.div`
     display:flex;
     flex-direction:column;
+    background-color: #1e1e1e;
     height:auto;
     width:100%;
     margin: 0 0 15px 0;
@@ -24,7 +25,7 @@ const tagStyle = {
     box-sizing: border-box;
     display: flex;
     background-color: #171717;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 1rem;
     padding: 18px;
 
     img {
@@ -34,7 +35,7 @@ const tagStyle = {
     }
     > div:first-child {
       width: 100px;
-      /* margin-right: 10px; */
+      margin-right: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
