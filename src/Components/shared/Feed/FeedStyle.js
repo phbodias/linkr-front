@@ -40,6 +40,7 @@ const InnerContainer = styled.div`
 
 const LeftInnerContainer = styled.div`
   width: 65%;
+  color:#FFFFFF;
   @media (max-width: 1130px) {
     width: 100%;
   }
@@ -53,6 +54,7 @@ const RightInnerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   border-radius: 1rem;
+  color:#FFFFFF;
   @media (max-width: 1130px) {
     display: none;
   }
