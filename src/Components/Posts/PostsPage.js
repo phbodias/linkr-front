@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import Post from "./Post/Post";
@@ -17,6 +17,28 @@ export default function PostsPage() {
     const [friends, setFriends] = useState(null)
     const token = localStorage.getItem('tokenLinker');
     const navigate = useNavigate();
+    
+    const loadPostList = useCallback( () => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        setLoading(true);
+        const promise = axios.get(`${URL}/posts`, config);
+        promise.then(response => {
+            setPostList(response.data)
+            
+        });
+        promise.catch((error) => {
+            if(error.response.status===401){
+                navigate("/")
+            } else {
+                alert("An error occured while trying to fetch the posts, please refresh the page");
+            }
+        });
+    },[]);
+
     function postsList (openModal) {
         return(
         postList?.length > 0 ?
@@ -33,6 +55,7 @@ export default function PostsPage() {
                     likes={p.likes}
                     openModal={openModal}
                     idUser={p.userOwner.id}
+                    loadPostList={loadPostList}
                 />
             )
             :
@@ -51,20 +74,8 @@ export default function PostsPage() {
             }
         }
         setLoading(true);
-        const promise = axios.get(`${URL}/posts`, config);
-        promise.then(response => {
-            setPostList(response.data)
-            console.log(response.data)
-            // const arrayClicked = Array.from({length: response.data.length},()=>false);
-            // setClickedComments([...arrayClicked]);
-        });
-        promise.catch((error) => {
-            if(error.response.status===401){
-                navigate("/")
-            } else {
-                alert("An error occured while trying to fetch the posts, please refresh the page");
-            }
-        });
+
+        loadPostList();
 
         axios.get(`${URL}/hashtags`, config)
             .then(res => {
@@ -97,11 +108,11 @@ export default function PostsPage() {
                 }
             })
 
-    }, [token, URL]);
+    }, [token, URL, loadPostList]);
 
     // if(clickedComments) console.log(clickedComments);   
 
     return (
-            <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} friends={friends} />
+            <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} friends={friends} loadPostList={loadPostList}/>
     );
 }

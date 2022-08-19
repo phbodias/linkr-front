@@ -25,6 +25,7 @@ export default function Post({
   repostedBy,
   openModal,
   idUser,
+  loadPostList
 }) {
 
   const { userData } = useContext(UserContext);
@@ -110,6 +111,8 @@ export default function Post({
     switch (code) {
       case "Enter":
         updatePost();
+        setEditMode(false);
+        setDisable(false);
         break;
       case "Escape":
         setDescription(description);
@@ -137,7 +140,7 @@ export default function Post({
       config
     );
     promise.then(() => {
-      window.location.reload(false);
+      loadPostList();
     });
     promise.catch(error => {
       if (error.response.status === 401) {
@@ -157,7 +160,7 @@ export default function Post({
     };
     const promise = axios.post(`${URL}/likes`, { id }, config);
     promise.then(() => {
-      window.location.reload(false);
+      loadPostList();
     });
     promise.catch(error => {
       if (error.response.status === 401) {
@@ -176,7 +179,7 @@ export default function Post({
     };
     const promise = axios.delete(`${URL}/likes/${id}`, config);
     promise.then(() => {
-      window.location.reload(false);
+      loadPostList();
     });
     promise.catch(error => {
       if (error.response.status === 401) {

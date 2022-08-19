@@ -8,6 +8,7 @@ export const Container = styled.div`
     height: 2rem;
     width:fit-content;
     margin-top:24px;
+    cursor:pointer;
 `;
 
 export const UpperContainer = styled.div`

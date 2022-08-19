@@ -17,61 +17,64 @@ import axios from "axios";
 import UrlContext from "../../../contexts/UrlContext";
 import SearchNewUpdates from "../../Posts/SearchNewUpdates";
 
-export function FeedPage({ title, forms, posts, hashtags, friends }) {
-  const navigate = useNavigate();
-  const URL = useContext(UrlContext);
-  const [postToDelete, setDelete] = useState("");
-  const [postToRepost, setRepost] = useState("");
-  const [deleteIsOpen, setDeleteOpen] = useState(false);
-  const [repostIsOpen, setRepostOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const token = localStorage.getItem("tokenLinker");
+export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}) {
+    const navigate = useNavigate();
+    const URL = useContext(UrlContext);
+    const [postToDelete, setDelete] = useState('');
+    const [postToRepost, setRepost] = useState('');
+    const [deleteIsOpen, setDeleteOpen] = useState(false);
+    const [repostIsOpen, setRepostOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const token = localStorage.getItem('tokenLinker');
 
-  function deletePost() {
-    setLoading(true);
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const promise = axios.delete(`${URL}/posts/${postToDelete}`, config);
-    promise.then(() => {
-      window.location.reload(false);
-    });
-    promise.catch((error) => {
-      setLoading(false);
-      closeModal("delete");
-      if (error.response.status === 401) {
-        navigate("/");
-      } else {
-        alert("The post could not be deleted");
-      }
-      console.log(error.response.data);
-    });
-  }
+    function deletePost() {
+        setLoading(true);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.delete(`${URL}/posts/${postToDelete}`, config);
+        promise.then(() => {
+            setLoading(false);
+            closeModal('delete');
+            loadPostList();
+        })
+        promise.catch((error) => {
+            setLoading(false);
+            closeModal('delete');
+            if(error.response.status===401){
+                navigate("/")
+            } else {
+                console.log(error.response.data);
+                alert("The post could not be deleted");
+            }
+            console.log(error.response.data);
+        })
+    }
 
-  function addRepost() {
-    setLoading(true);
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const promise = axios.post(`${URL}/repost/${postToRepost}`, {}, config);
-    promise.then(() => {
-      window.location.reload(false);
-    });
-    promise.catch((error) => {
-      setLoading(false);
-      closeModal("repost");
-      if (error.response.status === 401) {
-        navigate("/");
-      } else {
-        alert("The post could not be reposted");
-      }
-      console.log(error.response.data);
-    });
-  }
+    function addRepost() {
+        setLoading(true);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(`${URL}/repost/${postToRepost}`,{}, config);
+        promise.then(() => {
+            loadPostList();
+        })
+        promise.catch((error) => {
+            setLoading(false);
+            closeModal('repost');
+            if(error.response.status===401){
+                navigate("/")
+            } else {
+                alert("The post could not be reposted");
+            }
+            console.log(error.response.data);
+        })
+    }
 
   function openModal(id, field) {
     switch (field) {
