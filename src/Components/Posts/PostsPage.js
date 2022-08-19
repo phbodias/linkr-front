@@ -15,21 +15,35 @@ export default function PostsPage() {
   const [loading, setLoading] = useState(false);
   const [friends, setFriends] = useState(null);
   const [hasMore, setHasMore] = useState(true);
-  const [limit, setLimit] = useState(0);
+  const initialLimit = 4;
+  const [limit, setLimit] = useState(initialLimit);
   const token = localStorage.getItem("tokenLinker");
   const navigate = useNavigate();
 
-  const loadPostList = useCallback(() => {
+  const loadPostList = useCallback((limit) => {
+    if(!limit) limit=initialLimit;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
     setLoading(true);
-    const promise = axios.get(`${URL}/posts/?limit=4`, config);
+    const promise = axios.get(`${URL}/posts/?limit=${limit}`, config);
     promise.then((response) => {
-        if (postList.length === 0) setPostList(response.data);
-    });
+        if(postList.length===0){
+          setPostList(response.data);
+          setLimit(limit+2);
+        } 
+        
+        if (response.data.length > postList.length) {
+          setHasMore(true);
+          setPostList(response.data);
+          setLimit(limit+2);
+        } else {
+          setHasMore(false);
+        }
+    
+      });
     promise.catch((error) => {
       if (error.response.status === 401) {
         navigate("/");
@@ -41,39 +55,11 @@ export default function PostsPage() {
     });
   }, []);
 
-  function load() {
-    console.log("Load aqui");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    setLoading(true);
-    setLimit(postList.length + 2);
-    const promise = axios.get(`${URL}/posts/?limit=${limit + 2}`, config);
-    promise.then((response) => {
-      console.log(response.data);
-      if (response.data.length > postList.length) {
-        setHasMore(true);
-        setPostList(response.data);
-      } else setHasMore(false);
-    });
-    promise.catch((error) => {
-      if (error.response.status === 401) {
-        navigate("/");
-      } else {
-        alert(
-          "An error occured while trying to fetch the posts, please refresh the page"
-        );
-      }
-    });
-  }
-
   function postsList(openModal) {
     return postList?.length > 0 ? (
       <InfiniteScroll
         pageStart={0}
-        loadMore={load}
+        loadMore={loadPostList}
         hasMore={hasMore}
         loader={
           <TailSpin
@@ -117,7 +103,7 @@ export default function PostsPage() {
     };
     setLoading(true);
 
-    loadPostList();
+    loadPostList(limit);
 
     axios
       .get(`${URL}/hashtags`, config)
@@ -154,7 +140,7 @@ export default function PostsPage() {
           );
         }
       });
-  }, [token, URL, limit]);
+  }, [token, URL]);
 
   return (
     <FeedPage
