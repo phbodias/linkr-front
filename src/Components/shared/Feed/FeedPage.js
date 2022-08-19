@@ -8,7 +8,7 @@ import axios from "axios";
 import UrlContext from "../../../contexts/UrlContext";
 import SearchNewUpdates from "../../Posts/SearchNewUpdates";
 
-export function FeedPage({ title, forms, posts, hashtags ,friends}) {
+export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}) {
     const navigate = useNavigate();
     const URL = useContext(UrlContext);
     const [postToDelete, setDelete] = useState('');
@@ -27,7 +27,9 @@ export function FeedPage({ title, forms, posts, hashtags ,friends}) {
         }
         const promise = axios.delete(`${URL}/posts/${postToDelete}`, config);
         promise.then(() => {
-            window.location.reload(false);
+            setLoading(false);
+            closeModal('delete');
+            loadPostList();
         })
         promise.catch((error) => {
             setLoading(false);
@@ -35,6 +37,7 @@ export function FeedPage({ title, forms, posts, hashtags ,friends}) {
             if(error.response.status===401){
                 navigate("/")
             } else {
+                console.log(error.response.data);
                 alert("The post could not be deleted");
             }
             console.log(error.response.data);
@@ -50,7 +53,7 @@ export function FeedPage({ title, forms, posts, hashtags ,friends}) {
         }
         const promise = axios.post(`${URL}/repost/${postToRepost}`,{}, config);
         promise.then(() => {
-            window.location.reload(false);
+            loadPostList();
         })
         promise.catch((error) => {
             setLoading(false);
