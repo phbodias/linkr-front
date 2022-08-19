@@ -54,6 +54,7 @@ export default function PostsPage() {
         const promise = axios.get(`${URL}/posts`, config);
         promise.then(response => {
             setPostList(response.data)
+            console.log(response.data)
             // const arrayClicked = Array.from({length: response.data.length},()=>false);
             // setClickedComments([...arrayClicked]);
         });
