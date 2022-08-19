@@ -110,8 +110,6 @@ export default function PostsPage() {
 
     }, [token, URL, loadPostList]);
 
-    // if(clickedComments) console.log(clickedComments);   
-
     return (
             <FeedPage title='timeline' forms={true} posts={postsList} hashtags={hashtags} friends={friends} loadPostList={loadPostList}/>
     );

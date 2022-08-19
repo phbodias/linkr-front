@@ -16,6 +16,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import UrlContext from "../../../contexts/UrlContext";
 import SearchNewUpdates from "../../Posts/SearchNewUpdates";
+import styled from "styled-components";
 
 export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}) {
     const navigate = useNavigate();
@@ -117,7 +118,7 @@ export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}
             {title !== "timeline" ? (
               posts(openModal)
             ) : friends?.length === 0 ? (
-              <h1>You don't follow anyone yet. Search for new Friends</h1>
+              <NoPosts>You don't follow anyone yet. Search for new Friends</NoPosts>
             ) : posts?.length > 0 ? (
               posts(openModal)
             ) : (
@@ -168,4 +169,9 @@ export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}
     </>
   );
 }
+
+const NoPosts = styled.div`
+  text-align: center;
+  font-size: 20px;
+`;
 

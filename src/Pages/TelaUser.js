@@ -7,18 +7,18 @@ import Post from "../Components/Posts/Post/Post";
 import { FeedPage } from "../Components/shared/Feed/FeedPage";
 import UrlContext from "../contexts/UrlContext";
 import { Follow, Unfollow } from "../Components/shared/Feed/FeedStyle";
+import styled from "styled-components";
 
 export default function TelaUser() {
   const URL = useContext(UrlContext);
   const { id } = useParams();
-  const userLoggedId = (parseInt(localStorage.getItem("userLinkerId")) === parseInt(id));
+  const userLoggedId = localStorage.getItem("userLinkerId") === useParams().id;
   const [postList, setPostList] = useState(null);
   const [hashtags, setHashtags] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingFollow, setLoadingFollow] = useState(false);
   const [name, setName] = useState("");
   const [isFriend, setIsFriend] = useState(false);
-
   const token = localStorage.getItem("tokenLinker");
 
   useEffect(() => {
@@ -66,9 +66,13 @@ export default function TelaUser() {
     const friends = axios.get(`${URL}/follow`, config);
     friends
       .then((res) => {
-        if (res.data.filter((friendId) => friendId === parseInt(id)).length > 0)
+        if (
+          res.data.filter((friendId) => friendId === parseInt(id)).length > 0
+        ) {
           setIsFriend(true);
-        console.log("Isfriend", isFriend)
+        } else {
+          setIsFriend(false);
+        }
       })
       .catch((e) => alert(e.message));
   }, [token, id, URL, isFriend]);
@@ -88,6 +92,7 @@ export default function TelaUser() {
       })
       .catch((err) => {
         alert(err.message);
+        setLoadingFollow(false);
       });
   }
 
@@ -106,6 +111,7 @@ export default function TelaUser() {
       })
       .catch((err) => {
         alert(err.message);
+        setLoadingFollow(false);
       });
   }
 
@@ -127,7 +133,7 @@ export default function TelaUser() {
         />
       ))
     ) : loading || !postList || !hashtags ? (
-      <p>There are no posts yet</p>
+      <NoPosts>There are no posts yet</NoPosts>
     ) : (
       <ThreeDots color="#FFF" height={50} width={100} />
     );
@@ -139,7 +145,6 @@ export default function TelaUser() {
         title={`${name}'s Posts`}
         posts={postsList}
         hashtags={hashtags}
-        isFriend={isFriend}
       />
       {!userLoggedId ? (
         loadingFollow ? (
@@ -157,3 +162,8 @@ export default function TelaUser() {
     </>
   );
 }
+
+const NoPosts = styled.div`
+  text-align: center;
+  font-size: 25px;
+`;
