@@ -1,4 +1,13 @@
-import { Container, Title, InnerContainer, RightInnerContainer, LeftInnerContainer, SubTitle, TextContent, SubItems } from "./FeedStyle";
+import {
+  Container,
+  Title,
+  InnerContainer,
+  RightInnerContainer,
+  LeftInnerContainer,
+  SubTitle,
+  TextContent,
+  SubItems,
+} from "./FeedStyle";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import ModalForPostActions from "../../Posts/Post/ModalForPostActions";
@@ -67,91 +76,96 @@ export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}
         })
     }
 
-    function openModal(id, field) {
-        switch (field) {
-            case 'repost':
-                setRepostOpen(true);
-                setRepost(id);
-                break
-            case 'delete':
-                setDeleteOpen(true);
-                setDelete(id);
-                break
-            default:
-                break
-        }
+  function openModal(id, field) {
+    switch (field) {
+      case "repost":
+        setRepostOpen(true);
+        setRepost(id);
+        break;
+      case "delete":
+        setDeleteOpen(true);
+        setDelete(id);
+        break;
+      default:
+        break;
     }
+  }
 
-    function closeModal(field) {
-        switch (field) {
-            case 'repost':
-                setRepostOpen(false);
-                break
-            case 'delete':
-                setDeleteOpen(false);
-                break
-            default:
-                break
-        }
+  function closeModal(field) {
+    switch (field) {
+      case "repost":
+        setRepostOpen(false);
+        break;
+      case "delete":
+        setDeleteOpen(false);
+        break;
+      default:
+        break;
     }
-    return (
-        <>
-            <Header />
-            <Container>
-                <Title>
-                    {title}
-                </Title>
+  }
+  return (
+    <>
+      <Header />
+      <Container>
+        <Title>{title}</Title>
 
+        <InnerContainer>
+          <LeftInnerContainer>
+            {forms ? <CreatePost /> : ''}
+            <SearchNewUpdates />
 
-                <InnerContainer>
-                    <LeftInnerContainer>
-                        {forms ? <CreatePost /> : null}
-                        <SearchNewUpdates />
-
-                    { 
-                        title!=="timeline"?
-                        posts(openModal):
-                        friends.length===0?
-                        <h1>You don't follow anyone yet. Search for new Friends</h1>:
-                        posts.length>0?
-                        posts(openModal):
-                        <h1>No posts found from your friends</h1>
-                    }
-
-                        
-
-                    </LeftInnerContainer>
-                    <RightInnerContainer>
-                        <SubTitle>
-                            trendings
-                        </SubTitle>
-                        <SubItems>
-
-                            {hashtags ?
-                                hashtags.map((item, index) => {
-                                    return <TextContent key={index} onClick={() => navigate(`/hashtag/${item}`)} >
-                                        {`#${item}`}
-                                    </TextContent>
-                                })
-                                : null}
-                        </SubItems>
-                    </RightInnerContainer>
-                </InnerContainer>
-                <ModalForPostActions
-                    modalIsOpen={deleteIsOpen}
-                    loading={loading}
-                    closeModal={()=>closeModal('delete')}
-                    postFunction={deletePost}
-                    questionAnswers={['Are you sure you want to delete this post?','No, go back','Yes, delete it']}
-                />
-                <ModalForPostActions
-                    modalIsOpen={repostIsOpen}
-                    loading={loading}
-                    closeModal={()=>closeModal('repost')}
-                    postFunction={addRepost}
-                    questionAnswers={['Do you want to re-post this link?','No, cancel','Yes, share!']}
-                />
-            </Container>
-        </>
-    );
+            {title !== "timeline" ? (
+              posts(openModal)
+            ) : friends?.length === 0 ? (
+              <h1>You don't follow anyone yet. Search for new Friends</h1>
+            ) : posts?.length > 0 ? (
+              posts(openModal)
+            ) : (
+              ""
+            )}
+          </LeftInnerContainer>
+          <RightInnerContainer>
+            <SubTitle>trendings</SubTitle>
+            <SubItems>
+              {hashtags
+                ? hashtags.map((item, index) => {
+                    return (
+                      <TextContent
+                        key={index}
+                        onClick={() => navigate(`/hashtag/${item}`)}
+                      >
+                        {`#${item}`}
+                      </TextContent>
+                    );
+                  })
+                : null}
+            </SubItems>
+          </RightInnerContainer>
+        </InnerContainer>
+        <ModalForPostActions
+          modalIsOpen={deleteIsOpen}
+          loading={loading}
+          closeModal={() => closeModal("delete")}
+          postFunction={deletePost}
+          questionAnswers={[
+            "Are you sure you want to delete this post?",
+            "No, go back",
+            "Yes, delete it",
+          ]}
+        />
+        <ModalForPostActions
+          modalIsOpen={repostIsOpen}
+          loading={loading}
+          closeModal={() => closeModal("repost")}
+          postFunction={addRepost}
+          questionAnswers={[
+            "Do you want to re-post this link?",
+            "No, cancel",
+            "Yes, share!",
+          ]}
+        />
+      </Container>
+    </>
+  );
 }
+

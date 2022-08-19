@@ -31,7 +31,6 @@ export default function Post({
   const { userData } = useContext(UserContext);
   const URL = useContext(UrlContext);
   const [currDescription, setDescription] = useState(description);
-  const [following, setFollowing] = useState([]);
   const [editPost, setEditMode] = useState(false);
   const [disable, setDisable] = useState(false);
   const token = localStorage.getItem("tokenLinker");
@@ -62,7 +61,7 @@ export default function Post({
     return textOutput;
   }
 
-  useEffect(()=>{
+  /*useEffect(()=>{
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -79,7 +78,7 @@ export default function Post({
         alert("Followers could not be retrieved");
       }
     });
-  },[URL,token])
+  },[URL,token])*/
 
   function moveCursorAtEnd(e) {
     const temp_value = e.target.value;
@@ -210,19 +209,17 @@ export default function Post({
   }
 
   function nameRepost () {
-    if(repostedBy===userData[0].id){
+    if(repostedBy.id===userData[0]?.id){
       return 'you';
-    } else if (following.includes(repostedBy)){
-      return 'your Friend X';
     } else {
-      return 'should not appear in your feed';
+      return repostedBy.name;
     }
   }
 
   return (
 
     <OutterContainer>
-      {(following.includes(repostedBy)||repostedBy===userData[0].id) ?
+      {repostedBy.name ?
         <>
           <RepostSpan>
             <BiRepost onClick={() => openModal(id, 'repost')} />

@@ -23,7 +23,10 @@ export default function Header() {
     };
     const promise = axios.get(`${URL}/me`, config);
     promise
-      .then((res) => setUserData(res.data))
+      .then((res) => {
+        setUserData(res.data);
+        localStorage.setItem("userLinkerId", res.data[0].id);
+      })
       .catch((error) => {
         alert(`Erro: \n\n${error.response.status} - ${error.response.data}`);
         localStorage.removeItem("tokenLinker");
@@ -125,13 +128,13 @@ const Container = styled.div`
   width: 100%;
   top: 0;
   left: 0;
-  height: 75px;
+  height: 80px;
   background-color: #151515;
   color: #ffffff;
-  padding: 10px 0;
   display: flex;
-  align-items: flex-start;
-  box-sizing: content-box;
+  align-items: center;
+  padding-top: auto;
+  
   @media (max-width: 563px) {
     display: flex;
     justify-content: space-between;
