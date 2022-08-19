@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext} from "react";
+import { useEffect, useState, useContext, useCallback} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
@@ -6,6 +6,7 @@ import Post from "../Components/Posts/Post/Post";
 import { FeedPage } from "../Components/shared/Feed/FeedPage";
 import UrlContext from "../contexts/UrlContext";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 
 export default function HashtagPage() { 
@@ -14,12 +15,13 @@ export default function HashtagPage() {
     const [postList, setPostList] = useState(null);
     const [hashtags, setHashtags] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const token = localStorage.getItem('tokenLinker');
-
     const { hashtag } = useParams();
 
-    useEffect(() => {
+    const loadPostList = useCallback( () => {
+        
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -28,14 +30,28 @@ export default function HashtagPage() {
         setLoading(true);
         const promise = axios.get(`${URL}/hashtags/${hashtag}`, config);
         promise.then(response => {
-            setPostList(response.data);
-
+            setPostList(response.data)
+            
         });
         promise.catch((error) => {
-            console.log(error.response.data);
-            alert("An error occured while trying to fetch the posts, please refresh the page");
-
+            if(error.response.status===401){
+                navigate("/")
+            } else {
+                alert("An error occured while trying to fetch the posts, please refresh the page");
+            }
         });
+    },[]);
+
+
+    useEffect(() => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        setLoading(true);
+        
+        loadPostList()
 
         axios.get(`${URL}/hashtags`, config)
             .then(res => {
@@ -45,9 +61,12 @@ export default function HashtagPage() {
                 }
                 setHashtags([...arrayHashtags]);
             })
-            .catch(err => {
-                console.log(err.response.data);
-                alert("An error occured while trying to fetch the trenddins, please refresh the page");
+            .catch(error => {
+                if(error.response.status===401){
+                    navigate("/")
+                } else {
+                    alert("An error occured while trying to fetch the trendings, please refresh the page");
+                }
                 setLoading(false);
             });
 
@@ -71,6 +90,7 @@ export default function HashtagPage() {
                         likes={p.likes}
                         openModal={openModal}
                         idUser={p.userOwner.id}
+                        loadPostList={loadPostList}
                     />
                 )
                 :
@@ -83,7 +103,7 @@ export default function HashtagPage() {
     }
 
     return (
-        <FeedPage title={`# ${hashtag}`} posts={postsList} hashtags={hashtags} />
+        <FeedPage title={`# ${hashtag}`} posts={postsList} hashtags={hashtags} loadPostList={loadPostList} />
     )
 }
 
