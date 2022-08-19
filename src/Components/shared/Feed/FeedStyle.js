@@ -1,26 +1,23 @@
 import styled from "styled-components";
 
 const Container = styled.main`
-    margin-top: 35px;
-    min-height:100vh;
-    display:flex;
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    background-color:#333333;
-    box-sizing:border-box;
-    padding: 72px 18% 0 16%;
-    @media (max-width: 1130px) {
-        padding:35px 0 0 0;
-        }
+  margin-top: 35px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #333333;
+  box-sizing: border-box;
+  padding: 72px 18% 0 16%;
+  @media (max-width: 1130px) {
+    padding: 35px 0 0 0;
+  }
 `;
 
 const Title = styled.h1`
   font-family: "Oswald", sans-serif;
   font-size: 2.75rem;
   font-weight: 700;
-  margin: 70px 0 43px 0;
+  margin: 65px 0 43px 0;
   color: #ffffff;
   height: fit-content;
   @media (max-width: 1130px) {
@@ -29,7 +26,7 @@ const Title = styled.h1`
     margin-bottom: 20px;
     width: 100%;
   }
-  @media (max-width: 563px){
+  @media (max-width: 563px) {
     margin-top: 100px;
   }
 `;
@@ -42,9 +39,6 @@ const InnerContainer = styled.div`
 
 const LeftInnerContainer = styled.div`
   width: 65%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   @media (max-width: 1130px) {
     width: 100%;
   }
@@ -104,7 +98,7 @@ const Follow = styled.div`
   width: 112px;
   height: 31px;
   left: 73vw;
-  top: 170px;
+  top: 175px;
   background: #1877f2;
   border-radius: 5px;
   color: #ffffff;
@@ -112,12 +106,16 @@ const Follow = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-right: 10px;
   @media (max-width: 1130px) {
-    top: 150px;
+    top: 160px;
+    height: 26px;
+    left: 80vw;
   }
 
-  @media (max-width: 563px){
-    top: 177px;
+  @media (max-width: 563px) {
+    top: 196px;
+    left: 68vw;
   }
 `;
 
@@ -138,7 +136,7 @@ const Unfollow = styled.div`
   @media (max-width: 1130px) {
     top: 150px;
   }
-  @media (max-width: 563px){
+  @media (max-width: 563px) {
     top: 177px;
   }
 `;
@@ -153,5 +151,5 @@ export {
   SubItems,
   TextContent,
   Follow,
-  Unfollow
+  Unfollow,
 };

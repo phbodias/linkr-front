@@ -33,7 +33,7 @@ export default function InputSearchUsers() {
       getUsersByName.then(getUsersByNameSucess);
       getUsersByName.catch(getUsersByNameFail);
     }
-  }, [searchWords, token, URL]);
+  }, [searchWords, token, URL, friends]);
 
   function getUsersByNameSucess(response) {
     setUsers(response.data.filter((friend) => friends.includes(friend.id)));
@@ -99,10 +99,10 @@ export default function InputSearchUsers() {
 }
 
 const Input = styled.div`
-  width: 100%;
   height: 45px;
   display: flex;
   justify-content: center;
+  margin: auto;
 
   input {
     width: 563px;
@@ -114,15 +114,19 @@ const Input = styled.div`
 `;
 
 const Body = styled.div`
-  margin: 0 auto;
+  margin: auto;
   border-radius: 8px;
   padding: 0;
   width: 563px;
   height: ${(props) => (props.selecionado ? "150px" : "45px")};
   background-color: #e7e7e7;
   overflow-y: scroll;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin-top: 20px;
+  box-sizing: border-box;
 
   @media (max-width: 563px) {
     position: absolute;
