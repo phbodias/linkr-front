@@ -1,6 +1,6 @@
 import { OutterContainer, tagStyle, Icons, Heart, RepostStyle, RepostSpan, InnerContainer, EditInput, URLdiv } from "./PostStyle";
 import axios from "axios";
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdNorthWest } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
@@ -60,25 +60,6 @@ export default function Post({
     }
     return textOutput;
   }
-
-  /*useEffect(()=>{
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const promise = axios.get(`${URL}/follow`, config);
-    promise.then(response => {
-      setFollowing(response.data)
-    });
-    promise.catch(error => {
-      if (error.response.status === 401) {
-        navigate("/")
-      } else {
-        alert("Followers could not be retrieved");
-      }
-    });
-  },[URL,token])*/
 
   function moveCursorAtEnd(e) {
     const temp_value = e.target.value;
@@ -171,7 +152,7 @@ export default function Post({
     });
   }
   function removeLike() {
-    console.log(id, token);
+    
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -191,19 +172,19 @@ export default function Post({
   }
 
   function messageLikes() {
-    if (likesCount === 0) {
+    if (parseInt(likesCount) === 0) {
       return `Ninguém curtiu esse post ainda`;
     } else {
       let user1 = "";
       if (likes.filter((l) => l.id === userData[0]?.id).length > 0) {
         user1 = "Você";
       } else user1 = likes[0]?.name;
-      if (likesCount === 1) {
+      if (parseInt(likesCount) === 1) {
         return `${user1} curtiu`;
-      } else if (likesCount === 2) {
+      } else if (parseInt(likesCount) === 2) {
         return `${user1} e ${likes[1]?.name} curtiram`;
       } else {
-        return `${user1},${likes[1]?.name} e outras ${likesCount - 2} pessoas curtiram`;
+        return `${user1}, ${likes[1]?.name} e outras ${likesCount - 2} pessoas curtiram`;
       }
     }
   }

@@ -19,6 +19,7 @@ export default function PostsPage() {
     const navigate = useNavigate();
     
     const loadPostList = useCallback( () => {
+        
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
