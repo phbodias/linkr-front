@@ -55,6 +55,7 @@ export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}
     }
 
     function addRepost() {
+    console.log('deu repost')
         setLoading(true);
         const config = {
             headers: {
@@ -63,6 +64,8 @@ export function FeedPage({ title, forms, posts, hashtags ,friends, loadPostList}
         }
         const promise = axios.post(`${URL}/repost/${postToRepost}`,{}, config);
         promise.then(() => {
+            setLoading(false);
+            closeModal('repost');
             loadPostList();
         })
         promise.catch((error) => {

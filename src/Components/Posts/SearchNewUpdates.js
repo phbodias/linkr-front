@@ -61,7 +61,7 @@ export default function SearchNewUpdates(){
     let dif = arrUpdatePosts.filter(item=>!arrPosts.includes(item))
 
    
-    if(dif.length!=0){
+    if(dif.length!==0){
          visible=true
     }
 
